@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Airline_Management_System__AMS_.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20251127233813_AddSeatModel")]
+    [Migration("20251127235857_AddSeatModel")]
     partial class AddSeatModel
     {
         /// <inheritdoc />
