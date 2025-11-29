@@ -4,7 +4,8 @@ namespace Airline_Management_System__AMS_.Models
 {
     public class Flight
     {
-        public int Id { get; set; }
+        [Key]
+        public int FlightId { get; set; }
 
         [Required]
         [Display(Name = "Flight Number")]
@@ -35,5 +36,8 @@ namespace Airline_Management_System__AMS_.Models
         [Required]
         [DataType(DataType.Currency)]
         public decimal Price { get; set; }
+
+        public ICollection<Booking> Bookings { get; set; }
+        public ICollection<Seat> Seats { get; set; }
     }
 }
