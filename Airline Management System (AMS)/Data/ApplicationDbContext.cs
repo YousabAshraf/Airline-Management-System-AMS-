@@ -28,5 +28,7 @@ namespace Airline_Management_System__AMS_.Data
         public DbSet<Passenger> Passengers { get; set; }
         public DbSet<Booking> Bookings { get; set; }
         public DbSet<Feedback> Feedbacks { get; set; }
+        public DbSet<Seat> Seats { get; set; }
+
     }
 }
