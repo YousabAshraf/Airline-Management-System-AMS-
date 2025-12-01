@@ -23,6 +23,7 @@ namespace Airline_Management_System__AMS_.Models
         [EmailAddress]
         public string Email { get; set; }
 
+        public string dateOfBirth { get; set; }
         [Required]
         [Phone]
         [Display(Name = "Phone Number")]
