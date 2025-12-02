@@ -20,5 +20,15 @@ namespace Airline_Management_System__AMS_.Models
 
         [Display(Name = "Full Name")]
         public string FullName => $"{FirstName} {LastName}";
+
+        [Display(Name = "Email Confirmation Code")]
+        public string EmailConfirmationCode { get; internal set; }
+
+        [Display(Name = "Last Verification Email Sent")]
+        public DateTime? LastVerificationEmailSent { get; set; }
+
+        public int VerificationResendCount { get; set; } = 0;
+
+
     }
 }
