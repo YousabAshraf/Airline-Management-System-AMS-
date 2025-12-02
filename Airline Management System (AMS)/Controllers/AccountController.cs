@@ -120,16 +120,16 @@ public class AccountController : Controller
         var user = await _userManager.FindByIdAsync(userId);
         if (user == null) return NotFound();
 
-        if (user.VerificationResendCount >= 3)
+        if (user.VerificationResendCount >= 5)
         {
             TempData["Error"] = "You have reached the maximum number of resend attempts.";
             return RedirectToAction("VerifyEmail", new { userId });
         }
 
         if (user.LastVerificationEmailSent != null &&
-            (DateTime.UtcNow - user.LastVerificationEmailSent.Value).TotalMinutes < 5)
+            (DateTime.UtcNow - user.LastVerificationEmailSent.Value).TotalMinutes < 5* user.VerificationResendCount)
         {
-            var remaining = 1 * user.VerificationResendCount - (DateTime.UtcNow - user.LastVerificationEmailSent.Value).TotalMinutes;
+            var remaining = 5* user.VerificationResendCount - (DateTime.UtcNow - user.LastVerificationEmailSent.Value).TotalMinutes;
             TempData["Error"] = $"Please wait {Math.Ceiling(remaining)} minutes before requesting another code.";
             return RedirectToAction("VerifyEmail", new { userId });
         }
