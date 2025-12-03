@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using Airline_Management_System__AMS_.Models;
+using Airline_Management_System__AMS_.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Airline_Management_System__AMS_.Controllers
@@ -15,7 +16,25 @@ namespace Airline_Management_System__AMS_.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            return View(new FlightSearchViewModel
+            {
+                Origin = string.Empty,
+                Destination = string.Empty
+            });
+        }
+
+        [HttpPost]
+        public IActionResult SearchFlights(FlightSearchViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View("Index", model);
+            }
+
+            // TODO: Implement flight search logic when FlightsController is created
+            // For now, redirect to home with a message
+            TempData["SearchMessage"] = $"Searching for flights from {model.Origin} to {model.Destination}...";
+            return RedirectToAction("Index");
         }
 
         public IActionResult Privacy()

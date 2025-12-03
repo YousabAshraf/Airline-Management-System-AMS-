@@ -1,84 +1,229 @@
-﻿@{
+﻿@model Airline_Management_System__AMS_.ViewModels.FlightSearchViewModel
+@{
     ViewData["Title"] = "Home";
 }
 
-<style>
-    body {
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
-        min-height: 100vh;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin: 0;
-        padding: 20px;
-    }
+<!-- HERO SECTION -->
+<section class="hero-section">
+    <div class="hero-content">
+        <h1 class="hero-title">Fly Beyond Boundaries</h1>
+        <p class="hero-subtitle">Discover the world with AMS Airlines - Your journey begins here</p>
 
-    .home-container {
-        background: rgba(255, 255, 255, 0.15);
-        backdrop-filter: blur(15px);
-        border-radius: 24px;
-        padding: 60px 50px;
-        max-width: 600px;
-        text-align: center;
-        box-shadow: 0 15px 30px rgba(0,0,0,0.2), 0 4px 12px rgba(102,126,234,0.2);
-        border: 1px solid rgba(255, 255, 255, 0.25);
-        color: #fff;
-        animation: fadeInUp 0.8s ease-out;
-    }
+        <!-- FLIGHT SEARCH FORM -->
+        <div class="flight-search-container">
+            <div class="trip-type-selector">
+                <button type="button" class="trip-type-btn active" data-trip-type="RoundTrip">
+                    <i class="fas fa-exchange-alt"></i> Round Trip
+                </button>
+                <button type="button" class="trip-type-btn" data-trip-type="OneWay">
+                    <i class="fas fa-long-arrow-alt-right"></i> One Way
+                </button>
+            </div>
 
-        .home-container h2 {
-            font-size: 36px;
-            margin-bottom: 20px;
-            background: linear-gradient(135deg, #ffffff, #ffffffaa);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
+            <form id="flightSearchForm" asp-controller="Home" asp-action="SearchFlights" method="post">
+                <input type="hidden" id="tripTypeInput" asp-for="TripType" value="RoundTrip" />
 
-        .home-container p {
-            font-size: 18px;
-            color: #e0e0e0;
-            margin-bottom: 30px;
-        }
+                <div class="search-form">
+                    <div class="form-group">
+                        <label for="Origin">
+                            <i class="fas fa-plane-departure"></i> From
+                        </label>
+                        <input type="text" id="Origin" asp-for="Origin" class="form-control"
+                            placeholder="Enter origin city" required />
+                        <span asp-validation-for="Origin" class="text-danger"></span>
+                    </div>
 
-    .btn-primary {
-        padding: 15px 30px;
-        font-size: 18px;
-        border-radius: 12px;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        border: none;
-        color: #fff;
-        font-weight: 700;
-        transition: all 0.3s ease;
-        box-shadow: 0 8px 20px rgba(102,126,234,0.4), 0 4px 8px rgba(118,75,162,0.2);
-    }
+                    <div class="form-group">
+                        <label for="Destination">
+                            <i class="fas fa-plane-arrival"></i> To
+                        </label>
+                        <input type="text" id="Destination" asp-for="Destination" class="form-control"
+                            placeholder="Enter destination city" required />
+                        <span asp-validation-for="Destination" class="text-danger"></span>
+                    </div>
 
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 12px 28px rgba(102,126,234,0.5), 0 6px 12px rgba(118,75,162,0.3);
-            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
-        }
+                    <div class="form-group">
+                        <label for="DepartureDate">
+                            <i class="fas fa-calendar-alt"></i> Departure
+                        </label>
+                        <input type="date" id="DepartureDate" asp-for="DepartureDate" class="form-control" required />
+                        <span asp-validation-for="DepartureDate" class="text-danger"></span>
+                    </div>
 
-    @@keyframes fadeInUp {
-        from
+                    <div class="form-group" id="returnDateGroup">
+                        <label for="ReturnDate">
+                            <i class="fas fa-calendar-check"></i> Return
+                        </label>
+                        <input type="date" id="ReturnDate" asp-for="ReturnDate" class="form-control" />
+                        <span asp-validation-for="ReturnDate" class="text-danger"></span>
+                    </div>
 
-    {
-        opacity: 0;
-        transform: translateY(20px);
-    }
+                    <div class="form-group">
+                        <label for="PassengerCount">
+                            <i class="fas fa-users"></i> Passengers
+                        </label>
+                        <input type="number" id="PassengerCount" asp-for="PassengerCount" class="form-control" min="1"
+                            max="9" value="1" required />
+                        <span asp-validation-for="PassengerCount" class="text-danger"></span>
+                    </div>
+                </div>
 
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+                <div style="text-align: center;">
+                    <button type="submit" class="search-btn">
+                        <i class="fas fa-search"></i> Search Flights
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
 
-    }
-</style>
+<!-- FEATURED DESTINATIONS SECTION -->
+<section class="destinations-section" id="destinations">
+    <h2 class="section-title">Popular Destinations</h2>
+    <p class="section-subtitle">Explore our most sought-after travel destinations</p>
 
-<div class="home-container">
-    <h2>Welcome to Airline Management System (AMS)</h2>
-    <p>Manage your flights, passengers, and bookings efficiently.</p>
-    <a asp-controller="Account" asp-action="Login" class="btn btn-primary">
-        Login
-    </a>
-</div>
+    <div class="destinations-grid">
+        <div class="destination-card" data-destination="Paris">
+            <img src="~/images/destinations/paris_destination_1764761262209.png" alt="Paris, France"
+                class="destination-image" />
+            <div class="destination-overlay">
+                <h3 class="destination-name">Paris, France</h3>
+                <p class="destination-price">From $599</p>
+                <button class="destination-btn">Book Now</button>
+            </div>
+        </div>
+
+        <div class="destination-card" data-destination="Dubai">
+            <img src="~/images/destinations/dubai_destination_1764761278133.png" alt="Dubai, UAE"
+                class="destination-image" />
+            <div class="destination-overlay">
+                <h3 class="destination-name">Dubai, UAE</h3>
+                <p class="destination-price">From $799</p>
+                <button class="destination-btn">Book Now</button>
+            </div>
+        </div>
+
+        <div class="destination-card" data-destination="Tokyo">
+            <img src="~/images/destinations/tokyo_destination_1764761295134.png" alt="Tokyo, Japan"
+                class="destination-image" />
+            <div class="destination-overlay">
+                <h3 class="destination-name">Tokyo, Japan</h3>
+                <p class="destination-price">From $899</p>
+                <button class="destination-btn">Book Now</button>
+            </div>
+        </div>
+
+        <div class="destination-card" data-destination="Maldives">
+            <img src="~/images/destinations/maldives_destination_1764761312305.png" alt="Maldives"
+                class="destination-image" />
+            <div class="destination-overlay">
+                <h3 class="destination-name">Maldives</h3>
+                <p class="destination-price">From $1,299</p>
+                <button class="destination-btn">Book Now</button>
+            </div>
+        </div>
+
+        <div class="destination-card" data-destination="New York">
+            <img src="~/images/destinations/new_york_destination_1764761331522.png" alt="New York, USA"
+                class="destination-image" />
+            <div class="destination-overlay">
+                <h3 class="destination-name">New York, USA</h3>
+                <p class="destination-price">From $499</p>
+                <button class="destination-btn">Book Now</button>
+            </div>
+        </div>
+
+        <div class="destination-card" data-destination="London">
+            <img src="~/images/destinations/london_destination_1764761347429.png" alt="London, UK"
+                class="destination-image" />
+            <div class="destination-overlay">
+                <h3 class="destination-name">London, UK</h3>
+                <p class="destination-price">From $549</p>
+                <button class="destination-btn">Book Now</button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- SERVICES SECTION -->
+<section class="services-section" id="services">
+    <h2 class="section-title">Why Choose AMS Airlines?</h2>
+    <p class="section-subtitle">Experience excellence in every journey</p>
+
+    <div class="services-grid">
+        <div class="service-card">
+            <div class="service-icon">
+                <i class="fas fa-ticket-alt"></i>
+            </div>
+            <h3 class="service-title">Easy Booking</h3>
+            <p class="service-description">
+                Book your flights in minutes with our intuitive platform. Simple, fast, and secure.
+            </p>
+        </div>
+
+        <div class="service-card">
+            <div class="service-icon">
+                <i class="fas fa-plane"></i>
+            </div>
+            <h3 class="service-title">Flight Management</h3>
+            <p class="service-description">
+                Manage your bookings, check flight status, and make changes effortlessly.
+            </p>
+        </div>
+
+        <div class="service-card">
+            <div class="service-icon">
+                <i class="fas fa-headset"></i>
+            </div>
+            <h3 class="service-title">24/7 Support</h3>
+            <p class="service-description">
+                Our dedicated team is always here to assist you, anytime, anywhere.
+            </p>
+        </div>
+
+        <div class="service-card">
+            <div class="service-icon">
+                <i class="fas fa-shield-alt"></i>
+            </div>
+            <h3 class="service-title">Secure Payments</h3>
+            <p class="service-description">
+                Your transactions are protected with industry-leading security measures.
+            </p>
+        </div>
+    </div>
+</section>
+
+<!-- TESTIMONIALS SECTION -->
+<section class="testimonials-section">
+    <h2 class="section-title">What Our Customers Say</h2>
+    <p class="section-subtitle">Real experiences from real travelers</p>
+
+    <div class="testimonials-container">
+        <div class="testimonial-card">
+            <div class="stars">
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+            </div>
+            <p class="testimonial-text">
+                "AMS Airlines made my trip to Paris absolutely seamless. The booking process was straightforward,
+                and the customer service was exceptional. Highly recommended!"
+            </p>
+            <div class="testimonial-author">
+                <div class="author-avatar">SM</div>
+                <div class="author-info">
+                    <h4>Sarah Mitchell</h4>
+                    <p>Business Traveler</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <script src="~/js/home.js" asp-append-version="true"></script>
+    <partial name="_ValidationScriptsPartial" />
+}
