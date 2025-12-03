@@ -82,7 +82,9 @@ public class AccountController : Controller
 
             <!-- Banner -->
             <div style='text-align:center; margin-bottom:20px;'>
-                <img src='src=~/images/logo_in_email/readme_banner.png' alt='Banner' style='width:100%; border-radius:10px;'>
+<img src='https://github.com/Steven-Amin02/Airline-Management-System-AMS-/raw/master/Airline%20Management%20System%20(AMS)/wwwroot/images/logo_in_email/readme_banner.png'
+     alt='Banner'
+     style='width:100%; border-radius:10px;' />
             </div>
 
             <!-- Title -->
@@ -194,7 +196,9 @@ public class AccountController : Controller
 
             <!-- Banner -->
             <div style='text-align:center; margin-bottom:20px;'>
-                <img src='~/images/logo_in_email/readme_banner.png' alt='Banner' style='width:100%; border-radius:10px;'>
+<img src='https://github.com/Steven-Amin02/Airline-Management-System-AMS-/raw/master/Airline%20Management%20System%20(AMS)/wwwroot/images/logo_in_email/readme_banner.png'
+     alt='Banner'
+     style='width:100%; border-radius:10px;' />
             </div>
 
             <!-- Title -->
@@ -320,7 +324,7 @@ public class AccountController : Controller
 
             <!-- Banner -->
             <div style='text-align:center; margin-bottom:20px;'>
-<img src='https://github.com/Steven-Amin02/Airline-Management-System-AMS-/raw/master/Airline%20Management%20System%20(AMS)/wwwroot/images/destinations/dubai_destination_1764761278133.png'
+<img src='https://github.com/Steven-Amin02/Airline-Management-System-AMS-/raw/master/Airline%20Management%20System%20(AMS)/wwwroot/images/logo_in_email/readme_banner.png'
      alt='Banner'
      style='width:100%; border-radius:10px;' />
             </div>
