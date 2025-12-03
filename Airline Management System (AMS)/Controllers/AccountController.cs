@@ -39,8 +39,11 @@ public class AccountController : Controller
     [HttpPost]
     public async Task<IActionResult> Register(RegisterViewModel model)
     {
-        if (!ModelState.IsValid) return View(model);
-
+        if (!ModelState.IsValid)
+        {
+            TempData["Error"] = "Please correct the errors in the form.";
+            return View(model);
+        }
         var code = new Random().Next(100000, 999999).ToString();
 
         var user = new ApplicationUser
@@ -77,6 +80,7 @@ public class AccountController : Controller
         await _emailSender.SendEmailAsync(user.Email, "Email Verification Code",
             $"Your verification code is: <b>{code}</b>");
 
+        TempData["Success"] = "Correct Data, Verify your email.";
         return RedirectToAction("VerifyEmail", new { userId = user.Id });
     }
 
@@ -100,9 +104,10 @@ public class AccountController : Controller
         if (user.EmailConfirmationCode == model.Code)
         {
             user.EmailConfirmed = true;
-            user.EmailConfirmationCode = "CONFIRMED"; // بعد التفعيل نحذف الكود
+            user.EmailConfirmationCode = "CONFIRMED";
             user.VerificationResendCount = 0;
             await _userManager.UpdateAsync(user);
+            TempData["Success"] = "Account verified you can login now.";
 
             return RedirectToAction("Login");
         }
@@ -203,7 +208,7 @@ public class AccountController : Controller
                 return RedirectToAction("Index", "Home");
         }
 
-        ModelState.AddModelError("", "Invalid login attempt.");
+        ModelState.AddModelError("", "Wrong Password, Please try again.");
         return View(model);
     }
     [HttpGet]

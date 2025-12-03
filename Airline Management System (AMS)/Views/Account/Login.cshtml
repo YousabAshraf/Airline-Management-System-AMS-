@@ -293,12 +293,19 @@
         <p>Sign in to access your airline dashboard</p>
     </div>
 
-    @if (ViewBag.Message != null)
-    {
-            <div class="alert alert-success">@ViewBag.Message</div>
-    }
 
+
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success">
+            @TempData["Success"]
+        </div>
+    }
+    @if(ViewData.ModelState.ErrorCount > 0)
+    {
     <div asp-validation-summary="All" class="validation-summary text-danger"></div>
+	}
 
     <form asp-action="Login" method="post">
         <div class="form-group">

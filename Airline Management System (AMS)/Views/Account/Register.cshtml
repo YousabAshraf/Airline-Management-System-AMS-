@@ -273,9 +273,10 @@
         <h2>Create Account</h2>
         <p>Join our airline management system</p>
     </div>
-
-    <div asp-validation-summary="All" class="validation-summary text-danger"></div>
-
+    @if (ViewData.ModelState.ErrorCount > 0)
+    {
+        <div asp-validation-summary="All" class="validation-summary text-danger"></div>
+    }
     <form asp-action="Register" method="post">
         <div class="form-row">
             <div class="form-group">
