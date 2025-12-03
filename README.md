@@ -1,6 +1,6 @@
 # ✈️ AMS Airlines - Airline Management System
 
-![AMS Airlines Banner](readme_banner.png)
+![AMS Airlines Banner](Airline Management System (AMS)\readme_banner.png)
 
 ## 📋 Overview
 
