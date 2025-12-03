@@ -57,7 +57,6 @@ public class AccountController : Controller
             Role = model.Role
         };
 
-        // 1️⃣ إنشاء المستخدم أولاً
         var result = await _userManager.CreateAsync(user, model.Password);
         if (!result.Succeeded)
         {
@@ -66,19 +65,57 @@ public class AccountController : Controller
             return View(model);
         }
 
-        // 2️⃣ إضافة الدور
         if (!await _roleManager.RoleExistsAsync(model.Role))
             await _roleManager.CreateAsync(new IdentityRole(model.Role));
 
         await _userManager.AddToRoleAsync(user, model.Role);
 
-        // 3️⃣ حفظ وقت إرسال الكود بعد نجاح الـ Create
         user.LastVerificationEmailSent = DateTime.UtcNow;
         await _userManager.UpdateAsync(user);
 
-        // 4️⃣ إرسال الإيميل
-        await _emailSender.SendEmailAsync(user.Email, "Email Verification Code",
-            $"Your verification code is: <b>{code}</b>");
+        await _emailSender.SendEmailAsync(
+            user.Email,
+            "Email Verification Code",
+            $@"
+    <div style='font-family: Arial, sans-serif; background-color:#f5f7fa; padding:30px;'>
+        <div style='max-width:600px; margin:auto; background:white; padding:25px; border-radius:12px; box-shadow:0 2px 10px rgba(0,0,0,0.08);'>
+
+            <!-- Banner -->
+            <div style='text-align:center; margin-bottom:20px;'>
+                <img src='src=~/images/logo_in_email/readme_banner.png' alt='Banner' style='width:100%; border-radius:10px;'>
+            </div>
+
+            <!-- Title -->
+            <h2 style='text-align:center; color:#333; margin-bottom:10px;'>
+                Email Verification
+            </h2>
+
+            <p style='color:#555; font-size:15px; text-align:center;'>
+                Welcome to <strong>Airline Management System</strong>!  
+                Please use the verification code below to complete your registration.
+            </p>
+
+            <!-- Code Box -->
+            <div style='margin:30px auto; text-align:center;'>
+                <div style='display:inline-block; padding:15px 25px; border-radius:10px;
+                            background:#004aad; color:white; font-size:24px; 
+                            letter-spacing:5px; font-weight:bold;'>
+                    {code}
+                </div>
+            </div>
+
+            <p style='color:#555; font-size:14px; text-align:center;'>
+                This code is valid for the next <strong>10 minutes</strong>.
+            </p>
+
+            <hr style='margin:30px 0; border:none; border-top:1px solid #ddd;'>
+            <p style='text-align:center; font-size:13px; color:#888;'>
+                If you didn't request this verification, you can safely ignore this email.
+            </p>
+        </div>
+    </div>
+    ");
+
 
         TempData["Success"] = "Correct Data, Verify your email.";
         return RedirectToAction("VerifyEmail", new { userId = user.Id });
@@ -149,13 +186,51 @@ public class AccountController : Controller
         await _userManager.UpdateAsync(user);
 
         await _emailSender.SendEmailAsync(
-            user.Email,
-            "New Verification Code",
-            $"Your new verification code is: <b>{code}</b>"
-        );
+      user.Email,
+      "New Verification Code",
+      $@"
+    <div style='font-family: Arial, sans-serif; background-color:#f5f7fa; padding:30px;'>
+        <div style='max-width:600px; margin:auto; background:white; padding:25px; border-radius:12px; box-shadow:0 2px 10px rgba(0,0,0,0.08);'>
+
+            <!-- Banner -->
+            <div style='text-align:center; margin-bottom:20px;'>
+                <img src='~/images/logo_in_email/readme_banner.png' alt='Banner' style='width:100%; border-radius:10px;'>
+            </div>
+
+            <!-- Title -->
+            <h2 style='text-align:center; color:#333; margin-bottom:10px;'>
+                New Verification Code
+            </h2>
+
+            <p style='color:#555; font-size:15px; text-align:center;'>
+                You requested a new verification code.  
+                Please use the updated code below to complete your email verification.
+            </p>
+
+            <!-- Code Box -->
+            <div style='margin:30px auto; text-align:center;'>
+                <div style='display:inline-block; padding:15px 25px; border-radius:10px;
+                            background:#004aad; color:white; font-size:24px; 
+                            letter-spacing:5px; font-weight:bold;'>
+                    {code}
+                </div>
+            </div>
+
+            <p style='color:#555; font-size:14px; text-align:center;'>
+                This code is valid for the next <strong>10 minutes</strong>.
+            </p>
+
+            <hr style='margin:30px 0; border:none; border-top:1px solid #ddd;'>
+            <p style='text-align:center; font-size:13px; color:#888;'>
+                If you didn't request this email, please ignore it.
+            </p>
+        </div>
+    </div>
+    ");
+
+
 
         TempData["Success"] = "A new verification code has been sent to your email.";
-
         return RedirectToAction("VerifyEmail", new { userId });
     }
     [HttpPost]
@@ -236,10 +311,53 @@ public class AccountController : Controller
 
         await _userManager.UpdateAsync(user);
 
-        await _emailSender.SendEmailAsync(user.Email, "Password Reset Code",
-            $"Your password reset verification code is: <b>{code}</b>");
+        await _emailSender.SendEmailAsync(
+     user.Email,
+     "Email Verification Code",
+     $@"
+    <div style='font-family: Arial, sans-serif; background-color:#f5f7fa; padding:30px;'>
+        <div style='max-width:600px; margin:auto; background:white; padding:25px; border-radius:12px; box-shadow:0 2px 10px rgba(0,0,0,0.08);'>
 
-        
+            <!-- Banner -->
+            <div style='text-align:center; margin-bottom:20px;'>
+<img src='https://github.com/Steven-Amin02/Airline-Management-System-AMS-/raw/master/Airline%20Management%20System%20(AMS)/wwwroot/images/destinations/dubai_destination_1764761278133.png'
+     alt='Banner'
+     style='width:100%; border-radius:10px;' />
+            </div>
+
+            <!-- Title -->
+            <h2 style='text-align:center; color:#333; margin-bottom:10px;'>
+                Email Verification
+            </h2>
+
+            <p style='color:#555; font-size:15px; text-align:center;'>
+                Welcome to <strong>Airline Management System</strong>!  
+                Please use the verification code below to complete your registration.
+            </p>
+
+            <!-- Code Box -->
+            <div style='margin:30px auto; text-align:center;'>
+                <div style='display:inline-block; padding:15px 25px; border-radius:10px;
+                            background:#004aad; color:white; font-size:24px; 
+                            letter-spacing:5px; font-weight:bold;'>
+                    {code}
+                </div>
+            </div>
+
+            <p style='color:#555; font-size:14px; text-align:center;'>
+                This code is valid for the next <strong>10 minutes</strong>.
+            </p>
+
+            <hr style='margin:30px 0; border:none; border-top:1px solid #ddd;'>
+            <p style='text-align:center; font-size:13px; color:#888;'>
+                If you didn't request this verification, you can safely ignore this email.
+            </p>
+        </div>
+    </div>
+    ");
+
+
+
         TempData["Success"] = "Verification code sent to your email.";
         return RedirectToAction("ResetPassword", new { userId = user.Id });
     }
