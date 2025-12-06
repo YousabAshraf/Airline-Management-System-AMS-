@@ -1,117 +1,209 @@
 ﻿@{
     ViewData["Title"] = "Admin Dashboard";
+    Layout = null; // Remove the default layout (header and footer)
 }
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - AMS Airlines</title>
+    <link rel="stylesheet" href="~/css/home.css" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+</head>
+<body>
+
 <style>
-    body {
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+    .admin-dashboard-page {
         min-height: 100vh;
-        margin: 0;
-        padding: 20px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
+        background-color: var(--bg-light);
+        padding: 40px 20px;
     }
 
-    .dashboard-container {
-        background: rgba(255, 255, 255, 0.15);
-        backdrop-filter: blur(15px);
-        border-radius: 24px;
-        padding: 50px 40px;
-        max-width: 600px;
-        width: 100%;
-        box-shadow: 0 15px 30px rgba(0,0,0,0.2), 0 4px 12px rgba(102,126,234,0.2);
-        border: 1px solid rgba(255, 255, 255, 0.25);
-        color: #fff;
+    .dashboard-header {
+        max-width: 1200px;
+        margin: 0 auto 3rem;
         text-align: center;
-        animation: fadeInUp 0.8s ease-out;
     }
 
-        .dashboard-container h2 {
-            font-size: 36px;
-            margin-bottom: 15px;
-            background: linear-gradient(135deg, #ffffff, #ffffffaa);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
+    .dashboard-header h1 {
+        font-size: 2.5rem;
+        font-weight: 800;
+        color: var(--primary-color);
+        margin-bottom: 0.5rem;
+    }
 
-        .dashboard-container p {
-            font-size: 18px;
-            margin-bottom: 30px;
-            color: #e0e0e0;
-        }
+    .dashboard-header p {
+        font-size: 1.1rem;
+        color: var(--text-medium);
+    }
 
-        .dashboard-container ul {
-            list-style: none;
-            padding: 0;
-            margin-bottom: 30px;
-        }
+    .dashboard-content {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
 
-            .dashboard-container ul li {
-                margin: 15px 0;
-            }
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 2rem;
+        margin-bottom: 3rem;
+    }
 
-                .dashboard-container ul li a {
-                    text-decoration: none;
-                    color: #fff;
-                    font-size: 18px;
-                    font-weight: 600;
-                    padding: 10px 20px;
-                    border-radius: 12px;
-                    background: rgba(255,255,255,0.1);
-                    transition: all 0.3s ease;
-                    display: inline-block;
-                }
-
-                    .dashboard-container ul li a:hover {
-                        background: rgba(255,255,255,0.25);
-                        transform: translateY(-2px);
-                    }
-
-    .btn-danger {
-        padding: 12px 25px;
-        font-size: 16px;
+    .stat-card {
+        background: var(--bg-white);
         border-radius: 12px;
-        border: none;
-        font-weight: 700;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        background: linear-gradient(135deg, #ff416c, #ff4b2b);
-        color: #fff;
-        box-shadow: 0 8px 20px rgba(255,65,108,0.4), 0 4px 8px rgba(255,75,43,0.2);
+        padding: 2.5rem;
+        text-align: center;
+        box-shadow: var(--shadow-md);
+        border: 1px solid var(--border-color);
+        transition: var(--transition-smooth);
+        border-top: 4px solid var(--secondary-color);
     }
 
-        .btn-danger:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 12px 28px rgba(255,65,108,0.5), 0 6px 12px rgba(255,75,43,0.3);
-            background: linear-gradient(135deg, #ff4b2b, #ff416c);
+    .stat-card:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--shadow-lg);
+        border-top-color: var(--accent-color);
+    }
+
+    .stat-card:nth-child(1) {
+        border-top-color: var(--primary-color);
+    }
+
+    .stat-card:nth-child(2) {
+        border-top-color: var(--secondary-color);
+    }
+
+    .stat-card:nth-child(3) {
+        border-top-color: var(--accent-color);
+    }
+
+    .stat-number {
+        font-size: 3rem;
+        font-weight: 800;
+        color: var(--primary-color);
+        margin-bottom: 0.5rem;
+        line-height: 1;
+    }
+
+    .stat-label {
+        font-size: 1.1rem;
+        color: var(--text-medium);
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .management-links {
+        background: var(--bg-white);
+        border-radius: 12px;
+        padding: 2.5rem;
+        box-shadow: var(--shadow-md);
+        border: 1px solid var(--border-color);
+    }
+
+    .management-links h2 {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: var(--primary-color);
+        margin-bottom: 2rem;
+        text-align: center;
+    }
+
+    .links-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1.5rem;
+    }
+
+    .management-link {
+        display: block;
+        padding: 1.5rem;
+        background: var(--bg-light);
+        border-radius: 8px;
+        text-decoration: none;
+        color: var(--text-dark);
+        font-weight: 600;
+        font-size: 1.1rem;
+        text-align: center;
+        transition: var(--transition-smooth);
+        border: 2px solid transparent;
+    }
+
+    .management-link:hover {
+        background: var(--secondary-light);
+        border-color: var(--secondary-color);
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-sm);
+        color: var(--primary-color);
+    }
+
+    .management-link::before {
+        content: '✈️';
+        display: block;
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+    }
+
+    @@media (max-width: 768px) {
+        .dashboard-header h1 {
+            font-size: 2rem;
         }
 
-    @@keyframes fadeInUp {
-        from {
-            opacity: 0;
-            transform: translateY(20px);
+        .stats-grid {
+            grid-template-columns: 1fr;
         }
 
-        to {
-            opacity: 1;
-            transform: translateY(0);
+        .links-grid {
+            grid-template-columns: 1fr;
         }
     }
 </style>
 
-<div class="dashboard-container">
-    <h2>Admin Dashboard</h2>
-    <p>Welcome, @User.Identity.Name!</p>
+<div class="admin-dashboard-page">
+    <div class="dashboard-header">
+        <h1>✈️ Admin Dashboard</h1>
+        <p>Welcome, @User.Identity.Name! Manage your airline system</p>
+    </div>
 
-    <ul>
-        <li><a asp-controller="Flights" asp-action="Index">Manage Flights</a></li>
-        <li><a asp-controller="Passengers" asp-action="Index">Manage Passengers</a></li>
-        <li><a asp-controller="Bookings" asp-action="Index">Manage Bookings</a></li>
-    </ul>
+    <div class="dashboard-content">
+        <!-- Statistics Section -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number">@ViewBag.NumberOfUsers</div>
+                <div class="stat-label">Total Users</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">@ViewBag.NumberOfAvailableFlights</div>
+                <div class="stat-label">Available Flights</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">@ViewBag.NumberOfCompletedFlights</div>
+                <div class="stat-label">Completed Flights</div>
+            </div>
+        </div>
 
-    <form asp-controller="Account" asp-action="Logout" method="post">
-        <button type="submit" class="btn btn-danger">Logout</button>
-    </form>
+        <!-- Management Links Section -->
+        <div class="management-links">
+            <h2>Management Tools</h2>
+            <div class="links-grid">
+                <a asp-controller="AdminDashboard" asp-action="FlightManagment" class="management-link">
+                    Flight Management
+                </a>
+                <a asp-controller="AdminDashboard" asp-action="PassengerManagment" class="management-link">
+                    Passenger Management
+                </a>
+                <a asp-controller="AdminDashboard" asp-action="BookingManagment" class="management-link">
+                    Booking Management
+                </a>
+            </div>
+        </div>
+    </div>
 </div>
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
