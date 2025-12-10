@@ -1,3 +1,4 @@
+using Airline_Management_System__AMS_.Models;
 using System.ComponentModel.DataAnnotations;
 
 namespace Airline_Management_System__AMS_.ViewModels
@@ -29,6 +30,9 @@ namespace Airline_Management_System__AMS_.ViewModels
         [Required]
         [Display(Name = "Trip Type")]
         public TripType TripType { get; set; } = TripType.RoundTrip;
+
+        public List<Flight>? SearchResults { get; set; }
+
     }
 
     public enum TripType

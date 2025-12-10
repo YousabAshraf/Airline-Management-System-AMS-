@@ -1,2 +1,48 @@
-@* Person 3: Create Booking View (Customer) *@
-@* TODO: Implement booking creation with flight and seat selection *@
+@model BookingViewModel
+
+<br />
+<h2 class="mb-4 text-center">Confirm Your Booking</h2>
+
+<div class="card p-4 shadow" style="max-width: 900px; margin: auto;">
+
+    <div class="row mb-4">
+        <!-- Flight Details -->
+        <div class="col-md-6 border-end pe-4">
+            <h4>Flight Details</h4>
+            <p><strong>Flight:</strong> @ViewBag.Flight.FlightNumber</p>
+            <p><strong>From:</strong> @ViewBag.Flight.Origin</p>
+            <p><strong>To:</strong> @ViewBag.Flight.Destination</p>
+            <p><strong>Departure:</strong> @ViewBag.Flight.DepartureTime.ToString("f")</p>
+        </div>
+
+        <!-- Passenger Details -->
+        <div class="col-md-6 ps-4">
+            <h4>Passenger Details</h4>
+            <p><strong>Name:</strong> @ViewBag.Passenger.FullName</p>
+            <p><strong>Email:</strong> @ViewBag.Passenger.Email</p>
+            <p><strong>Phone:</strong> @ViewBag.Passenger.PhoneNumber</p>
+            <p><strong>Passport:</strong> @ViewBag.Passenger.PassportNumber</p>
+            <p><strong>National ID:</strong> @ViewBag.Passenger.NationalId</p>
+        </div>
+    </div>
+
+    <form method="post">
+        <input type="hidden" name="FlightId" value="@ViewBag.Flight.FlightId" />
+        <input type="hidden" name="PassengerId" value="@ViewBag.Passenger.Id" />
+
+        <div class="form-group mb-3">
+            <label>Select Seat</label>
+            <select asp-for="SeatNumber" class="form-control">
+                <option value="">-- Select Seat --</option>
+                @foreach (var seat in Model.AvailableSeats)
+                {
+                    <option value="@seat">@seat</option>
+                }
+            </select>
+            <span asp-validation-for="SeatNumber" class="text-danger"></span>
+        </div>
+
+        <button type="submit" class="btn btn-primary w-100">Confirm Booking</button>
+    </form>
+</div>
+<br />

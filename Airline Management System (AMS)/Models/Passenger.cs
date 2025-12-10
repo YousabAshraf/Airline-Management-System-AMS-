@@ -39,8 +39,8 @@ namespace Airline_Management_System__AMS_.Models
         public string PassportNumber { get; set; }
 
         [Display(Name = "National ID")]
-        [StringLength(14)]
-        public string? NationalId { get; set; }
+        [StringLength(14, MinimumLength = 14, ErrorMessage = "National ID must be 14 digits")]
+        public string NationalId { get; set; }
 
         [Display(Name = "Archived")]
         public bool IsArchived { get; set; } = false;

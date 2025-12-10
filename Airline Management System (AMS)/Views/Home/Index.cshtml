@@ -74,6 +74,47 @@
                     </button>
                 </div>
             </form>
+            <br />
+            @if (Model?.SearchResults != null && Model.SearchResults.Any())
+            {
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Flight Number</th>
+                            <th>From</th>
+                            <th>To</th>
+                            <th>Departure</th>
+                            <th>Arrival</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var flight in Model.SearchResults)
+                        {
+                            <tr>
+                                <td>@flight.FlightNumber</td>
+                                <td>@flight.Origin</td>
+                                <td>@flight.Destination</td>
+                                <td>@flight.DepartureTime.ToString("g")</td>
+								<td>@flight.ArrivalTime.ToString("g")</td>
+                                <td>
+                                    <a asp-controller="Booking"
+                                       asp-action="Create"
+                                       asp-route-flightId="@flight.FlightId"
+                                       class="btn-primary">
+                                        Book Ticket
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else if (Model != null)
+            {
+                <p style="text-align:center; margin-top:20px; font-size:18px;">No flights found.</p>
+            }
+
         </div>
     </div>
 </section>

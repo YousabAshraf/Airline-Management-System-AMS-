@@ -33,10 +33,6 @@ namespace Airline_Management_System__AMS_.Models
         [Display(Name = "Available Seats")]
         public int AvailableSeats { get; set; }
 
-        [Required]
-        [DataType(DataType.Currency)]
-        public decimal Price { get; set; }
-
         public ICollection<Booking> Bookings { get; set; }
         public ICollection<Seat> Seats { get; set; }
     }

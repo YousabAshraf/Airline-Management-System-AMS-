@@ -1,17 +1,22 @@
-using System.Diagnostics;
+﻿using Airline_Management_System__AMS_.Data;
 using Airline_Management_System__AMS_.Models;
 using Airline_Management_System__AMS_.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System.Diagnostics;
 
 namespace Airline_Management_System__AMS_.Controllers
 {
     public class HomeController : Controller
     {
+        private readonly ApplicationDbContext _context;
+
         private readonly ILogger<HomeController> _logger;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, ApplicationDbContext context)
         {
             _logger = logger;
+            _context = context;
         }
 
         public IActionResult Index()
@@ -22,20 +27,24 @@ namespace Airline_Management_System__AMS_.Controllers
                 Destination = string.Empty
             });
         }
-
         [HttpPost]
         public IActionResult SearchFlights(FlightSearchViewModel model)
         {
             if (!ModelState.IsValid)
-            {
                 return View("Index", model);
-            }
 
-            // TODO: Implement flight search logic when FlightsController is created
-            // For now, redirect to home with a message
-            TempData["SearchMessage"] = $"Searching for flights from {model.Origin} to {model.Destination}...";
-            return RedirectToAction("Index");
+            var flights = _context.Flights
+                .Where(f =>
+                    f.Origin.ToLower() == model.Origin.ToLower() &&
+                    f.Destination.ToLower() == model.Destination.ToLower() &&
+                    f.DepartureTime.Date == model.DepartureDate.Date)
+                .ToList();
+
+            model.SearchResults = flights; // رجّع النتيجة للصفحة
+
+            return View("Index", model);  // يرجع نفس صفحة Home ومعاها النتائج
         }
+
 
         public IActionResult Privacy()
         {

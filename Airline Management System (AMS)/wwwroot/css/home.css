@@ -1,4 +1,4 @@
-/* ===================================
+﻿/* ===================================
    HOME PAGE STYLES - PROFESSIONAL AIRLINE THEME
    =================================== */
 
@@ -201,6 +201,20 @@
     background-color: var(--accent-hover);
     transform: translateY(-1px);
     box-shadow: var(--shadow-lg);
+}
+.btn-primary {
+    background-color: var(--accent-color); 
+    color: white;
+    padding: 8px 15px;
+    text-decoration: none;
+    border-radius: 5px;
+    border: none;
+    display: inline-block;
+}
+.btn-primary:hover {
+        background-color: var(--accent-hover);
+        transform: translateY(-1px);
+        box-shadow: var(--shadow-lg);
 }
 
 /* ===================================
