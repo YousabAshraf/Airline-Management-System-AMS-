@@ -91,6 +91,7 @@
                             <th>Contact Info</th>
                             <th>Passport / ID</th>
                             <th>Status</th>
+                            <th>Link Status</th>
                             <th class="text-end pe-4">Actions</th>
                         </tr>
                     </thead>
@@ -130,6 +131,20 @@
                                     else
                                     {
                                         <span class="badge bg-success">Active</span>
+                                    }
+                                </td>
+                                <td>
+                                    @if (!string.IsNullOrEmpty(item.UserId))
+                                    {
+                                        <span class="badge bg-info">
+                                            <i class="fas fa-link me-1"></i>Linked
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-secondary">
+                                            <i class="fas fa-user-slash me-1"></i>Walk-in
+                                        </span>
                                     }
                                 </td>
                                 <td class="text-end pe-4">

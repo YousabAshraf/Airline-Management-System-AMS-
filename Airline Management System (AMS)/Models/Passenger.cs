@@ -6,6 +6,11 @@ namespace Airline_Management_System__AMS_.Models
     {
         public int Id { get; set; }
 
+        // Optional link to user account (allows walk-in passengers without accounts)
+        [Display(Name = "User Account")]
+        public string? UserId { get; set; }
+        public ApplicationUser? User { get; set; }
+
         [Required]
         [Display(Name = "First Name")]
         [StringLength(50, MinimumLength = 2, ErrorMessage = "First Name must be between 2 and 50 characters.")]

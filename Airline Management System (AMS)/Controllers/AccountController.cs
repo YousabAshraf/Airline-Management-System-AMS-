@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Airline_Management_System__AMS_.Models;
 using Airline_Management_System__AMS_.ViewModels;
+using Airline_Management_System__AMS_.Data;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Threading.Tasks;
 
@@ -12,16 +14,19 @@ public class AccountController : Controller
     private readonly SignInManager<ApplicationUser> _signInManager;
     private readonly RoleManager<IdentityRole> _roleManager;
     private readonly IEmailSender _emailSender;
+    private readonly ApplicationDbContext _context;
 
     public AccountController(UserManager<ApplicationUser> userManager,
                              SignInManager<ApplicationUser> signInManager,
                              RoleManager<IdentityRole> roleManager,
-                             IEmailSender emailSender)
+                             IEmailSender emailSender,
+                             ApplicationDbContext context)
     {
         _userManager = userManager;
         _signInManager = signInManager;
         _roleManager = roleManager;
         _emailSender = emailSender;
+        _context = context;
     }
 
     // Register GET
@@ -146,13 +151,39 @@ public class AccountController : Controller
             user.EmailConfirmationCode = "CONFIRMED";
             user.VerificationResendCount = 0;
             await _userManager.UpdateAsync(user);
-            TempData["Success"] = "Account verified you can login now.";
 
+            // AUTO-CREATE PASSENGER PROFILE for Customer users
+            var roles = await _userManager.GetRolesAsync(user);
+            if (roles.Contains("User") || roles.Contains("Customer"))
+            {
+                // Check if passenger profile already exists
+                var existingPassenger = await _context.Passengers
+                    .FirstOrDefaultAsync(p => p.UserId == user.Id);
+
+                if (existingPassenger == null)
+                {
+                    var passenger = new Passenger
+                    {
+                        UserId = user.Id,
+                        FirstName = user.FirstName,
+                        LastName = user.LastName,
+                        Email = user.Email,
+                        PhoneNumber = user.PhoneNumber ?? "Not Provided",
+                        PassportNumber = "PENDING", // User must update before booking
+                        NationalId = null,
+                        IsArchived = false
+                    };
+
+                    _context.Passengers.Add(passenger);
+                    await _context.SaveChangesAsync();
+                }
+            }
+
+            TempData["Success"] = "Account verified you can login now.";
             return RedirectToAction("Login");
         }
 
         TempData["Error"] = "The verification code is incorrect. Please try again.";
-
         return RedirectToAction("VerifyEmail", new { userId = model.UserId });
     }
 
@@ -171,9 +202,9 @@ public class AccountController : Controller
         }
 
         if (user.LastVerificationEmailSent != null &&
-            (DateTime.UtcNow - user.LastVerificationEmailSent.Value).TotalMinutes < 5* user.VerificationResendCount)
+            (DateTime.UtcNow - user.LastVerificationEmailSent.Value).TotalMinutes < 5 * user.VerificationResendCount)
         {
-            var remaining = 5* user.VerificationResendCount - (DateTime.UtcNow - user.LastVerificationEmailSent.Value).TotalMinutes;
+            var remaining = 5 * user.VerificationResendCount - (DateTime.UtcNow - user.LastVerificationEmailSent.Value).TotalMinutes;
             TempData["Error"] = $"Please wait {Math.Ceiling(remaining)} minutes before requesting another code.";
             return RedirectToAction("VerifyEmail", new { userId });
         }

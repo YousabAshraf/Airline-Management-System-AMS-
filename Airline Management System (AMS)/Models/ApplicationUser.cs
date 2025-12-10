@@ -21,6 +21,9 @@ namespace Airline_Management_System__AMS_.Models
         [Display(Name = "Full Name")]
         public string FullName => $"{FirstName} {LastName}";
 
+        // Navigation to passenger profile (if user is a customer who books flights)
+        public Passenger? PassengerProfile { get; set; }
+
         [Display(Name = "Email Confirmation Code")]
         public string EmailConfirmationCode { get; internal set; }
 
