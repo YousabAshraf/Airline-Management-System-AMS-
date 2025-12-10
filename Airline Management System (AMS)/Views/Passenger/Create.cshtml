@@ -1,5 +1,101 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model Airline_Management_System__AMS_.Models.Passenger
+
 @{
+    ViewData["Title"] = "Create Passenger";
+}
+
+<link rel="stylesheet" href="~/css/admin-dashboard.css" />
+
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow border-0 rounded-3">
+                <div class="card-header bg-primary text-white py-3">
+                    <h4 class="mb-0 fw-bold"><i class="fas fa-user-plus me-2"></i>Create New Passenger</h4>
+                </div>
+                <div class="card-body p-4">
+                    <form asp-action="Create">
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="FirstName" class="form-label fw-bold">First Name</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light"><i class="fas fa-user"></i></span>
+                                    <input asp-for="FirstName" class="form-control" placeholder="Enter first name" />
+                                </div>
+                                <span asp-validation-for="FirstName" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="LastName" class="form-label fw-bold">Last Name</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light"><i class="fas fa-user"></i></span>
+                                    <input asp-for="LastName" class="form-control" placeholder="Enter last name" />
+                                </div>
+                                <span asp-validation-for="LastName" class="text-danger small"></span>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Email" class="form-label fw-bold">Email Address</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light"><i class="fas fa-envelope"></i></span>
+                                    <input asp-for="Email" class="form-control" type="email"
+                                        placeholder="name@example.com" />
+                                </div>
+                                <span asp-validation-for="Email" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="PhoneNumber" class="form-label fw-bold">Phone Number</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light"><i class="fas fa-phone"></i></span>
+                                    <input asp-for="PhoneNumber" class="form-control" placeholder="+1..." />
+                                </div>
+                                <span asp-validation-for="PhoneNumber" class="text-danger small"></span>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="PassportNumber" class="form-label fw-bold">Passport Number</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light"><i class="fas fa-passport"></i></span>
+                                    <input asp-for="PassportNumber" class="form-control" placeholder="Passport No." />
+                                </div>
+                                <span asp-validation-for="PassportNumber" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="NationalId" class="form-label fw-bold">National ID</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light"><i class="fas fa-id-card"></i></span>
+                                    <input asp-for="NationalId" class="form-control"
+                                        placeholder="National ID (Optional)" />
+                                </div>
+                                <span asp-validation-for="NationalId" class="text-danger small"></span>
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-between mt-4">
+                            <a asp-action="Index" class="btn btn-outline-secondary">
+                                <i class="fas fa-arrow-left me-2"></i>Back to List
+                            </a>
+                            <button type="submit" class="btn btn-primary px-4 fw-bold">
+                                <i class="fas fa-save me-2"></i>Create Passenger
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }
