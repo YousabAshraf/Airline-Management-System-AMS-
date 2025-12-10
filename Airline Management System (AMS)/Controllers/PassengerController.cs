@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Airline_Management_System__AMS_.Controllers;
 namespace Airline_Management_System__AMS_.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin")] // Commented out for testing - uncomment when roles are configured
     public class PassengerController : Controller
     {
         private readonly ApplicationDbContext _context;

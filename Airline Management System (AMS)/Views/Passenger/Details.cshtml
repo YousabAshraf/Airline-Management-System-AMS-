@@ -6,6 +6,31 @@
 
 <link rel="stylesheet" href="~/css/admin-dashboard.css" />
 
+<style>
+    .avatar-circle.bg-primary {
+        background-color: #002244 !important;
+    }
+
+    .text-primary {
+        color: #002244 !important;
+    }
+
+    .btn-warning {
+        background-color: #FF6600 !important;
+        border-color: #FF6600 !important;
+        color: white !important;
+    }
+
+    .btn-warning:hover {
+        background-color: #CC5200 !important;
+        border-color: #CC5200 !important;
+    }
+
+    .card-header h5 {
+        color: #002244 !important;
+    }
+</style>
+
 <div class="container py-4">
     <div class="row">
         <!-- Passenger Profile Card -->
@@ -93,8 +118,7 @@
                                     }
                                     else
                                     {
-                                        <span
-                                            class="text-muted fst-italic">Not provided</span>
+                                        <span class="text-muted fst-italic">Not provided</span>
                                     }
                                 </span>
                             </div>
@@ -132,8 +156,7 @@
                                                 }
                                                 else
                                                 {
-                                                    <span
-                                                        class="text-muted">N/A</span>
+                                                    <span class="text-muted">N/A</span>
                                                 }
                                             </td>
                                             <td>
@@ -153,14 +176,12 @@
                                                 @if (booking.Status ==
                                                Airline_Management_System__AMS_.Models.BookingStatus.Booked)
                                                 {
-                                                    <span
-                                                        class="badge bg-primary">Booked</span>
+                                                    <span class="badge bg-primary">Booked</span>
                                                 }
                                                 else if (booking.Status ==
                                                 Airline_Management_System__AMS_.Models.BookingStatus.CheckedIn)
                                                 {
-                                                    <span
-                                                        class="badge bg-success">Checked In</span>
+                                                    <span class="badge bg-success">Checked In</span>
                                                 }
                                                 else
                                                 {
