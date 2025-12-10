@@ -1,7 +1,7 @@
 ﻿@{
     ViewData["Title"] = "Admin Dashboard";
-    var recentBookings = ViewBag.RecentBookings as List<Airline_Management_System__AMS_.Models.Booking> ?? new
-    List<Airline_Management_System__AMS_.Models.Booking>();
+    Layout = null; // Use standalone layout without main site header/footer
+    var recentBookings = ViewBag.RecentBookings as List<Airline_Management_System__AMS_.Models.Booking> ?? new List<Airline_Management_System__AMS_.Models.Booking>();
 }
 
 <!DOCTYPE html>
