@@ -12,31 +12,33 @@
             <div class="card shadow border-0 rounded-3 text-center">
                 <div class="card-body p-5">
                     <div class="mb-4">
-                        <div class="avatar-circle mx-auto bg-warning bg-opacity-10 text-warning d-flex align-items-center justify-content-center rounded-circle" style="width: 80px; height: 80px; font-size: 2.5rem;">
+                        <div class="avatar-circle mx-auto bg-warning bg-opacity-10 text-warning d-flex align-items-center justify-content-center rounded-circle"
+                            style="width: 80px; height: 80px; font-size: 2.5rem;">
                             <i class="fas fa-archive"></i>
                         </div>
                     </div>
-                    
+
                     <h2 class="fw-bold text-dark mb-3">Archive Passenger?</h2>
                     <p class="text-muted mb-4 lead">
                         Are you sure you want to archive <strong>@Model.FullName</strong>?
-                        <br><span class="small">The passenger will be hidden from active lists but data will be preserved.</span>
+                        <br><span class="small">The passenger will be hidden from active lists but data will be
+                            preserved.</span>
                     </p>
 
                     <div class="bg-light p-3 rounded-3 mb-4 text-start">
                         <div class="row g-2">
                             <div class="col-6 text-muted small text-uppercase fw-bold">Passenger Name</div>
                             <div class="col-6 fw-bold text-end">@Model.FullName</div>
-                            
+
                             <div class="col-6 text-muted small text-uppercase fw-bold">Email</div>
                             <div class="col-6 fw-bold text-end text-break">@Model.Email</div>
-                            
+
                             <div class="col-6 text-muted small text-uppercase fw-bold">Passport</div>
                             <div class="col-6 fw-bold text-end">@Model.PassportNumber</div>
                         </div>
                     </div>
 
-                    <form asp-action="Delete">
+                    <form asp-action="Delete" method="post">
                         <input type="hidden" asp-for="Id" />
                         <div class="d-grid gap-2">
                             <button type="submit" class="btn btn-warning btn-lg fw-bold">
