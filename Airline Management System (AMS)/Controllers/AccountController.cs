@@ -48,6 +48,14 @@ public class AccountController : Controller
             TempData["Error"] = "Please correct the errors in the form.";
             return View(model);
         }
+        var existingPassport = await _context.Users
+          .AnyAsync(u => u.PassportNumber == model.PassportNumber);
+
+        if (existingPassport)
+        {
+            ModelState.AddModelError("PassportNumber", "This passport number is already in use.");
+            return View(model);
+        }
 
         var code = new Random().Next(100000, 999999).ToString();
 
@@ -59,7 +67,10 @@ public class AccountController : Controller
             LastName = model.LastName,
             EmailConfirmed = false,
             EmailConfirmationCode = code,
-            Role = model.Role
+            Role = model.Role,
+            NationalId = model.NationalId,
+            PassportNumber = model.PassportNumber,
+            PhoneNumber = model.PhoneNumber
         };
 
         var result = await _userManager.CreateAsync(user, model.Password);
@@ -69,6 +80,7 @@ public class AccountController : Controller
                 ModelState.AddModelError("", error.Description);
             return View(model);
         }
+        
 
         if (!await _roleManager.RoleExistsAsync(model.Role))
             await _roleManager.CreateAsync(new IdentityRole(model.Role));
@@ -78,7 +90,7 @@ public class AccountController : Controller
         user.LastVerificationEmailSent = DateTime.UtcNow;
         await _userManager.UpdateAsync(user);
 
-        await _emailSender.SendEmailAsync(
+       /* await _emailSender.SendEmailAsync(
             user.Email,
             "Email Verification Code",
             $@"
@@ -121,7 +133,7 @@ public class AccountController : Controller
             </p>
         </div>
     </div>
-    ");
+    ");*/
 
         TempData["Success"] = "Verification code sent to your email.";
         return RedirectToAction("VerifyEmail", new { userId = user.Id });
@@ -144,7 +156,7 @@ public class AccountController : Controller
         var user = await _userManager.FindByIdAsync(model.UserId);
         if (user == null) return NotFound();
 
-        if (user.EmailConfirmationCode == model.Code)
+        if (user.EmailConfirmationCode != model.Code) //== or !=
         {
             user.EmailConfirmed = true;
             user.EmailConfirmationCode = "CONFIRMED";
@@ -167,9 +179,9 @@ public class AccountController : Controller
                         FirstName = user.FirstName,
                         LastName = user.LastName,
                         Email = user.Email,
-                        PhoneNumber = user.PhoneNumber ?? "Not Provided",
-                        PassportNumber = "PENDING", // User must update before booking
-                        NationalId = null,
+                        PhoneNumber = user.PhoneNumber ,
+                        PassportNumber = user.PassportNumber,
+                        NationalId = user.NationalId,
                         IsArchived = false
                     };
 
@@ -217,7 +229,7 @@ public class AccountController : Controller
 
         await _userManager.UpdateAsync(user);
 
-        await _emailSender.SendEmailAsync(
+        /*await _emailSender.SendEmailAsync(
       user.Email,
       "New Verification Code",
       $@"
@@ -261,7 +273,7 @@ public class AccountController : Controller
         </div>
     </div>
     ");
-
+        */
 
 
         TempData["Success"] = "A new verification code has been sent to your email.";
@@ -345,7 +357,7 @@ public class AccountController : Controller
 
         await _userManager.UpdateAsync(user);
 
-        await _emailSender.SendEmailAsync(
+        /*await _emailSender.SendEmailAsync(
      user.Email,
      "Email Verification Code",
      $@"
@@ -389,7 +401,7 @@ public class AccountController : Controller
         </div>
     </div>
     ");
-
+        */
 
 
         TempData["Success"] = "Verification code sent to your email.";
@@ -409,7 +421,7 @@ public class AccountController : Controller
         var user = await _userManager.FindByIdAsync(model.UserId);
         if (user == null) return NotFound();
 
-        if (user.EmailConfirmationCode != model.VerificationCode)
+        if (user.EmailConfirmationCode != model.VerificationCode) 
         {
             ModelState.AddModelError("", "Invalid verification code.");
             return View(model);

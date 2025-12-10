@@ -50,9 +50,9 @@ namespace Airline_Management_System__AMS_.Controllers
                         FirstName = user.FirstName,
                         LastName = user.LastName,
                         Email = user.Email,
-                        PhoneNumber = user.PhoneNumber ?? "Not Provided",
-                        PassportNumber = "PENDING", // User must update before booking
-                        NationalId = null,
+                        PhoneNumber = user.PhoneNumber ,
+                        PassportNumber = user.PassportNumber , 
+                        NationalId = user.NationalId ,
                         IsArchived = false
                     };
 

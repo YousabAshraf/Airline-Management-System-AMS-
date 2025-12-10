@@ -39,7 +39,7 @@ namespace Airline_Management_System__AMS_.Models
         public string PassportNumber { get; set; }
 
         [Display(Name = "National ID")]
-        [StringLength(20)]
+        [StringLength(14)]
         public string? NationalId { get; set; }
 
         [Display(Name = "Archived")]

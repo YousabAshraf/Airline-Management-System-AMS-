@@ -29,5 +29,21 @@ namespace Airline_Management_System__AMS_.ViewModels
         [Required(ErrorMessage = "Please select a role")]
         [Display(Name = "Role")]
         public string Role { get; set; }
+
+      
+        [Required]
+        [Display(Name = "National ID")]
+        [StringLength(14, MinimumLength = 14, ErrorMessage = "National ID must be 14 digits")]
+        public string NationalId { get; set; }
+
+        [Required]
+        [Display(Name = "Passport Number")]
+        [StringLength(20, MinimumLength = 5, ErrorMessage = "Passport Number must be between 5 and 20 characters.")]
+        public string PassportNumber { get; set; }
+
+        [Required]
+        [Phone]
+        [Display(Name = "Phone Number")]
+        public string PhoneNumber { get; set; }
     }
 }

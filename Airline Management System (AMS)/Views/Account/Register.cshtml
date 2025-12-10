@@ -12,43 +12,43 @@
 
     body {
         font-family: 'Inter', 'Segoe UI', sans-serif;
-        background: linear-gradient(135deg, #002244 0%, #004488 100%);
+        background: linear-gradient(135deg, #002244 20%, #004488 80%);
         min-height: 100vh;
         display: flex;
         align-items: center;
         justify-content: center;
         position: relative;
         padding: 40px 20px;
+        overflow-x: hidden;
     }
 
-    body::before {
-        content: '';
-        position: absolute;
-        width: 500px;
-        height: 500px;
-        background: radial-gradient(circle, rgba(0, 119, 204, 0.15) 0%, transparent 70%);
-        border-radius: 50%;
-        top: -200px;
-        right: -150px;
-        animation: float 10s ease-in-out infinite;
-    }
 
-    body::after {
-        content: '';
-        position: absolute;
-        width: 400px;
-        height: 400px;
-        background: radial-gradient(circle, rgba(255, 102, 0, 0.1) 0%, transparent 70%);
-        border-radius: 50%;
-        bottom: -150px;
-        left: -100px;
-        animation: float 12s ease-in-out infinite reverse;
-    }
+        body::before {
+            content: '';
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(0, 119, 204, 0.15) 0%, transparent 70%);
+            border-radius: 50%;
+            top: -200px;
+            right: -150px;
+            animation: float 10s ease-in-out infinite;
+        }
+
+        body::after {
+            content: '';
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(255, 102, 0, 0.1) 0%, transparent 70%);
+            border-radius: 50%;
+            bottom: -150px;
+            left: -100px;
+            animation: float 12s ease-in-out infinite reverse;
+        }
 
     @@keyframes float {
-
-        0%,
-        100% {
+        0%, 100% {
             transform: translateY(0) translateX(0);
         }
 
@@ -63,7 +63,7 @@
         padding: 50px 45px;
         box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
         width: 100%;
-        max-width: 520px;
+        max-width: 850px;
         position: relative;
         z-index: 1;
         animation: slideIn 0.5s ease-out;
@@ -87,26 +87,26 @@
         margin-bottom: 40px;
     }
 
-    .register-header .icon {
-        font-size: 48px;
-        margin-bottom: 15px;
-        display: block;
-    }
+        .register-header .icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+            display: block;
+        }
 
-    .register-header h2 {
-        color: #002244;
-        font-size: 32px;
-        font-weight: 700;
-        margin: 0 0 10px 0;
-        letter-spacing: -0.5px;
-    }
+        .register-header h2 {
+            color: #002244;
+            font-size: 32px;
+            font-weight: 700;
+            margin: 0 0 10px 0;
+            letter-spacing: -0.5px;
+        }
 
-    .register-header p {
-        color: #4A4A4A;
-        font-size: 15px;
-        margin: 0;
-        font-weight: 400;
-    }
+        .register-header p {
+            color: #4A4A4A;
+            font-size: 15px;
+            margin: 0;
+            font-weight: 400;
+        }
 
     .validation-summary {
         background-color: #FFE5E8;
@@ -119,9 +119,7 @@
     }
 
     @@keyframes shake {
-
-        0%,
-        100% {
+        0%, 100% {
             transform: translateX(0);
         }
 
@@ -132,11 +130,6 @@
         75% {
             transform: translateX(8px);
         }
-    }
-
-    .validation-summary ul {
-        margin: 0;
-        padding-left: 20px;
     }
 
     .text-danger {
@@ -159,14 +152,14 @@
         position: relative;
     }
 
-    .form-group label {
-        display: block;
-        color: #002244;
-        font-weight: 600;
-        margin-bottom: 8px;
-        font-size: 14px;
-        letter-spacing: 0.3px;
-    }
+        .form-group label {
+            display: block;
+            color: #002244;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 14px;
+            letter-spacing: 0.3px;
+        }
 
     .form-control {
         width: 100%;
@@ -179,16 +172,16 @@
         font-weight: 400;
     }
 
-    .form-control:focus {
-        outline: none;
-        border-color: #0077CC;
-        background-color: #FFFFFF;
-        box-shadow: 0 0 0 3px rgba(0, 119, 204, 0.1);
-    }
+        .form-control:focus {
+            outline: none;
+            border-color: #0077CC;
+            background-color: #FFFFFF;
+            box-shadow: 0 0 0 3px rgba(0, 119, 204, 0.1);
+        }
 
-    .form-control::placeholder {
-        color: #A0AEC0;
-    }
+        .form-control::placeholder {
+            color: #A0AEC0;
+        }
 
     select.form-control {
         cursor: pointer;
@@ -216,15 +209,15 @@
         margin-top: 12px;
     }
 
-    .btn-success:hover {
-        background-color: #CC5200;
-        transform: translateY(-2px);
-        box-shadow: 0 6px 16px rgba(255, 102, 0, 0.4);
-    }
+        .btn-success:hover {
+            background-color: #CC5200;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(255, 102, 0, 0.4);
+        }
 
-    .btn-success:active {
-        transform: translateY(0);
-    }
+        .btn-success:active {
+            transform: translateY(0);
+        }
 
     .login-link {
         text-align: center;
@@ -236,17 +229,17 @@
         font-weight: 400;
     }
 
-    .login-link a {
-        color: #0077CC;
-        text-decoration: none;
-        font-weight: 600;
-        transition: color 0.2s ease;
-    }
+        .login-link a {
+            color: #0077CC;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.2s ease;
+        }
 
-    .login-link a:hover {
-        color: #004488;
-        text-decoration: underline;
-    }
+            .login-link a:hover {
+                color: #004488;
+                text-decoration: underline;
+            }
 
     @@media (max-width: 576px) {
         .register-container {
@@ -273,11 +266,15 @@
         <h2>Create Account</h2>
         <p>Join our airline management system</p>
     </div>
+
     @if (ViewData.ModelState.ErrorCount > 0)
     {
         <div asp-validation-summary="All" class="validation-summary text-danger"></div>
     }
+
     <form asp-action="Register" method="post">
+
+        <!-- ======== Personal Info ======== -->
         <div class="form-row">
             <div class="form-group">
                 <label asp-for="FirstName">First Name</label>
@@ -297,6 +294,25 @@
             <input asp-for="Email" class="form-control" placeholder="Enter your email" />
             <span asp-validation-for="Email" class="text-danger"></span>
         </div>
+
+        <div class="form-group">
+            <label asp-for="PhoneNumber">Phone Number</label>
+            <input asp-for="PhoneNumber" class="form-control" placeholder="Enter Phone Number" />
+            <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="NationalId">National ID</label>
+            <input asp-for="NationalId" class="form-control" placeholder="Enter National ID" />
+            <span asp-validation-for="NationalId" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="PassportNumber">Passport Number</label>
+            <input asp-for="PassportNumber" class="form-control" placeholder="Enter Passport Number" />
+            <span asp-validation-for="PassportNumber" class="text-danger"></span>
+        </div>
+
 
         <div class="form-group">
             <label asp-for="Password">Password</label>
@@ -327,6 +343,7 @@
         Already have an account? <a asp-controller="Account" asp-action="Login">Sign In</a>
     </div>
 </div>
+
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />

@@ -49,7 +49,12 @@ namespace Airline_Management_System__AMS_.Data
                 Role = "Admin",
                 EmailConfirmationCode = Guid.NewGuid().ToString(),
                 LastVerificationEmailSent = DateTime.UtcNow,
-                VerificationResendCount = 0
+                VerificationResendCount = 0,
+
+                NationalId = "00000000000000",
+                PassportNumber = "TEMP",
+                PhoneNumber = "0123456789"
+
             };
             adminUser.PasswordHash = hasher.HashPassword(adminUser, "Admin@123"); 
 
@@ -60,7 +65,7 @@ namespace Airline_Management_System__AMS_.Data
                 RoleId = adminRoleId,
                 UserId = adminUserId
             });
-        }
+        }   
 
         public DbSet<Flight> Flights { get; set; }
         public DbSet<Passenger> Passengers { get; set; }

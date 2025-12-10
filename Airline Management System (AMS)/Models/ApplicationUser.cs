@@ -15,6 +15,7 @@ namespace Airline_Management_System__AMS_.Models
         [Display(Name = "Last Name")]
         public string LastName { get; set; }
 
+        [Required]
         [Display(Name = "Role")]
         public string Role { get; set; }
 
@@ -31,6 +32,15 @@ namespace Airline_Management_System__AMS_.Models
         public DateTime? LastVerificationEmailSent { get; set; }
 
         public int VerificationResendCount { get; set; } = 0;
+
+        
+        public string NationalId { get; set; }
+
+
+        public string PassportNumber { get; set; }
+
+
+        public string PhoneNumber { get; set; }
 
 
     }
