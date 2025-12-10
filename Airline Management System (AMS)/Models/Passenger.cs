@@ -45,7 +45,7 @@ namespace Airline_Management_System__AMS_.Models
         [Display(Name = "Archived")]
         public bool IsArchived { get; set; } = false;
 
-        public ICollection<Booking> Bookings { get; set; }
+        public ICollection<Booking>? Bookings { get; set; }
 
     }
 }
