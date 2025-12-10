@@ -1,22 +1,35 @@
 ﻿using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.Extensions.Configuration;
 using System.Net;
 using System.Net.Mail;
 using System.Threading.Tasks;
 
 public class EmailSender : IEmailSender
 {
+    private readonly IConfiguration _configuration;
+
+    public EmailSender(IConfiguration configuration)
+    {
+        _configuration = configuration;
+    }
+
     public Task SendEmailAsync(string email, string subject, string htmlMessage)
     {
-        var smtp = new SmtpClient("smtp.gmail.com")
+        var smtpHost = _configuration["Email:SmtpHost"];
+        var smtpPort = int.Parse(_configuration["Email:SmtpPort"]);
+        var smtpUser = _configuration["Email:SmtpUser"];
+        var smtpPass = _configuration["Email:SmtpPass"];
+
+        var smtp = new SmtpClient(smtpHost)
         {
-            Port = 587,
-            Credentials = new NetworkCredential("notifications.ams.1@gmail.com", "qmps rgby crle dzgz"),
+            Port = smtpPort,
+            Credentials = new NetworkCredential(smtpUser, smtpPass),
             EnableSsl = true,
         };
 
         var mail = new MailMessage
         {
-            From = new MailAddress("notifications.ams.1@gmail.com"),
+            From = new MailAddress(smtpUser),
             Subject = subject,
             Body = htmlMessage,
             IsBodyHtml = true,

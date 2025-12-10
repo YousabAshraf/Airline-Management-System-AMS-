@@ -41,7 +41,6 @@ public class AccountController : Controller
 
     // Register POST
     [HttpPost]
-    [HttpPost]
     public async Task<IActionResult> Register(RegisterViewModel model)
     {
         if (!ModelState.IsValid)
@@ -49,6 +48,7 @@ public class AccountController : Controller
             TempData["Error"] = "Please correct the errors in the form.";
             return View(model);
         }
+
         var code = new Random().Next(100000, 999999).ToString();
 
         var user = new ApplicationUser
@@ -123,8 +123,7 @@ public class AccountController : Controller
     </div>
     ");
 
-
-        TempData["Success"] = "Correct Data, Verify your email.";
+        TempData["Success"] = "Verification code sent to your email.";
         return RedirectToAction("VerifyEmail", new { userId = user.Id });
     }
 
