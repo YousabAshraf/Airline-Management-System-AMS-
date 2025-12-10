@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Airline_Management_System__AMS_.Controllers
 {
-   // [Authorize(Roles = "Admin")]
+    // [Authorize(Roles = "Admin")]
     public class AdminDashboardController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -25,17 +25,50 @@ namespace Airline_Management_System__AMS_.Controllers
             int numberOfUsers = 0;
             int numberOfAvailableFlights = 0;
             int numberOfCompletedFlights = 0;
+            int totalBookings = 0;
+            int totalPassengers = 0;
+            decimal totalRevenue = 0;
+            int todaysFlights = 0;
+            int pendingFeedback = 0;
+            List<Booking> recentBookings = new List<Booking>();
 
             try
             {
                 // Get statistics
                 numberOfUsers = await _userManager.Users.CountAsync();
+
                 numberOfAvailableFlights = await _context.Flights
                     .Where(f => f.DepartureTime > DateTime.Now && f.AvailableSeats > 0)
                     .CountAsync();
+
                 numberOfCompletedFlights = await _context.Flights
                     .Where(f => f.ArrivalTime < DateTime.Now)
                     .CountAsync();
+
+                // New comprehensive statistics
+                totalBookings = await _context.Bookings.CountAsync();
+
+                totalPassengers = await _context.Passengers
+                    .Where(p => !p.IsArchived)
+                    .CountAsync();
+
+                totalRevenue = await _context.Bookings
+                    .SumAsync(b => b.TicketPrice);
+
+                var today = DateTime.Today;
+                todaysFlights = await _context.Flights
+                    .Where(f => f.DepartureTime.Date == today)
+                    .CountAsync();
+
+                pendingFeedback = await _context.Feedbacks.CountAsync();
+
+                // Get recent bookings for activity feed
+                recentBookings = await _context.Bookings
+                    .Include(b => b.Passenger)
+                    .Include(b => b.Flight)
+                    .OrderByDescending(b => b.BookingDate)
+                    .Take(5)
+                    .ToListAsync();
             }
             catch (Exception)
             {
@@ -43,9 +76,16 @@ namespace Airline_Management_System__AMS_.Controllers
                 // This allows the page to load even if SQL Server is not running
             }
 
+            // Pass data to view
             ViewBag.NumberOfUsers = numberOfUsers;
             ViewBag.NumberOfAvailableFlights = numberOfAvailableFlights;
             ViewBag.NumberOfCompletedFlights = numberOfCompletedFlights;
+            ViewBag.TotalBookings = totalBookings;
+            ViewBag.TotalPassengers = totalPassengers;
+            ViewBag.TotalRevenue = totalRevenue;
+            ViewBag.TodaysFlights = todaysFlights;
+            ViewBag.PendingFeedback = pendingFeedback;
+            ViewBag.RecentBookings = recentBookings;
 
             return View();
         }

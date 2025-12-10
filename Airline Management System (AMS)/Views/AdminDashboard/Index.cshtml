@@ -1,209 +1,351 @@
 ﻿@{
     ViewData["Title"] = "Admin Dashboard";
-    Layout = null; // Remove the default layout (header and footer)
+    var recentBookings = ViewBag.RecentBookings as List<Airline_Management_System__AMS_.Models.Booking> ?? new
+    List<Airline_Management_System__AMS_.Models.Booking>();
 }
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - AMS Airlines</title>
-    <link rel="stylesheet" href="~/css/home.css" />
+    <meta name="description" content="Admin Dashboard - Manage your airline system efficiently" />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+    <!-- Stylesheets -->
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/admin-dashboard.css" asp-append-version="true" />
 </head>
+
 <body>
-
-<style>
-    .admin-dashboard-page {
-        min-height: 100vh;
-        background-color: var(--bg-light);
-        padding: 40px 20px;
-    }
-
-    .dashboard-header {
-        max-width: 1200px;
-        margin: 0 auto 3rem;
-        text-align: center;
-    }
-
-    .dashboard-header h1 {
-        font-size: 2.5rem;
-        font-weight: 800;
-        color: var(--primary-color);
-        margin-bottom: 0.5rem;
-    }
-
-    .dashboard-header p {
-        font-size: 1.1rem;
-        color: var(--text-medium);
-    }
-
-    .dashboard-content {
-        max-width: 1200px;
-        margin: 0 auto;
-    }
-
-    .stats-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-        gap: 2rem;
-        margin-bottom: 3rem;
-    }
-
-    .stat-card {
-        background: var(--bg-white);
-        border-radius: 12px;
-        padding: 2.5rem;
-        text-align: center;
-        box-shadow: var(--shadow-md);
-        border: 1px solid var(--border-color);
-        transition: var(--transition-smooth);
-        border-top: 4px solid var(--secondary-color);
-    }
-
-    .stat-card:hover {
-        transform: translateY(-5px);
-        box-shadow: var(--shadow-lg);
-        border-top-color: var(--accent-color);
-    }
-
-    .stat-card:nth-child(1) {
-        border-top-color: var(--primary-color);
-    }
-
-    .stat-card:nth-child(2) {
-        border-top-color: var(--secondary-color);
-    }
-
-    .stat-card:nth-child(3) {
-        border-top-color: var(--accent-color);
-    }
-
-    .stat-number {
-        font-size: 3rem;
-        font-weight: 800;
-        color: var(--primary-color);
-        margin-bottom: 0.5rem;
-        line-height: 1;
-    }
-
-    .stat-label {
-        font-size: 1.1rem;
-        color: var(--text-medium);
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-    }
-
-    .management-links {
-        background: var(--bg-white);
-        border-radius: 12px;
-        padding: 2.5rem;
-        box-shadow: var(--shadow-md);
-        border: 1px solid var(--border-color);
-    }
-
-    .management-links h2 {
-        font-size: 1.8rem;
-        font-weight: 700;
-        color: var(--primary-color);
-        margin-bottom: 2rem;
-        text-align: center;
-    }
-
-    .links-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        gap: 1.5rem;
-    }
-
-    .management-link {
-        display: block;
-        padding: 1.5rem;
-        background: var(--bg-light);
-        border-radius: 8px;
-        text-decoration: none;
-        color: var(--text-dark);
-        font-weight: 600;
-        font-size: 1.1rem;
-        text-align: center;
-        transition: var(--transition-smooth);
-        border: 2px solid transparent;
-    }
-
-    .management-link:hover {
-        background: var(--secondary-light);
-        border-color: var(--secondary-color);
-        transform: translateY(-2px);
-        box-shadow: var(--shadow-sm);
-        color: var(--primary-color);
-    }
-
-    .management-link::before {
-        content: '✈️';
-        display: block;
-        font-size: 2rem;
-        margin-bottom: 0.5rem;
-    }
-
-    @@media (max-width: 768px) {
-        .dashboard-header h1 {
-            font-size: 2rem;
-        }
-
-        .stats-grid {
-            grid-template-columns: 1fr;
-        }
-
-        .links-grid {
-            grid-template-columns: 1fr;
-        }
-    }
-</style>
-
-<div class="admin-dashboard-page">
-    <div class="dashboard-header">
-        <h1>✈️ Admin Dashboard</h1>
-        <p>Welcome, @User.Identity.Name! Manage your airline system</p>
-    </div>
-
-    <div class="dashboard-content">
-        <!-- Statistics Section -->
-        <div class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-number">@ViewBag.NumberOfUsers</div>
-                <div class="stat-label">Total Users</div>
+    <div class="admin-dashboard-page">
+        <!-- Dashboard Navigation -->
+        <nav class="dashboard-navbar">
+            <div class="container">
+                <a href="#" class="dashboard-brand">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span>Admin Dashboard</span>
+                </a>
+                <div class="dashboard-nav-links">
+                    <span class="nav-link-btn">
+                        <i class="fas fa-user-circle"></i> @User.Identity.Name
+                    </span>
+                    <a asp-controller="Home" asp-action="Index" class="nav-link-btn btn-home">
+                        <i class="fas fa-home"></i> Back to Site
+                    </a>
+                    <form asp-controller="Account" asp-action="Logout" method="post" class="d-inline">
+                        <button type="submit" class="nav-link-btn"
+                            style="background: none; border: none; cursor: pointer;">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </button>
+                    </form>
+                </div>
             </div>
-            <div class="stat-card">
-                <div class="stat-number">@ViewBag.NumberOfAvailableFlights</div>
-                <div class="stat-label">Available Flights</div>
+        </nav>
+
+        <!-- Dashboard Content -->
+        <div class="dashboard-container">
+            <!-- Header Section -->
+            <div class="dashboard-header fade-in-up">
+                <h1 class="dashboard-title">
+                    <i class="fas fa-chart-line"></i>
+                    Dashboard Overview
+                </h1>
+                <p class="dashboard-subtitle">Welcome back, @User.Identity.Name! Here's what's happening with your
+                    airline today.</p>
+                <div class="dashboard-breadcrumb">
+                    <a asp-controller="Home" asp-action="Index">Home</a>
+                    <i class="fas fa-chevron-right"></i>
+                    <span>Admin Dashboard</span>
+                </div>
             </div>
-            <div class="stat-card">
-                <div class="stat-number">@ViewBag.NumberOfCompletedFlights</div>
-                <div class="stat-label">Completed Flights</div>
+
+            <!-- Statistics Grid -->
+            <div class="stats-grid">
+                <!-- Total Users -->
+                <div class="stat-card stat-primary fade-in-up">
+                    <div class="stat-card-content">
+                        <div class="stat-info">
+                            <div class="stat-number">@ViewBag.NumberOfUsers</div>
+                            <div class="stat-label">Total Users</div>
+                        </div>
+                        <div class="stat-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Available Flights -->
+                <div class="stat-card stat-secondary fade-in-up">
+                    <div class="stat-card-content">
+                        <div class="stat-info">
+                            <div class="stat-number">@ViewBag.NumberOfAvailableFlights</div>
+                            <div class="stat-label">Available Flights</div>
+                        </div>
+                        <div class="stat-icon">
+                            <i class="fas fa-plane-departure"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Total Bookings -->
+                <div class="stat-card stat-accent fade-in-up">
+                    <div class="stat-card-content">
+                        <div class="stat-info">
+                            <div class="stat-number">@ViewBag.TotalBookings</div>
+                            <div class="stat-label">Total Bookings</div>
+                        </div>
+                        <div class="stat-icon">
+                            <i class="fas fa-ticket-alt"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Total Passengers -->
+                <div class="stat-card stat-success fade-in-up">
+                    <div class="stat-card-content">
+                        <div class="stat-info">
+                            <div class="stat-number">@ViewBag.TotalPassengers</div>
+                            <div class="stat-label">Total Passengers</div>
+                        </div>
+                        <div class="stat-icon">
+                            <i class="fas fa-user-friends"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Total Revenue -->
+                <div class="stat-card stat-warning fade-in-up">
+                    <div class="stat-card-content">
+                        <div class="stat-info">
+                            <div class="stat-number">$@ViewBag.TotalRevenue.ToString("N0")</div>
+                            <div class="stat-label">Total Revenue</div>
+                        </div>
+                        <div class="stat-icon">
+                            <i class="fas fa-dollar-sign"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pending Feedback -->
+                <div class="stat-card stat-info fade-in-up">
+                    <div class="stat-card-content">
+                        <div class="stat-info">
+                            <div class="stat-number">@ViewBag.PendingFeedback</div>
+                            <div class="stat-label">Customer Feedback</div>
+                        </div>
+                        <div class="stat-icon">
+                            <i class="fas fa-comments"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- System Overview Cards -->
+            <div class="system-overview-section">
+                <div class="overview-card fade-in-up">
+                    <div class="overview-card-header">
+                        <div class="overview-card-icon">
+                            <i class="fas fa-calendar-day"></i>
+                        </div>
+                        <h3 class="overview-card-title">Today's Flights</h3>
+                    </div>
+                    <div class="overview-card-content">
+                        <p><strong>@ViewBag.TodaysFlights</strong> flights scheduled for today</p>
+                        <p class="mt-1" style="font-size: 0.85rem; color: var(--text-medium);">
+                            Monitor and manage today's flight operations
+                        </p>
+                    </div>
+                </div>
+
+                <div class="overview-card fade-in-up">
+                    <div class="overview-card-header">
+                        <div class="overview-card-icon">
+                            <i class="fas fa-plane-arrival"></i>
+                        </div>
+                        <h3 class="overview-card-title">Completed Flights</h3>
+                    </div>
+                    <div class="overview-card-content">
+                        <p><strong>@ViewBag.NumberOfCompletedFlights</strong> flights completed</p>
+                        <p class="mt-1" style="font-size: 0.85rem; color: var(--text-medium);">
+                            Total number of successfully completed flights
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions Section -->
+            <div class="quick-actions-section">
+                <div class="section-header">
+                    <h2 class="section-title">Quick Actions</h2>
+                    <p class="section-description">Access key management tools and features</p>
+                </div>
+                <div class="quick-actions-grid">
+                    <a asp-controller="Flight" asp-action="Index" class="action-card">
+                        <div class="action-icon">
+                            <i class="fas fa-plane"></i>
+                        </div>
+                        <h3 class="action-title">Flight Management</h3>
+                        <p class="action-description">Create, edit, and manage flight schedules and availability</p>
+                    </a>
+
+                    <a asp-controller="Passenger" asp-action="Index" class="action-card">
+                        <div class="action-icon">
+                            <i class="fas fa-id-card"></i>
+                        </div>
+                        <h3 class="action-title">Passenger Management</h3>
+                        <p class="action-description">View and manage passenger information and profiles</p>
+                    </a>
+
+                    <a asp-controller="Booking" asp-action="Index" class="action-card">
+                        <div class="action-icon">
+                            <i class="fas fa-calendar-check"></i>
+                        </div>
+                        <h3 class="action-title">Booking Management</h3>
+                        <p class="action-description">Monitor and manage all flight bookings and reservations</p>
+                    </a>
+
+                    <a asp-controller="Feedback" asp-action="Index" class="action-card">
+                        <div class="action-icon">
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <h3 class="action-title">Feedback Management</h3>
+                        <p class="action-description">Review customer feedback and ratings</p>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Recent Activity Section -->
+            <div class="recent-activity-section slide-in-right">
+                <div class="section-header">
+                    <h2 class="section-title">Recent Bookings</h2>
+                    <p class="section-description">Latest booking activity in your system</p>
+                </div>
+
+                @if (recentBookings.Any())
+                {
+                    <ul class="activity-list">
+                        @foreach (var booking in recentBookings)
+                        {
+                            <li class="activity-item">
+                                <div class="activity-info">
+                                    <div class="activity-title">
+                                        @booking.Passenger?.FullName ?? "Unknown Passenger"
+                                    </div>
+                                    <div class="activity-details">
+                                        <span class="activity-detail-item">
+                                            <i class="fas fa-plane"></i>
+                                            @if (booking.Flight != null)
+                                            {
+                                                <span>@booking.Flight.FlightNumber - @booking.Flight.Origin to
+                                                    @booking.Flight.Destination</span>
+                                            }
+                                            else
+                                            {
+                                                <span>Flight information unavailable</span>
+                                            }
+                                        </span>
+                                        <span class="activity-detail-item">
+                                            <i class="fas fa-chair"></i>
+                                            <span>Seat @booking.SeatNumber</span>
+                                        </span>
+                                        <span class="activity-detail-item">
+                                            <i class="fas fa-dollar-sign"></i>
+                                            <span>$@booking.TicketPrice.ToString("N2")</span>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="activity-meta">
+                                    <span class="activity-date">
+                                        <i class="fas fa-clock"></i>
+                                        @booking.BookingDate.ToString("MMM dd, yyyy")
+                                    </span>
+                                    <span class="status-badge status-@booking.Status.ToString().ToLower()">
+                                        @booking.Status.ToString()
+                                    </span>
+                                </div>
+                            </li>
+                        }
+                    </ul>
+                }
+                else
+                {
+                    <div class="empty-state">
+                        <i class="fas fa-inbox"></i>
+                        <p>No recent bookings to display</p>
+                    </div>
+                }
             </div>
         </div>
-
-        <!-- Management Links Section -->
-        <div class="management-links">
-            <h2>Management Tools</h2>
-            <div class="links-grid">
-                <a asp-controller="AdminDashboard" asp-action="FlightManagment" class="management-link">
-                    Flight Management
-                </a>
-                <a asp-controller="AdminDashboard" asp-action="PassengerManagment" class="management-link">
-                    Passenger Management
-                </a>
-                <a asp-controller="AdminDashboard" asp-action="BookingManagment" class="management-link">
-                    Booking Management
-                </a>
-            </div>
-        </div>
     </div>
-</div>
 
-<script src="~/lib/jquery/dist/jquery.min.js"></script>
-<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Scripts -->
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // Add fade-in animation on scroll
+        document.addEventListener('DOMContentLoaded', function () {
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+
+            const observer = new IntersectionObserver(function (entries) {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, observerOptions);
+
+            // Observe all stat cards
+            document.querySelectorAll('.stat-card, .action-card, .overview-card').forEach(card => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                observer.observe(card);
+            });
+        });
+
+        // Animate numbers on page load
+        function animateValue(element, start, end, duration) {
+            let startTimestamp = null;
+            const step = (timestamp) => {
+                if (!startTimestamp) startTimestamp = timestamp;
+                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                const value = Math.floor(progress * (end - start) + start);
+                element.textContent = value.toLocaleString();
+                if (progress < 1) {
+                    window.requestAnimationFrame(step);
+                }
+            };
+            window.requestAnimationFrame(step);
+        }
+
+        // Animate stat numbers on load
+        window.addEventListener('load', function () {
+            setTimeout(() => {
+                document.querySelectorAll('.stat-number').forEach(element => {
+                    const text = element.textContent.replace(/[^0-9]/g, '');
+                    const finalValue = parseInt(text) || 0;
+                    if (finalValue > 0 && finalValue < 10000) {
+                        animateValue(element, 0, finalValue, 1000);
+                    }
+                });
+            }, 300);
+        });
+    </script>
 </body>
+
 </html>
