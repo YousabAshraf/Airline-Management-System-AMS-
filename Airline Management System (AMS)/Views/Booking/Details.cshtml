@@ -42,17 +42,13 @@
                 <span class="value">@Model.Flight.DepartureTime.ToString("ddd, MMM dd")</span>
             </div>
             <div class="detail-item">
-                <span class="label">Time</span>
+                <span class="label">Departure Time</span>
                 <span class="value">@Model.Flight.DepartureTime.ToString("hh:mm tt")</span>
             </div>
             <div class="detail-item">
-                <span class="label">Duration</span>
-                <span class="value">
-                    @{
-                        var duration = Model.Flight.ArrivalTime - Model.Flight.DepartureTime;
-                        @($"{duration.Hours}h {duration.Minutes}m")
-                    }
-                </span>
+                <span class="label">Arrival Time</span>
+                <span class="value">@Model.Flight.ArrivalTime.ToString("hh:mm tt")</span>
+
             </div>
         </div>
     </div>
@@ -645,11 +641,9 @@
             }, index * 100);
         });
 
-        // تحديث الوقت المتبقي
-        function updateCountdown() {
-    const departureTime = new Date();
-    departureTime.setMinutes(departureTime.getMinutes() + 1); // تجربة بعد 10 دقائق
-                const now = new Date();
+        /*function updateCountdown() {
+            const departureTime = new Date('@Model.Flight.DepartureTime.ToString("o")');
+            const now = new Date();
             const diff = departureTime - now;
 
             if (diff > 0) {
@@ -662,7 +656,7 @@
                     countdownElement.innerHTML = `${days}d ${hours}h ${minutes}m`;
                 }
             }
-        }
+        
 
         // إنشاء عنصر العد التنازلي إذا أردت
         const flightDetails = document.querySelector('.flight-details');
@@ -677,6 +671,6 @@
 
             updateCountdown();
             setInterval(updateCountdown, 60000); // تحديث كل دقيقة
-        }
+        }}*/
     });
 </script>
