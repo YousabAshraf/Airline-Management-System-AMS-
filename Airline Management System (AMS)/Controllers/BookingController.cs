@@ -62,7 +62,54 @@ public class BookingController : Controller
         var passenger = await _context.Passengers
             .Include(p => p.User) 
             .FirstOrDefaultAsync(p => p.Id == model.PassengerId);
+        await _emailSender.SendEmailAsync(
+            passenger.Email,
+            "Booking Confirmation - Airline Management System",
+            $@"
+<div style='font-family: Arial, sans-serif; background-color:#f5f7fa; padding:30px;'>
+    <div style='max-width:600px; margin:auto; background:white; padding:25px; border-radius:12px; box-shadow:0 2px 10px rgba(0,0,0,0.08);'>
+        <!-- Banner -->
+        <div style='text-align:center; margin-bottom:20px;'>
+            <img src='https://github.com/Steven-Amin02/Airline-Management-System-AMS-/raw/master/Airline%20Management%20System-AMS-/wwwroot/images/logo_in_email/readme_banner.png'
+                 alt='Banner'
+                 style='width:100%; border-radius:10px;' />
+        </div>
 
+        <!-- Title -->
+        <h2 style='text-align:center; color:#333; margin-bottom:10px;'>
+            Booking Confirmed!
+        </h2>
+
+        <p style='color:#555; font-size:15px; text-align:center;'>
+            Hello <strong>{passenger.FullName}</strong>,<br/>
+            Your booking has been successfully confirmed. Here are your ticket details:
+        </p>
+
+        <!-- Booking Details Box -->
+        <div style='margin:30px auto; text-align:center;'>
+            <div style='display:inline-block; padding:15px 25px; border-radius:10px;
+                        background:#004aad; color:white; font-size:16px; 
+                        letter-spacing:1px; font-weight:bold; text-align:left;'>
+                <p><strong>Flight:</strong> {flight.FlightNumber}</p>
+                <p><strong>Seat Number:</strong> {model.seat.SeatNumber}</p>
+                <p><strong>Class:</strong> {model.seat.Class}</p>
+                <p><strong>Departure:</strong> {flight.DepartureTime:f}</p>
+            </div>
+        </div>
+
+        <p style='color:#555; font-size:14px; text-align:center;'>
+            Please be at the airport at least 2 hours before departure.
+        </p>
+
+        <hr style='margin:30px 0; border:none; border-top:1px solid #ddd;'>
+
+        <p style='text-align:center; font-size:13px; color:#888;'>
+            If you didn't make this booking, please contact our support immediately.
+        </p>
+    </div>
+</div>
+");
+        
         TempData["BookingSuccess"] = "Booking successful!";
         return RedirectToAction("Index", "Home");
     }
