@@ -30,11 +30,9 @@ namespace Airline_Management_System__AMS_.Models
         [Display(Name = "Seat Number")]
         public string SeatNumber { get; set; }
 
-
         [Display(Name = "Booking Date")]
         public DateTime BookingDate { get; set; } = DateTime.Now;
 
-        [Required]
         [DataType(DataType.Currency)]
         [Display(Name = "Ticket Price")]
         public decimal TicketPrice { get; set; }
@@ -43,4 +41,5 @@ namespace Airline_Management_System__AMS_.Models
         [Display(Name = "Booking Status")]
         public BookingStatus Status { get; set; } = BookingStatus.Booked;
     }
+
 }

@@ -1,48 +1,75 @@
-@model BookingViewModel
+﻿@model BookingViewModel
 
-<br />
 <h2 class="mb-4 text-center">Confirm Your Booking</h2>
 
-<div class="card p-4 shadow" style="max-width: 900px; margin: auto;">
-
+<div class="card p-4 shadow" style="max-width: 900px; margin:auto;">
     <div class="row mb-4">
-        <!-- Flight Details -->
         <div class="col-md-6 border-end pe-4">
             <h4>Flight Details</h4>
-            <p><strong>Flight:</strong> @ViewBag.Flight.FlightNumber</p>
-            <p><strong>From:</strong> @ViewBag.Flight.Origin</p>
-            <p><strong>To:</strong> @ViewBag.Flight.Destination</p>
-            <p><strong>Departure:</strong> @ViewBag.Flight.DepartureTime.ToString("f")</p>
+            <p><strong>Flight:</strong> @ViewBag.Flight?.FlightNumber</p>
+            <p><strong>From:</strong> @ViewBag.Flight?.Origin</p>
+            <p><strong>To:</strong> @ViewBag.Flight?.Destination</p>
+            <p><strong>Departure:</strong> @ViewBag.Flight?.DepartureTime.ToString("f")</p>
         </div>
 
-        <!-- Passenger Details -->
         <div class="col-md-6 ps-4">
             <h4>Passenger Details</h4>
-            <p><strong>Name:</strong> @ViewBag.Passenger.FullName</p>
-            <p><strong>Email:</strong> @ViewBag.Passenger.Email</p>
-            <p><strong>Phone:</strong> @ViewBag.Passenger.PhoneNumber</p>
-            <p><strong>Passport:</strong> @ViewBag.Passenger.PassportNumber</p>
-            <p><strong>National ID:</strong> @ViewBag.Passenger.NationalId</p>
+            <p><strong>Name:</strong> @ViewBag.Passenger?.FullName</p>
+            <p><strong>Email:</strong> @ViewBag.Passenger?.Email</p>
+            <p><strong>Phone:</strong> @ViewBag.Passenger?.PhoneNumber</p>
+            <p><strong>Passport:</strong> @ViewBag.Passenger?.PassportNumber</p>
+            <p><strong>National ID:</strong> @ViewBag.Passenger?.NationalId</p>
         </div>
+
+        @if (ViewBag.Seat != null)
+        {
+            <div class="col-md-6 ps-4">
+                <h4>Seat Details</h4>
+                <p><strong>Seat Number:</strong> @ViewBag.Seat?.SeatNumber</p>
+                <p><strong>Class:</strong> @ViewBag.Seat?.Class</p>
+                <p><strong>Seat Price:</strong> @ViewBag.Seat?.SeatPrice</p>
+            </div>
+        }
     </div>
 
-    <form method="post">
-        <input type="hidden" name="FlightId" value="@ViewBag.Flight.FlightId" />
-        <input type="hidden" name="PassengerId" value="@ViewBag.Passenger.Id" />
+    <form asp-action="Create" method="post">
+        <input type="hidden" name="FlightId" value="@ViewBag.Flight?.FlightId" />
+        <input type="hidden" name="PassengerId" value="@ViewBag.Passenger?.Id" />
+        <input type="hidden" name="SelectedSeatId" value="@Model.seat?.SeatId" />
 
-        <div class="form-group mb-3">
-            <label>Select Seat</label>
-            <select asp-for="SeatNumber" class="form-control">
-                <option value="">-- Select Seat --</option>
-                @foreach (var seat in Model.AvailableSeats)
-                {
-                    <option value="@seat">@seat</option>
-                }
-            </select>
-            <span asp-validation-for="SeatNumber" class="text-danger"></span>
+        <div class="form-group mb-3" id="seatSelection">
+            <label>Select Seat</label><br />
+            @if (!string.IsNullOrEmpty(Model.SeatNumber))
+            {
+                <a id="seatButton" href="@Url.Action("SelectSeat", "Booking", new { flightId = ViewBag.Flight?.FlightId })" class="btn btn-primary">
+                    Change Seat
+                </a>
+                <span class="text-muted ms-2">You have already selected a seat. Click to change it.</span>
+            }
+            else
+            {
+                <a id="seatButton" href="@Url.Action("SelectSeat", "Booking", new { flightId = ViewBag.Flight?.FlightId })" class="btn btn-success">
+                    Choose Seat
+                </a>
+                <span class="text-muted ms-2">Click the button to select your seat visually</span>
+            }
         </div>
 
-        <button type="submit" class="btn btn-primary w-100">Confirm Booking</button>
+        <button type="submit" class="btn btn-primary w-100 mt-3" id="confirmBtn">Confirm Booking</button>
     </form>
+
 </div>
-<br />
+
+<script>
+    document.getElementById("confirmBtn").addEventListener("click", function(event) {
+        var seatNumber = "@Model.SeatNumber";
+        if (!seatNumber) {
+            event.preventDefault();
+            alert("Please select a seat before confirming your booking!");
+            var seatButton = document.getElementById("seatButton");
+            seatButton.style.transition = "0.5s";
+            seatButton.style.transform = "scale(1.1)";
+            setTimeout(() => { seatButton.style.transform = "scale(1)"; }, 500);
+        }
+    });
+</script>

@@ -182,7 +182,7 @@ namespace Airline_Management_System__AMS_.Migrations
 
                     b.HasIndex("PassengerId");
 
-                    b.ToTable("Bookings");
+                    b.ToTable("Bookings", (string)null);
                 });
 
             modelBuilder.Entity("Airline_Management_System__AMS_.Models.Feedback", b =>
@@ -217,7 +217,7 @@ namespace Airline_Management_System__AMS_.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Feedbacks");
+                    b.ToTable("Feedbacks", (string)null);
                 });
 
             modelBuilder.Entity("Airline_Management_System__AMS_.Models.Flight", b =>
@@ -258,7 +258,7 @@ namespace Airline_Management_System__AMS_.Migrations
                     b.HasIndex("FlightNumber")
                         .IsUnique();
 
-                    b.ToTable("Flights");
+                    b.ToTable("Flights", (string)null);
                 });
 
             modelBuilder.Entity("Airline_Management_System__AMS_.Models.Passenger", b =>
@@ -312,7 +312,7 @@ namespace Airline_Management_System__AMS_.Migrations
                         .IsUnique()
                         .HasFilter("[UserId] IS NOT NULL");
 
-                    b.ToTable("Passengers");
+                    b.ToTable("Passengers", (string)null);
                 });
 
             modelBuilder.Entity("Airline_Management_System__AMS_.Models.Seat", b =>
@@ -347,7 +347,7 @@ namespace Airline_Management_System__AMS_.Migrations
 
                     b.HasIndex("FlightId");
 
-                    b.ToTable("Seats");
+                    b.ToTable("Seats", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>

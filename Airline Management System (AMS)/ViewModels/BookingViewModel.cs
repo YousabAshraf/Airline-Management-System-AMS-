@@ -1,3 +1,4 @@
+using Airline_Management_System__AMS_.Models;
 using System.ComponentModel.DataAnnotations;
 
 public class BookingViewModel
@@ -16,4 +17,8 @@ public class BookingViewModel
     [Required]
     [Display(Name = "Seat Number")]
     public string SeatNumber { get; set; }
+    [Required]
+    public Seat seat { get; set; }
+    [Required]
+    public int? SelectedSeatId { get; set; }
 }
