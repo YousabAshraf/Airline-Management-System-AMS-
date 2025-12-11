@@ -62,7 +62,7 @@ public class BookingController : Controller
         var passenger = await _context.Passengers
             .Include(p => p.User) 
             .FirstOrDefaultAsync(p => p.Id == model.PassengerId);
-        await _emailSender.SendEmailAsync(
+        /*await _emailSender.SendEmailAsync(
             passenger.Email,
             "Booking Confirmation - Airline Management System",
             $@"
@@ -109,7 +109,7 @@ public class BookingController : Controller
     </div>
 </div>
 ");
-        
+        */
         TempData["BookingSuccess"] = "Booking successful!";
         return RedirectToAction("Index", "Home");
     }
@@ -189,6 +189,91 @@ public class BookingController : Controller
 
         return RedirectToAction("Create", new { flightId = flightId });
     }
+
+
+    public async Task<IActionResult> MyBookings()
+    {
+        // الحصول على UserId الحالي
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        // جلب Passenger المرتبط بالمستخدم
+        var passenger = await _context.Passengers
+            .Include(p => p.Bookings)
+                .ThenInclude(b => b.Flight)
+            .FirstOrDefaultAsync(p => p.UserId == userId);
+
+        if (passenger == null)
+            return NotFound("Passenger not found.");
+
+        var bookings = passenger.Bookings?.OrderByDescending(b => b.BookingDate).ToList() ?? new List<Booking>();
+
+        return View(bookings);
+    }
+
+    public async Task<IActionResult> Edit(int id)
+    {
+        var booking = await _context.Bookings
+            .Include(f => f.Flight)
+            .FirstOrDefaultAsync(b => b.Id == id);
+
+        if (booking == null)
+            return NotFound();
+
+        return View(booking);
+    }
+    public async Task<IActionResult> Details(int id)
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        var booking = await _context.Bookings
+            .Include(b => b.Flight)
+            .Include(b => b.Passenger)
+            .FirstOrDefaultAsync(b => b.Id == id && b.Passenger.UserId == userId);
+
+        if (booking == null)
+            return NotFound();
+
+        var seat = await _context.Seats.FirstOrDefaultAsync(s => s.BookingId == booking.Id);
+
+        ViewBag.Seat = seat;
+        return View(booking);
+    }
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Cancel(int id)
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+
+        var booking = await _context.Bookings
+            .Include(b => b.Flight)
+            .Include(b => b.Passenger)
+            .FirstOrDefaultAsync(b => b.Id == id && b.Passenger.UserId == userId);
+        var seat = await _context.Seats.FirstOrDefaultAsync(s => s.BookingId == booking.Id);
+
+        if (booking == null)
+            return NotFound();
+
+        // تحقق أن الحالة Booked فقط يمكن إلغاؤها
+        if (booking.Status != BookingStatus.Booked)
+            return BadRequest("This booking cannot be cancelled.");
+
+        // تغيير الحالة إلى Cancelled
+        booking.Status = BookingStatus.Cancelled;
+
+        seat.IsAvailable = true;
+
+        if (seat != null)
+        {
+            seat.BookingId = null;
+        }
+        await _context.SaveChangesAsync();
+
+        return RedirectToAction("MyBookings");
+    }
+
+
+
 
 
 
