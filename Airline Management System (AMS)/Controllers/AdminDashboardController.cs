@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Airline_Management_System__AMS_.Controllers
 {
-    // [Authorize(Roles = "Admin")]
+     [Authorize(Roles = "Admin")]
     public class AdminDashboardController : Controller
     {
         private readonly ApplicationDbContext _context;

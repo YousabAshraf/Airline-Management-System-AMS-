@@ -321,7 +321,8 @@
         <div class="dashboard-card">
             <div class="card-icon">🎫</div>
             <h4 class="card-title">My Bookings</h4>
-            <p class="card-description">View and manage all your flight bookings, check booking status, and download tickets.</p>
+            <p class="card-description">View and manage all your flight bookings, check booking status, and download
+                tickets.</p>
             <a asp-controller="Booking" asp-action="MyBookings" class="card-link">
                 View Bookings <i class="fas fa-arrow-right"></i>
             </a>
@@ -330,7 +331,8 @@
         <div class="dashboard-card">
             <div class="card-icon">✈️</div>
             <h4 class="card-title">Browse Flights</h4>
-            <p class="card-description">Search and explore available flights to your favorite destinations worldwide.</p>
+            <p class="card-description">Search and explore available flights to your favorite destinations worldwide.
+            </p>
             <a asp-controller="home" asp-action="Index" class="card-link">
                 Search Flights <i class="fas fa-arrow-right"></i>
             </a>
@@ -342,6 +344,18 @@
             <p class="card-description">Update your personal information, contact details, and account preferences.</p>
             <a asp-controller="Account" asp-action="Profile" class="card-link">
                 Edit Profile <i class="fas fa-arrow-right"></i>
+            </a>
+            <a asp-controller="Account" asp-action="Profile" class="card-link">
+                Edit Profile <i class="fas fa-arrow-right"></i>
+            </a>
+        </div>
+
+        <div class="dashboard-card">
+            <div class="card-icon">💬</div>
+            <h4 class="card-title">My Feedback</h4>
+            <p class="card-description">Share your travel experiences and view your past reviews.</p>
+            <a asp-controller="Feedback" asp-action="MyFeedback" class="card-link">
+                View Feedback <i class="fas fa-arrow-right"></i>
             </a>
         </div>
 

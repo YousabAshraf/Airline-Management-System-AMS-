@@ -35,5 +35,7 @@ namespace Airline_Management_System__AMS_.Models
 
         public ICollection<Booking> Bookings { get; set; }
         public ICollection<Seat> Seats { get; set; }
+
+        public string FlightInfo => $"{FlightNumber} ({Origin} -> {Destination})";
     }
 }
