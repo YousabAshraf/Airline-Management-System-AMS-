@@ -57,10 +57,27 @@ namespace Airline_Management_System__AMS_.Controllers
         // POST: Flight/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("FlightNumber,Origin,Destination,DepartureTime,ArrivalTime,AircraftType")] FlightViewModel model)
+        public async Task<IActionResult> Create([Bind("FlightNumber,Origin,Destination,DepartureTime,ArrivalTime,AircraftType,EconomySeats,EconomyPrice,BusinessSeats,BusinessPrice,FirstClassSeats,FirstClassPrice")] FlightViewModel model)
         {
             if (ModelState.IsValid)
             {
+                // Validate that at least one seat class has seats
+                if (model.EconomySeats == 0 && model.BusinessSeats == 0 && model.FirstClassSeats == 0)
+                {
+                    ModelState.AddModelError("", "At least one seat class must have seats.");
+                    return View(model);
+                }
+
+                // Validate seat numbers are positive
+                if (model.EconomySeats < 0 || model.BusinessSeats < 0 || model.FirstClassSeats < 0)
+                {
+                    ModelState.AddModelError("", "Seat numbers cannot be negative.");
+                    return View(model);
+                }
+
+                // Calculate total seats
+                int totalSeats = model.EconomySeats + model.BusinessSeats + model.FirstClassSeats;
+
                 var flight = new Flight
                 {
                     FlightNumber = model.FlightNumber,
@@ -69,35 +86,64 @@ namespace Airline_Management_System__AMS_.Controllers
                     DepartureTime = model.DepartureTime,
                     ArrivalTime = model.ArrivalTime,
                     AircraftType = model.AircraftType,
-                    AvailableSeats = model.TotalSeats
+                    AvailableSeats = totalSeats
                 };
 
                 _context.Add(flight);
                 await _context.SaveChangesAsync();
 
-                // Create seats for the flight
+                // Create seats for each class
                 var seats = new List<Seat>();
-                var seatClasses = new[] { "Economy", "Business", "First Class" };
-                int seatsPerClass = model.TotalSeats / 3;
+                int seatCounter = 1;
 
-                for (int i = 0; i < seatClasses.Length; i++)
+                // Create Economy Class Seats
+                for (int i = 1; i <= model.EconomySeats; i++)
                 {
-                    for (int j = 1; j <= seatsPerClass; j++)
+                    seats.Add(new Seat
                     {
-                        seats.Add(new Seat
-                        {
-                            FlightId = flight.FlightId,
-                            SeatNumber = $"{seatClasses[i].Substring(0, 1)}{i + 1}{j:D2}",
-                            Class = seatClasses[i],
-                            SeatPrice = seatClasses[i] == "Economy" ? 100 : seatClasses[i] == "Business" ? 250 : 500,
-                            IsAvailable = true
-                        });
-                    }
+                        FlightId = flight.FlightId,
+                        SeatNumber = $"E{seatCounter:D3}",
+                        Class = "Economy",
+                        SeatPrice = model.EconomyPrice,
+                        IsAvailable = true
+                    });
+                    seatCounter++;
+                }
+
+                // Create Business Class Seats
+                seatCounter = 1;
+                for (int i = 1; i <= model.BusinessSeats; i++)
+                {
+                    seats.Add(new Seat
+                    {
+                        FlightId = flight.FlightId,
+                        SeatNumber = $"B{seatCounter:D3}",
+                        Class = "Business",
+                        SeatPrice = model.BusinessPrice,
+                        IsAvailable = true
+                    });
+                    seatCounter++;
+                }
+
+                // Create First Class Seats
+                seatCounter = 1;
+                for (int i = 1; i <= model.FirstClassSeats; i++)
+                {
+                    seats.Add(new Seat
+                    {
+                        FlightId = flight.FlightId,
+                        SeatNumber = $"F{seatCounter:D3}",
+                        Class = "First Class",
+                        SeatPrice = model.FirstClassPrice,
+                        IsAvailable = true
+                    });
+                    seatCounter++;
                 }
 
                 _context.Seats.AddRange(seats);
                 await _context.SaveChangesAsync();
 
+                TempData["Success"] = "Flight created successfully!";
                 return RedirectToAction(nameof(Index));
             }
             return View(model);

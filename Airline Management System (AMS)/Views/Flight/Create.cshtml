@@ -21,11 +21,59 @@
         background-color: #CC5200 !important;
         border-color: #CC5200 !important;
     }
+
+    .class-config-section {
+        background-color: #f8f9fa;
+        border-left: 4px solid #FF6600;
+        padding: 15px;
+        margin-bottom: 20px;
+        border-radius: 4px;
+    }
+
+    .class-config-header {
+        font-weight: bold;
+        color: #002244;
+        margin-bottom: 15px;
+        font-size: 1.1rem;
+    }
+
+    .class-input-group {
+        display: flex;
+        gap: 15px;
+        align-items: flex-end;
+        margin-bottom: 15px;
+    }
+
+    .class-input-group > div {
+        flex: 1;
+    }
+
+    .economy-header {
+        border-left-color: #28a745 !important;
+    }
+
+    .business-header {
+        border-left-color: #0077CC !important;
+    }
+
+    .first-class-header {
+        border-left-color: #FFD700 !important;
+    }
+
+    .total-seats-display {
+        background-color: white;
+        padding: 10px 15px;
+        border-radius: 4px;
+        border: 2px solid #FF6600;
+        font-weight: bold;
+        text-align: center;
+        color: #FF6600;
+    }
 </style>
 
 <div class="container py-4">
     <div class="row justify-content-center">
-        <div class="col-md-8">
+        <div class="col-md-10">
             <div class="card shadow border-0 rounded-3">
                 <div class="card-header card-header-airline py-3">
                     <h4 class="mb-0 fw-bold"><i class="fas fa-plane-departure me-2"></i>Create New Flight</h4>
@@ -33,6 +81,11 @@
                 <div class="card-body p-4">
                     <form asp-action="Create" method="post">
                         <div asp-validation-summary="All" class="text-danger mb-3"></div>
+
+                        <!-- Basic Flight Information -->
+                        <div class="alert alert-info">
+                            <strong>Flight Information</strong>
+                        </div>
 
                         <div class="row">
                             <div class="col-md-6 mb-3">
@@ -94,21 +147,85 @@
                             </div>
                         </div>
 
-                        <div class="row">
-                            <div class="col-md-12 mb-3">
-                                <label asp-for="TotalSeats" class="form-label fw-bold">Total Number of Seats</label>
-                                <div class="input-group">
-                                    <span class="input-group-text bg-light"><i class="fas fa-chair"></i></span>
-                                    <input asp-for="TotalSeats" type="number" class="form-control" placeholder="e.g., 300" min="1" />
+                        <!-- Seat Class Configuration -->
+                        <div class="alert alert-info mt-4">
+                            <strong>Seat Configuration by Class</strong>
+                        </div>
+
+                        <!-- Economy Class -->
+                        <div class="class-config-section economy-header">
+                            <div class="class-config-header">
+                                <i class="fas fa-chair me-2" style="color: #28a745;"></i>Economy Class
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label asp-for="EconomySeats" class="form-label fw-bold">Number of Seats</label>
+                                    <input asp-for="EconomySeats" type="number" class="form-control seat-input" placeholder="e.g., 100" min="0" />
+                                    <span asp-validation-for="EconomySeats" class="text-danger small"></span>
                                 </div>
-                                <small class="text-muted d-block mt-1">Seats will be automatically distributed across Economy, Business, and First Class</small>
-                                <span asp-validation-for="TotalSeats" class="text-danger small"></span>
+                                <div class="col-md-6 mb-3">
+                                    <label asp-for="EconomyPrice" class="form-label fw-bold">Price per Seat ($)</label>
+                                    <input asp-for="EconomyPrice" type="number" class="form-control price-input" placeholder="e.g., 100" min="1" />
+                                    <span asp-validation-for="EconomyPrice" class="text-danger small"></span>
+                                </div>
                             </div>
                         </div>
 
-                        <div class="alert alert-info mt-3">
-                            <i class="fas fa-info-circle me-2"></i>
-                            <strong>Note:</strong> When you create a flight, seats will be automatically generated and distributed evenly across three classes (Economy, Business, and First Class).
+                        <!-- Business Class -->
+                        <div class="class-config-section business-header">
+                            <div class="class-config-header">
+                                <i class="fas fa-chair me-2" style="color: #0077CC;"></i>Business Class
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label asp-for="BusinessSeats" class="form-label fw-bold">Number of Seats</label>
+                                    <input asp-for="BusinessSeats" type="number" class="form-control seat-input" placeholder="e.g., 100" min="0" />
+                                    <span asp-validation-for="BusinessSeats" class="text-danger small"></span>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label asp-for="BusinessPrice" class="form-label fw-bold">Price per Seat ($)</label>
+                                    <input asp-for="BusinessPrice" type="number" class="form-control price-input" placeholder="e.g., 250" min="1" />
+                                    <span asp-validation-for="BusinessPrice" class="text-danger small"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- First Class -->
+                        <div class="class-config-section first-class-header">
+                            <div class="class-config-header">
+                                <i class="fas fa-chair me-2" style="color: #FFD700;"></i>First Class
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label asp-for="FirstClassSeats" class="form-label fw-bold">Number of Seats</label>
+                                    <input asp-for="FirstClassSeats" type="number" class="form-control seat-input" placeholder="e.g., 100" min="0" />
+                                    <span asp-validation-for="FirstClassSeats" class="text-danger small"></span>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label asp-for="FirstClassPrice" class="form-label fw-bold">Price per Seat ($)</label>
+                                    <input asp-for="FirstClassPrice" type="number" class="form-control price-input" placeholder="e.g., 500" min="1" />
+                                    <span asp-validation-for="FirstClassPrice" class="text-danger small"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Total Seats Summary -->
+                        <div class="alert alert-light border-2 border-warning p-3 mt-4">
+                            <strong>Total Seats Summary:</strong>
+                            <div class="row mt-2 text-center">
+                                <div class="col-md-3">
+                                    <div>Economy: <span id="economyTotal" class="badge bg-success">0</span></div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div>Business: <span id="businessTotal" class="badge bg-primary">0</span></div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div>First Class: <span id="firstClassTotal" class="badge bg-warning text-dark">0</span></div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="total-seats-display">Grand Total: <span id="grandTotal">0</span></div>
+                                </div>
+                            </div>
                         </div>
 
                         <div class="d-flex justify-content-between mt-4">
@@ -130,4 +247,28 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
+    <script>
+        // Update total seats dynamically
+        function updateTotalSeats() {
+            const economySeats = parseInt(document.querySelector('[name="EconomySeats"]').value) || 0;
+            const businessSeats = parseInt(document.querySelector('[name="BusinessSeats"]').value) || 0;
+            const firstClassSeats = parseInt(document.querySelector('[name="FirstClassSeats"]').value) || 0;
+
+            const grandTotal = economySeats + businessSeats + firstClassSeats;
+
+            document.getElementById('economyTotal').textContent = economySeats;
+            document.getElementById('businessTotal').textContent = businessSeats;
+            document.getElementById('firstClassTotal').textContent = firstClassSeats;
+            document.getElementById('grandTotal').textContent = grandTotal;
+        }
+
+        // Attach event listeners to all seat input fields
+        document.querySelectorAll('.seat-input').forEach(input => {
+            input.addEventListener('change', updateTotalSeats);
+            input.addEventListener('keyup', updateTotalSeats);
+        });
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', updateTotalSeats);
+    </script>
 }
