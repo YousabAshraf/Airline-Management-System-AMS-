@@ -17,7 +17,6 @@ namespace Airline_Management_System__AMS_.Controllers
             _context = context;
         }
 
-        // GET: Flight
         public async Task<IActionResult> Index()
         {
             var flights = await _context.Flights

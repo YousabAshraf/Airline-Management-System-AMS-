@@ -25,6 +25,16 @@ public class BookingController : Controller
         _context = context;
     }
 
+    [Authorize(Roles = "Admin")]
+    public async Task<IActionResult> Index()
+    {
+        var booking =await _context.Bookings
+            .Include(b => b.Flight)
+            .Include(b => b.Passenger)
+            .ToListAsync();
+        return View(booking);
+    }
+
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create(BookingViewModel model)
@@ -460,6 +470,248 @@ public class BookingController : Controller
         return User.IsInRole("Admin") || booking.Passenger.UserId == userId;
     }
 
+
+    [Authorize(Roles = "Admin")]
+    public async Task<IActionResult> Delete(int? id)
+    {
+        if (id == null)
+        {
+            return NotFound();
+        }
+
+        var booking = _context.Bookings
+      .Include(b => b.Passenger)
+      .Include(b => b.Flight)
+      .FirstOrDefault(b => b.Id == id);
+
+        if (booking == null)
+        {
+            return NotFound();
+        }
+
+       
+
+        return View(booking);
+    }
+
+    [HttpPost, ActionName("Delete")]
+    [Authorize(Roles = "Admin")]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> DeleteConfirmed(int id)
+    {
+        var booking = await _context.Bookings
+           .Include(b => b.Flight)
+           .Include(b => b.Passenger)
+           .FirstOrDefaultAsync(b => b.Id == id);
+
+        var seat = await _context.Seats.FirstOrDefaultAsync(s => s.BookingId == booking.Id);
+
+        var passenger = await _context.Passengers
+            .Include(p => p.User)
+            .FirstOrDefaultAsync(p => p.Id == booking.PassengerId);
+
+        var flight = await _context.Flights.FindAsync(booking.FlightId);
+
+
+        if (booking == null)
+        {
+            return NotFound();
+        }
+
+        flight.AvailableSeats++;
+        seat.IsAvailable = true;
+
+        _context.Bookings.Remove(booking);
+        await _context.SaveChangesAsync();
+
+        TempData["Success"] = "Booking deleted successfully.";
+        return RedirectToAction(nameof(Index));
+    }
+
+    [Authorize(Roles = "Admin")]
+    public async Task<IActionResult> DetailsByAdmin(int? id)
+    {
+        if (id == null)
+        {
+            return NotFound();
+        }
+
+        var booking = _context.Bookings
+             .Include(b => b.Passenger)
+             .Include(b => b.Flight)
+             .FirstOrDefault(b => b.Id == id);
+
+        var seats = await _context.Seats
+            .Where(s => s.FlightId == booking.FlightId)
+            .ToListAsync();
+
+        var Class = seats.FirstOrDefault(s => s.SeatNumber == booking.SeatNumber)?.Class;
+
+
+        if (booking == null)
+        {
+            return NotFound();
+        }
+        ViewBag.Class = Class;
+        return View(booking);
+    }
+
+    [Authorize(Roles = "Admin")]
+    public async Task<IActionResult> EditByAdmin(int? id)
+    {
+        if (id == null)
+        {
+            return NotFound();
+        }
+
+        var booking = _context.Bookings
+              .Include(b => b.Passenger)
+              .Include(b => b.Flight)
+              .FirstOrDefault(b => b.Id == id);
+
+
+        if (booking == null)
+        {
+            return NotFound();
+        }
+        var bookedSeats = _context.Bookings
+           .Where(b => b.FlightId == booking.FlightId && b.Id != booking.Id)
+           .Select(b => b.SeatNumber)
+           .ToHashSet();
+
+
+        var seats = await _context.Seats
+            .Where(s => s.FlightId == booking.FlightId)
+            .ToListAsync();
+
+        var model = new BookingEditViewModel
+        {
+            BookingId = booking.Id,
+            FlightId = booking.FlightId.Value,
+            PassengerId = booking.PassengerId,
+            PassengerName = booking.Passenger.FullName, 
+            FlightNumber = booking.Flight.FlightNumber, 
+            CurrentSeat = booking.SeatNumber,
+            TicketPrice = booking.TicketPrice,
+            Seats = seats,
+            BookedSeats = bookedSeats,
+            Class = seats.FirstOrDefault(s => s.SeatNumber == booking.SeatNumber).Class,
+            Status = booking.Status
+            
+        };
+
+        return View(model);
+    }
+
+    [HttpPost]
+    [Authorize(Roles = "Admin")]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> EditByAdmin(int id, BookingEditViewModel model)
+    {
+        if (id != model.BookingId)
+        {
+            return View(model);
+        }
+
+        try
+        {
+            var booking = await _context.Bookings
+                .Include(b => b.Passenger)
+                .Include(b => b.Flight)
+                .FirstOrDefaultAsync(b => b.Id == id);
+
+            if (booking == null)
+            {
+                return View(model);
+            }
+
+            booking.SeatNumber = model.CurrentSeat;
+            booking.TicketPrice = model.TicketPrice;
+            booking.Status = model.Status ;
+
+            var seat = await _context.Seats.FirstOrDefaultAsync(s => s.BookingId == booking.Id);
+            var flight = await _context.Flights.FindAsync(booking.FlightId);
+
+            if (model.Status == BookingStatus.Cancelled)
+            {
+                seat.IsAvailable = true;
+                flight.AvailableSeats++;
+            }
+            if (model.Status == BookingStatus.Booked && seat.IsAvailable==true)
+            {
+                seat.IsAvailable = false ;
+                flight.AvailableSeats--;
+            }
+
+            _context.Update(booking);
+            await _context.SaveChangesAsync();
+
+          
+
+                // إرسال الإيميل بعد التحديث
+                var newSeat = await _context.Seats
+                    .FirstOrDefaultAsync(s => s.FlightId == booking.FlightId && s.SeatNumber == booking.SeatNumber);
+
+            /*await _emailSender.SendEmailAsync(
+                booking.Passenger.Email,
+                "Booking Updated Successfully - Airline Management System",
+                $@"
+<div style='font-family: Arial, sans-serif; background-color:#f5f7fa; padding:30px;'>
+    <div style='max-width:600px; margin:auto; background:white; padding:25px; border-radius:12px; box-shadow:0 2px 10px rgba(0,0,0,0.08);'>
+        <div style='text-align:center; margin-bottom:20px;'>
+            <img src='https://github.com/Steven-Amin02/Airline-Management-System-AMS-/raw/master/Airline%20Management%20System-AMS-/wwwroot/images/logo_in_email/readme_banner.png'
+                 alt='Banner'
+                 style='width:100%; border-radius:10px;' />
+        </div>
+        <h2 style='text-align:center; color:#333; margin-bottom:10px;'>Booking Updated Successfully!</h2>
+        <p style='color:#555; font-size:15px; text-align:center;'>
+            Hello <strong>{booking.Passenger.FullName}</strong>,<br/>
+            Your booking has been successfully updated. Here are your new ticket details:
+        </p>
+        <div style='margin:30px auto; text-align:center;'>
+            <div style='display:inline-block; padding:15px 25px; border-radius:10px;
+                        background:#0a6efd; color:white; font-size:16px; 
+                        letter-spacing:1px; font-weight:bold; text-align:left;'>
+                <p><strong>Flight:</strong> {booking.Flight.FlightNumber}</p>
+                <p><strong>New Seat Number:</strong> {booking.SeatNumber}</p>
+                <p><strong>Class:</strong> {newSeat?.Class}</p>
+                <p><strong>New Price:</strong> {booking.TicketPrice} EGP</p>
+                <p><strong>Departure:</strong> {booking.Flight.DepartureTime:f}</p>
+                <p><strong>Arrival:</strong> {booking.Flight.ArrivalTime:f}</p>
+            </div>
+        </div>
+        <p style='color:#555; font-size:14px; text-align:center;'>
+            Please make sure to arrive at the airport at least 2 hours before departure time.
+        </p>
+        <hr style='margin:30px 0; border:none; border-top:1px solid #ddd;'>
+        <p style='text-align:center; font-size:13px; color:#888;'>
+            If you did not request this update, please contact our support team immediately.
+        </p>
+    </div>
+</div>
+");*/
+
+            TempData["Success"] = "Booking edited successfully.";
+            return RedirectToAction(nameof(Index));
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            if (!BookingExists(model.BookingId))
+            {
+                return View(model);
+            }
+            else
+            {
+                throw;
+            }
+        }
+    }
+
+
+    private bool BookingExists(int id)
+    {
+        return _context.Bookings.Any(e => e.Id == id);
+    }
 }
 
 

@@ -1,0 +1,216 @@
+﻿@model IEnumerable<Airline_Management_System__AMS_.Models.Booking>
+
+@{
+    ViewData["Title"] = "Booking Management";
+}
+
+<link rel="stylesheet" href="~/css/admin-dashboard.css" />
+
+<style>
+    .text-primary {
+        color: #002244 !important;
+    }
+
+    .btn-primary {
+        background-color: #FF6600 !important;
+        border-color: #FF6600 !important;
+        color: white !important;
+    }
+
+        .btn-primary:hover {
+            background-color: #CC5200 !important;
+            border-color: #CC5200 !important;
+        }
+
+    .btn-outline-primary {
+        color: #0077CC !important;
+        border-color: #0077CC !important;
+    }
+
+        .btn-outline-primary:hover {
+            background-color: #0077CC !important;
+            border-color: #0077CC !important;
+            color: white !important;
+        }
+
+    .bg-primary {
+        background-color: #002244 !important;
+    }
+
+    h1.text-primary,
+    h5.text-primary {
+        color: #002244 !important;
+    }
+</style>
+
+<div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h2 text-primary fw-bold">
+                <i class="fas fa-ticket-alt me-2"></i>Booking Management
+            </h1>
+            <p class="text-muted">Manage all bookings in the system</p>
+        </div>
+    </div>
+
+    <div class="card shadow-sm border-0 rounded-3">
+        <div class="card-header bg-white py-3 border-bottom">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <h5 class="mb-0 text-primary fw-bold">Booking List</h5>
+                </div>
+                <div class="col-md-6">
+                    <div class="input-group">
+                        <span class="input-group-text bg-light border-end-0">
+                            <i class="fas fa-search text-muted"></i>
+                        </span>
+                        <input type="text" id="bookingSearch" class="form-control border-start-0 bg-light"
+                               placeholder="Search by passenger, flight number, seat...">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="bg-light">
+                        <tr>
+                            <th class="ps-4">Passenger</th>
+                            <th>Flight</th>
+                            <th>Seat</th>
+                            <th>Price</th>
+                            <th>Booking Date</th>
+                            <th>Status</th>
+                            <th class="text-end pe-4">Actions</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="bookingTableBody">
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td class="ps-4">
+                                    <div class="fw-bold">@item.Passenger.FullName</div>
+                                    <small class="text-muted">@item.Passenger.Email</small>
+                                </td>
+
+                                <td>
+                                    <div class="fw-medium">
+                                        @item.Flight.FlightNumber
+                                    </div>
+                                    <small class="text-muted">
+                                        @item.Flight.Origin → @item.Flight.Destination
+                                    </small>
+                                </td>
+
+                                <td>
+                                    <span class="badge bg-primary text-white">@item.SeatNumber</span>
+                                </td>
+
+                                <td>
+                                    <span class="fw-bold text-success">$@item.TicketPrice</span>
+                                </td>
+
+                                <td>
+                                    <div>@item.BookingDate.ToString("MMM dd, yyyy")</div>
+                                    <small class="text-muted">@item.BookingDate.ToString("hh:mm tt")</small>
+                                </td>
+
+                                <td>
+                                    @if (item.Status == BookingStatus.Booked)
+                                    {
+                                        <span class="badge bg-success">Booked</span>
+                                    }
+                                    else if (item.Status == BookingStatus.CheckedIn)
+                                    {
+                                        <span class="badge bg-info">Checked-In</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-danger">Cancelled</span>
+                                    }
+                                </td>
+
+                                <td class="text-end pe-4">
+                                    <div class="btn-group">
+                                        <a asp-action="DetailsByAdmin" asp-route-id="@item.Id"
+                                           class="btn btn-sm btn-outline-primary">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                        <a asp-action="Edit" asp-route-id="@item.Id"
+                                           class="btn btn-sm btn-outline-warning">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <a asp-action="Delete" asp-route-id="@item.Id"
+                                           class="btn btn-sm btn-outline-danger">
+                                            <i class="fas fa-trash"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById('bookingSearch').addEventListener('keyup', function () {
+        let searchText = this.value.toLowerCase();
+        let rows = document.querySelectorAll('#bookingTableBody tr');
+
+        rows.forEach(row => {
+            row.style.display = row.innerText.toLowerCase().includes(searchText)
+                ? ''
+                : 'none';
+        });
+    });
+</script>
+
+
+
+@if (TempData["Success"] != null)
+{
+    <div id="bookingToast" class="toast-message">
+        @TempData["Success"]
+    </div>
+}
+
+<style>
+    .toast-message {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background-color: rgba(0, 0, 0, 0.85);
+        color: #fff;
+        padding: 15px 25px;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+        font-size: 16px;
+        z-index: 9999;
+        opacity: 0;
+        transform: translateY(-20px);
+        transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+
+        .toast-message.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+</style>
+
+<script>
+    window.addEventListener('DOMContentLoaded', () => {
+        const toast = document.getElementById('bookingToast');
+        if(toast){
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 4000);
+        }
+    });
+</script>

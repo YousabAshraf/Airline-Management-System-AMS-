@@ -1,0 +1,67 @@
+﻿@model Airline_Management_System__AMS_.Models.Booking
+
+@{
+    ViewData["Title"] = "Delete Booking";
+}
+
+<link rel="stylesheet" href="~/css/admin-dashboard.css" />
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow border-0 rounded-3 text-center">
+                <div class="card-body p-5">
+                    <div class="mb-4">
+                        <div class="avatar-circle mx-auto bg-danger bg-opacity-10 text-danger d-flex align-items-center justify-content-center rounded-circle"
+                             style="width: 80px; height: 80px; font-size: 2.5rem;">
+                            <i class="fas fa-trash"></i>
+                        </div>
+                    </div>
+
+                    <h2 class="fw-bold text-dark mb-3">Delete Booking?</h2>
+                    <p class="text-muted mb-4 lead">
+                        Are you sure you want to permanently delete the booking for
+                        <strong>@Model.Passenger.FullName</strong> on flight
+                        <strong>@Model.Flight.FlightNumber</strong>?
+                        <br><span class="small text-danger fw-bold">This action cannot be undone.</span>
+                    </p>
+
+                    <div class="bg-light p-3 rounded-3 mb-4 text-start">
+                        <div class="row g-2">
+                            <div class="col-6 text-muted small text-uppercase fw-bold">Passenger</div>
+                            <div class="col-6 fw-bold text-end">@Model.Passenger.FullName</div>
+
+                            <div class="col-6 text-muted small text-uppercase fw-bold">Flight</div>
+                            <div class="col-6 fw-bold text-end">@Model.Flight.FlightNumber (@Model.Flight.Origin → @Model.Flight.Destination)</div>
+
+                            <div class="col-6 text-muted small text-uppercase fw-bold">Seat</div>
+                            <div class="col-6 fw-bold text-end">@Model.SeatNumber</div>
+
+                            <div class="col-6 text-muted small text-uppercase fw-bold">Price</div>
+                            <div class="col-6 fw-bold text-end">$@Model.TicketPrice</div>
+
+                            <div class="col-6 text-muted small text-uppercase fw-bold">Booking Date</div>
+                            <div class="col-6 fw-bold text-end">@Model.BookingDate.ToString("MMM dd, yyyy hh:mm tt")</div>
+
+                            <div class="col-6 text-muted small text-uppercase fw-bold">Status</div>
+                            <div class="col-6 fw-bold text-end">@Model.Status</div>
+                        </div>
+                    </div>
+
+                    <form asp-action="Delete" method="post">
+                        <input type="hidden" asp-for="Id" />
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-danger btn-lg fw-bold">
+                                <i class="fas fa-trash me-2"></i>Yes, Delete Booking Permanently
+                            </button>
+                            <a asp-action="Index" class="btn btn-light btn-lg">
+                                Cancel
+                            </a>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,40 @@
+﻿@model List<Airline_Management_System__AMS_.Models.Seat>
+
+<h2>إعداد الكراسي</h2>
+
+<form method="post" asp-action="SaveSeats">
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Seat Number</th>
+                <th>Class</th>
+                <th>Price</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @for (int i = 0; i < Model.Count; i++)
+            {
+                <tr>
+                    <td>
+                        <input asp-for="@Model[i].SeatNumber" class="form-control" readonly />
+                    </td>
+
+                    <td>
+                        <select asp-for="@Model[i].Class" class="form-control">
+                            <option value="Economy">Economy</option>
+                            <option value="Business">Business</option>
+                            <option value="First Class">First Class</option>
+                        </select>
+                    </td>
+
+                    <td>
+                        <input asp-for="@Model[i].SeatPrice" type="number" class="form-control" />
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <button type="submit" class="btn btn-success">حفظ المقاعد</button>
+</form>

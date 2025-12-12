@@ -41,5 +41,7 @@ namespace Airline_Management_System__AMS_.ViewModels
 
         [Display(Name = "Booked Seats")]
         public int BookedSeats => TotalSeats - AvailableSeats;
+
+
     }
 }
