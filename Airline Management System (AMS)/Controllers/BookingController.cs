@@ -369,15 +369,15 @@ public class BookingController : Controller
         if (newSeat == null || !newSeat.IsAvailable)
             return BadRequest("Selected seat is not available.");
 
-        // تحرير المقعد القديم
-        var oldSeat = await _context.Seats.FirstOrDefaultAsync(s => s.SeatNumber == booking.SeatNumber && s.FlightId == booking.FlightId);
+        var oldSeat = await _context.Seats
+            .FirstOrDefaultAsync(s => s.SeatNumber == booking.SeatNumber && s.FlightId == booking.FlightId);
+
         if (oldSeat != null)
         {
             oldSeat.IsAvailable = true;
             oldSeat.BookingId = null;
         }
 
-        // تحديث المقعد الجديد
         newSeat.IsAvailable = false;
         newSeat.BookingId = booking.Id;
 
@@ -386,9 +386,59 @@ public class BookingController : Controller
 
         await _context.SaveChangesAsync();
 
+        // SEND UPDATED BOOKING EMAIL
+       /* await _emailSender.SendEmailAsync(
+            booking.Passenger.Email,
+            "Booking Updated Successfully - Airline Management System",
+            $@"
+<div style='font-family: Arial, sans-serif; background-color:#f5f7fa; padding:30px;'>
+    <div style='max-width:600px; margin:auto; background:white; padding:25px; border-radius:12px; box-shadow:0 2px 10px rgba(0,0,0,0.08);'>
+
+        <div style='text-align:center; margin-bottom:20px;'>
+            <img src='https://github.com/Steven-Amin02/Airline-Management-System-AMS-/raw/master/Airline%20Management%20System-AMS-/wwwroot/images/logo_in_email/readme_banner.png'
+                 alt='Banner'
+                 style='width:100%; border-radius:10px;' />
+        </div>
+
+        <h2 style='text-align:center; color:#333; margin-bottom:10px;'>
+            Booking Updated Successfully!
+        </h2>
+
+        <p style='color:#555; font-size:15px; text-align:center;'>
+            Hello <strong>{booking.Passenger.FullName}</strong>,<br/>
+            Your booking has been successfully updated. Here are your new ticket details:
+        </p>
+
+        <div style='margin:30px auto; text-align:center;'>
+            <div style='display:inline-block; padding:15px 25px; border-radius:10px;
+                        background:#0a6efd; color:white; font-size:16px; 
+                        letter-spacing:1px; font-weight:bold; text-align:left;'>
+                <p><strong>Flight:</strong> {booking.Flight.FlightNumber}</p>
+                <p><strong>New Seat Number:</strong> {booking.SeatNumber}</p>
+                <p><strong>Class:</strong> {newSeat.Class}</p>
+                <p><strong>New Price:</strong> {newSeat.SeatPrice} EGP</p>
+                <p><strong>Departure:</strong> {booking.Flight.DepartureTime:f}</p>
+                <p><strong>Arrival:</strong> {booking.Flight.ArrivalTime:f}</p>
+            </div>
+        </div>
+
+        <p style='color:#555; font-size:14px; text-align:center;'>
+            Please make sure to arrive at the airport at least 2 hours before departure time.
+        </p>
+
+        <hr style='margin:30px 0; border:none; border-top:1px solid #ddd;'>
+
+        <p style='text-align:center; font-size:13px; color:#888;'>
+            If you did not request this update, please contact our support team immediately.
+        </p>
+    </div>
+</div>
+");*/
+
         TempData["BookingSuccess"] = "Booking updated successfully!";
         return RedirectToAction("MyBookings");
     }
+
 
 }
 
