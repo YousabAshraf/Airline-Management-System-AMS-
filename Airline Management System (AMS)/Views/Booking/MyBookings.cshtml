@@ -180,7 +180,7 @@
                         @if (booking.Status == BookingStatus.Booked)
                         {
                             <div class="btn-group">
-                                <a href="/Booking/Edit/@booking.Id" class="btn-secondary">
+                                <a href="/Booking/Edit?bookingId=@booking.Id" class="btn-secondary">
                                     <i class="fas fa-edit"></i> Edit
                                 </a>
 
@@ -216,6 +216,15 @@
         </button>
     </div>
 </div>
+
+@if (TempData["BookingSuccess"] != null)
+{
+    <div id="bookingToast" class="toast-message">
+        @TempData["BookingSuccess"]
+    </div>
+}
+
+
 
 <style>
     :root {
@@ -909,6 +918,28 @@
             border: 1px solid #ddd;
         }
     }
+
+
+    .toast-message {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background-color: rgba(0, 0, 0, 0.85);
+        color: #fff;
+        padding: 15px 25px;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+        font-size: 16px;
+        z-index: 9999;
+        opacity: 0;
+        transform: translateY(-20px);
+        transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+
+        .toast-message.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
 </style>
 
 <script>
@@ -998,5 +1029,15 @@
         window.printAllBookings = function() {
             window.print();
         };
+    });
+
+    window.addEventListener('DOMContentLoaded', () => {
+        const toast = document.getElementById('bookingToast');
+        if(toast){
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 4000);
+        }
     });
 </script>

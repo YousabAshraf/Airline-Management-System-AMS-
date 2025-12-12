@@ -1,2 +1,305 @@
-@* Person 3: Edit Booking View (Customer) *@
-@* TODO: Implement booking modification (change seat/date) *@
+﻿@model Airline_Management_System__AMS_.ViewModels.BookingEditViewModel
+
+@{
+    var flight = ViewBag.Flight;
+    var passenger = ViewBag.Passenger;
+
+    var rows = Model.Seats
+        .Where(s => !string.IsNullOrEmpty(s.SeatNumber))
+        .GroupBy(s => s.SeatNumber.Substring(1))
+        .OrderBy(g => int.Parse(g.Key))
+        .ToList();
+}
+
+<style>
+    :root {
+        --color-available: #03A9F4;
+        --color-booked: #E53935;
+        --color-business: #FFC107;
+        --color-selected: #28a745;
+        --color-aisle: #555;
+        --color-background: #f4f4f4;
+        --color-CurrentSeat: #555;
+    }
+
+    .seat-selection-wrapper {
+        max-width: 1000px;
+        margin: 40px auto;
+        padding: 0 15px;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        justify-content: center;
+    }
+
+    .card {
+        border: none;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    .airplane-container {
+        max-width: 500px;
+        padding: 10px;
+        background-color: var(--color-background);
+        border-radius: 15px;
+    }
+
+    .fuselage {
+        background-color: var(--color-aisle);
+        border-radius: 10px;
+        padding: 10px;
+        box-shadow: inset 0 0 10px rgba(0,0,0,0.2);
+    }
+
+    .seat-map-layout {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 8px;
+    }
+
+    .seat-row {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .seat-wrapper {
+        width: 40px;
+        height: 40px;
+    }
+
+    .seat-box {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 4px;
+        font-weight: bold;
+        color: white;
+        transition: all 0.2s ease;
+        border: 1px solid #333;
+        text-align: center;
+        font-size: 12px;
+    }
+
+        .seat-box.available {
+            background-color: var(--color-available);
+            cursor: pointer;
+        }
+
+        .seat-box.booked {
+            background-color: var(--color-booked);
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+
+        .seat-box.business {
+            background-color: var(--color-business);
+            cursor: pointer;
+        }
+
+        .seat-box.selected {
+            background-color: var(--color-selected) !important;
+            border: 2px solid #fff;
+            transform: scale(1.1);
+            box-shadow: 0 0 8px var(--color-selected);
+        }
+
+        .seat-box.available:hover, .seat-box.business:hover {
+            transform: scale(1.1);
+        }
+
+    .legend-area {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    .legend-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 14px;
+    }
+
+    .seat-legend {
+        width: 20px;
+        height: 20px;
+        border-radius: 4px;
+        border: 1px solid #333;
+        display: inline-block;
+    }
+
+    #select-seat-btn {
+        margin-top: 10px;
+    }
+
+    @@media (max-width:992px) {
+        .seat-selection-wrapper {
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .airplane-container, .flex-fill {
+            max-width: 100%;
+        }
+    }
+</style>
+
+<h2 class="mb-4 text-center">✈️ Edit Booking for Flight @flight.FlightNumber</h2>
+
+<div class="card p-4 shadow" style="max-width: 1000px; margin:auto;">
+    <!-- Flight & Passenger Info -->
+    <div class="row mb-4">
+        <div class="col-md-5 border-end pe-4">
+            <h4>Flight Details</h4>
+            <p><strong>Flight:</strong> @flight?.FlightNumber</p>
+            <p><strong>From:</strong> @flight?.Origin</p>
+            <p><strong>To:</strong> @flight?.Destination</p>
+            <p><strong>Departure:</strong> @flight?.DepartureTime.ToString("f")</p>
+            <p><strong>Arrival:</strong> @flight?.ArrivalTime.ToString("f")</p>
+        </div>
+        <div class="col-md-4 border-end ps-4">
+            <h4>Passenger Details</h4>
+            <p><strong>Name:</strong> @passenger?.FullName</p>
+            <p><strong>Email:</strong> @passenger?.Email</p>
+            <p><strong>Phone:</strong> @passenger?.PhoneNumber</p>
+            <p><strong>Passport:</strong> @passenger?.PassportNumber</p>
+            <p><strong>National ID:</strong> @passenger?.NationalId</p>
+        </div>
+        <div class="col-md-2 ps-4 ">
+            <h4>Current Seat</h4>
+            <p><strong>Seat:</strong> @Model.CurrentSeat</p>
+            <p><strong>Class:</strong> @Model.Class</p>
+            <p><strong>Price:</strong> @Model.TicketPrice EGP</p>
+        </div>
+    </div>
+
+    <!-- Seat Selection -->
+    <div class="seat-selection-wrapper d-flex flex-column flex-lg-row gap-4">
+        <div class="airplane-container">
+            <div class="fuselage">
+                <div class="seat-map-layout">
+                    @foreach (var rowGroup in rows)
+                    {
+                        <div class="seat-row">
+                            @foreach (var seat in rowGroup.OrderBy(s => s.SeatNumber))
+                            {
+                                var isBooked = Model.BookedSeats.Contains(seat.SeatNumber);
+                                var seatClass = seat.IsAvailable && !isBooked ? (seat.Class.ToLower().Contains("business") ? "business" : "available") : "booked";
+                                if (Model.CurrentSeat == seat.SeatNumber) seatClass = "selected";
+
+                                <div class="seat-wrapper">
+                                    <div class="seat-box @seatClass"
+                                         data-seat-id="@seat.SeatId"
+                                         data-seat-number="@seat.SeatNumber"
+                                         data-seat-class="@seat.Class"
+                                         data-seat-price="@seat.SeatPrice"
+                                         data-available="@seat.IsAvailable">
+                                        @seat.SeatNumber
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="flex-fill" style="min-width:300px; max-width:350px;">
+           <div class="card p-3 mb-3 shadow-sm">
+            <h5>Key</h5>
+            <div class="legend-area">
+                <div class="legend-item">
+                    <span class="seat-legend available" style="background-color: var(--color-available);"></span> Available
+                </div>
+                <div class="legend-item">
+                    <span class="seat-legend selected-color" style="background-color: var(--color-selected);"></span> Selected
+                </div>
+                <div class="legend-item">
+                    <span class="seat-legend booked" style="background-color: var(--color-booked);"></span> Booked
+                </div>
+                <div class="legend-item">
+                    <span class="seat-legend business" style="background-color: var(--color-business);"></span> Business Class
+                </div>
+                    <div class="legend-item">
+                        <span class="seat-legend Current-Seat" style="background-color: var(--color-CurrentSeat);"></span> Current Seat
+                    </div>
+            </div>
+        </div>
+
+            <div class="card p-4 shadow">
+                <h4>Seat Details</h4>
+                <div id="seat-info" class="mb-3">
+                    <p class="text-muted">Current seat: <strong>@Model.CurrentSeat</strong></p>
+                </div>
+
+                <form asp-action="Edit" method="post">
+                    <input type="hidden" name="bookingId" value="@Model.BookingId" />
+                    <input type="hidden" id="selectedSeatId" name="selectedSeatId" value="@Model.Seats.FirstOrDefault(s => s.SeatNumber == Model.CurrentSeat)?.SeatId" />
+
+                    <button id="select-seat-btn" type="submit" class="btn btn-success w-100" disabled>
+                        Confirm Seat Change
+                    </button>
+                    <a href="/Booking/MyBookings" class="btn btn-secondary w-100 mt-2">
+                        Cancel
+                    </a>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+                let selectedSeat = document.querySelector('.seat-box.selected');
+        const seatInfo = document.getElementById('seat-info');
+        const selectBtn = document.getElementById('select-seat-btn');
+        const selectedSeatInput = document.getElementById('selectedSeatId');
+
+        const currentSeatNumber = "@Model.CurrentSeat"; // الكرسي الحالي الحقيقي
+
+        // في البداية: لو selectedSeat هو نفس الكرسي الحالي → اقفل الزرار
+        if (selectedSeat && selectedSeat.dataset.seatNumber === currentSeatNumber) {
+            selectBtn.disabled = true;
+        }
+
+        document.querySelectorAll('.seat-box').forEach(box => {
+            box.addEventListener('click', function() {
+                const isAvailable = this.dataset.available === "True";
+                if (!isAvailable) return;
+
+                // إزالة السيلكت من القديم
+                if (selectedSeat) selectedSeat.classList.remove('selected');
+
+                // إضافة السيلكت الجديد
+                this.classList.add('selected');
+                selectedSeat = this;
+
+                selectedSeatInput.value = this.dataset.seatId;
+
+                const seatNumber = this.dataset.seatNumber;
+                const seatClass = this.dataset.seatClass;
+                const price = parseFloat(this.dataset.seatPrice).toFixed(2);
+
+                seatInfo.innerHTML = `
+                    <p><strong>Seat Number:</strong> ${seatNumber}</p>
+                    <p><strong>Class:</strong> ${seatClass}</p>
+                    <p><strong>Price:</strong> ${price} EGP</p>
+                `;
+
+                // 🔥 لو اختار نفس الكرسي القديم → اقفل الزرار
+                if (seatNumber === currentSeatNumber) {
+                    selectBtn.disabled = true;
+                } else {
+                    selectBtn.disabled = false;
+                }
+            });
+        });
+    </script>
+}

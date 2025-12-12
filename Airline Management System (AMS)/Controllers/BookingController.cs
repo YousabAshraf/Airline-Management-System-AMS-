@@ -208,17 +208,6 @@ public class BookingController : Controller
         return View(bookings);
     }
 
-    public async Task<IActionResult> Edit(int id)
-    {
-        var booking = await _context.Bookings
-            .Include(f => f.Flight)
-            .FirstOrDefaultAsync(b => b.Id == id);
-
-        if (booking == null)
-            return NotFound();
-
-        return View(booking);
-    }
 
     public async Task<IActionResult> Details(int id)
     {
@@ -327,9 +316,79 @@ public class BookingController : Controller
     }
 
 
+    [HttpGet]
+    public async Task<IActionResult> Edit(int bookingId)
+    {
+        var booking = await _context.Bookings
+            .Include(b => b.Flight)
+            .Include(b => b.Passenger)
+            .FirstOrDefaultAsync(b => b.Id == bookingId);
 
+        if (booking == null) return NotFound();
 
+        var bookedSeats = _context.Bookings
+            .Where(b => b.FlightId == booking.FlightId && b.Id != booking.Id)
+            .Select(b => b.SeatNumber)
+            .ToHashSet();
 
+        var seats = await _context.Seats
+            .Where(s => s.FlightId == booking.FlightId)
+            .ToListAsync();
+
+        var vm = new BookingEditViewModel
+        {
+            BookingId = booking.Id,
+            FlightId = booking.FlightId.Value,
+            PassengerId = booking.PassengerId,
+            CurrentSeat = booking.SeatNumber,
+            TicketPrice = booking.TicketPrice,
+            Seats = seats,
+            BookedSeats = bookedSeats,
+            Class= seats.FirstOrDefault(s => s.SeatNumber == booking.SeatNumber)?.Class
+        };
+
+        ViewBag.Flight = booking.Flight;
+        ViewBag.Passenger = booking.Passenger;
+
+        return View(vm);
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Edit(int bookingId, int selectedSeatId)
+    {
+        var booking = await _context.Bookings
+            .Include(b => b.Flight)
+            .Include(b => b.Passenger)
+            .FirstOrDefaultAsync(b => b.Id == bookingId);
+
+        if (booking == null) return NotFound();
+
+        var newSeat = await _context.Seats.FirstOrDefaultAsync(s => s.SeatId == selectedSeatId);
+
+        if (newSeat == null || !newSeat.IsAvailable)
+            return BadRequest("Selected seat is not available.");
+
+        // تحرير المقعد القديم
+        var oldSeat = await _context.Seats.FirstOrDefaultAsync(s => s.SeatNumber == booking.SeatNumber && s.FlightId == booking.FlightId);
+        if (oldSeat != null)
+        {
+            oldSeat.IsAvailable = true;
+            oldSeat.BookingId = null;
+        }
+
+        // تحديث المقعد الجديد
+        newSeat.IsAvailable = false;
+        newSeat.BookingId = booking.Id;
+
+        booking.SeatNumber = newSeat.SeatNumber;
+        booking.TicketPrice = newSeat.SeatPrice;
+
+        await _context.SaveChangesAsync();
+
+        TempData["BookingSuccess"] = "Booking updated successfully!";
+        return RedirectToAction("MyBookings");
+    }
 
 }
 
