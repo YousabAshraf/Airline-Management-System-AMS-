@@ -12,7 +12,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
-[Authorize]
+[Authorize(Roles = "Admin,User")]
 public class BookingController : Controller
 {
     private readonly ApplicationDbContext _context;
@@ -218,6 +218,8 @@ public class BookingController : Controller
             .Include(b => b.Passenger)
             .FirstOrDefaultAsync(b => b.Id == id && b.Passenger.UserId == userId);
 
+        if (!CanAccessBooking(booking)) return Forbid(); 
+
         if (booking == null)
             return NotFound();
 
@@ -240,8 +242,12 @@ public class BookingController : Controller
             .FirstOrDefaultAsync(b => b.Id == id && b.Passenger.UserId == userId);
         var seat = await _context.Seats.FirstOrDefaultAsync(s => s.BookingId == booking.Id);
 
+        
+
         if (booking == null)
             return NotFound();
+
+        if (!CanAccessBooking(booking)) return Forbid(); 
 
         // تحقق أن الحالة Booked فقط يمكن إلغاؤها
         if (booking.Status != BookingStatus.Booked)
@@ -298,10 +304,12 @@ public class BookingController : Controller
 </div>
 ");*/
 
-        // تغيير الحالة إلى Cancelled
         booking.Status = BookingStatus.Cancelled;
 
         seat.IsAvailable = true;
+
+        var flight = await _context.Flights.FindAsync(booking.FlightId);
+        flight.AvailableSeats++;
 
         if (seat != null)
         {
@@ -315,16 +323,19 @@ public class BookingController : Controller
         return RedirectToAction("MyBookings");
     }
 
-
     [HttpGet]
     public async Task<IActionResult> Edit(int bookingId)
     {
+
         var booking = await _context.Bookings
             .Include(b => b.Flight)
             .Include(b => b.Passenger)
             .FirstOrDefaultAsync(b => b.Id == bookingId);
 
+
         if (booking == null) return NotFound();
+
+        if (!CanAccessBooking(booking)) return Forbid();
 
         var bookedSeats = _context.Bookings
             .Where(b => b.FlightId == booking.FlightId && b.Id != booking.Id)
@@ -363,6 +374,8 @@ public class BookingController : Controller
             .FirstOrDefaultAsync(b => b.Id == bookingId);
 
         if (booking == null) return NotFound();
+
+        if (!CanAccessBooking(booking)) return Forbid();
 
         var newSeat = await _context.Seats.FirstOrDefaultAsync(s => s.SeatId == selectedSeatId);
 
@@ -439,6 +452,13 @@ public class BookingController : Controller
         return RedirectToAction("MyBookings");
     }
 
+
+
+    private bool CanAccessBooking(Booking booking)
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        return User.IsInRole("Admin") || booking.Passenger.UserId == userId;
+    }
 
 }
 

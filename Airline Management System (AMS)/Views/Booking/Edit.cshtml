@@ -149,8 +149,21 @@
         }
     }
 </style>
-
+<br />
 <h2 class="mb-4 text-center">✈️ Edit Booking for Flight @flight.FlightNumber</h2>
+<div class="alert alert-info" style="font-size:15px; line-height:1.7; border-radius:8px;">
+    <strong>Important Notice</strong><br>
+    This page allows you to change your <strong>seat only</strong> for this booking.<br><br>
+
+    Changing your <strong>personal information</strong> or modifying the <strong>flight date / aircraft</strong> is not available here.<br><br>
+
+    To update your personal details, please <strong>cancel your current booking</strong> first, then go to the
+    <strong>Passenger Profile</strong> page to edit your information.<br><br>
+
+    To change your flight date or choose a different flight, please <strong>cancel this booking</strong> and search for a new one on the
+    <strong>Search Flights</strong> page.
+</div>
+
 
 <div class="card p-4 shadow" style="max-width: 1000px; margin:auto;">
     <!-- Flight & Passenger Info -->
@@ -189,8 +202,7 @@
                         <div class="seat-row">
                             @foreach (var seat in rowGroup.OrderBy(s => s.SeatNumber))
                             {
-                                var isBooked = Model.BookedSeats.Contains(seat.SeatNumber);
-                                var seatClass = seat.IsAvailable && !isBooked ? (seat.Class.ToLower().Contains("business") ? "business" : "available") : "booked";
+                                var seatClass = seat.IsAvailable ? (seat.Class.ToLower().Contains("business") ? "business" : "available") : "booked";
                                 if (Model.CurrentSeat == seat.SeatNumber) seatClass = "selected";
 
                                 <div class="seat-wrapper">
