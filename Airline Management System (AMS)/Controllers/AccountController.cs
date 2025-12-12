@@ -90,7 +90,7 @@ public class AccountController : Controller
         user.LastVerificationEmailSent = DateTime.UtcNow;
         await _userManager.UpdateAsync(user);
 
-       /* await _emailSender.SendEmailAsync(
+        /*await _emailSender.SendEmailAsync(
             user.Email,
             "Email Verification Code",
             $@"
@@ -229,7 +229,7 @@ public class AccountController : Controller
 
         await _userManager.UpdateAsync(user);
 
-        /*await _emailSender.SendEmailAsync(
+      /*await _emailSender.SendEmailAsync(
       user.Email,
       "New Verification Code",
       $@"

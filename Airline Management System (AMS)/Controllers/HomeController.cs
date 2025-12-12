@@ -10,7 +10,6 @@ namespace Airline_Management_System__AMS_.Controllers
     public class HomeController : Controller
     {
         private readonly ApplicationDbContext _context;
-
         private readonly ILogger<HomeController> _logger;
 
         public HomeController(ILogger<HomeController> logger, ApplicationDbContext context)
@@ -24,25 +23,56 @@ namespace Airline_Management_System__AMS_.Controllers
             return View(new FlightSearchViewModel
             {
                 Origin = string.Empty,
-                Destination = string.Empty
+                Destination = string.Empty,
+                TripType = TripType.RoundTrip
             });
         }
+
         [HttpPost]
         public IActionResult SearchFlights(FlightSearchViewModel model)
         {
-            if (!ModelState.IsValid)
+            if (string.IsNullOrWhiteSpace(model.Origin) || string.IsNullOrWhiteSpace(model.Destination))
+            {
+                ModelState.AddModelError("", "Origin and Destination are required.");
                 return View("Index", model);
+            }
 
-            var flights = _context.Flights
-                .Where(f =>
-                    f.Origin.ToLower() == model.Origin.ToLower() &&
-                    f.Destination.ToLower() == model.Destination.ToLower() &&
-                    f.DepartureTime.Date == model.DepartureDate.Date)
-                .ToList();
+            var origin = model.Origin.Trim().ToLower();
+            var destination = model.Destination.Trim().ToLower();
 
-            model.SearchResults = flights; // رجّع النتيجة للصفحة
+            List<Flight> flights = new List<Flight>();
 
-            return View("Index", model);  // يرجع نفس صفحة Home ومعاها النتائج
+            // رحلة الذهاب
+            var departQuery = _context.Flights.AsQueryable();
+            departQuery = departQuery.Where(f =>
+                f.Origin.ToLower() == origin &&
+                f.Destination.ToLower() == destination
+            );
+
+            if (model.DepartureDate.HasValue)
+            {
+                var dep = model.DepartureDate.Value.Date;
+                departQuery = departQuery.Where(f => f.DepartureTime.Date == dep);
+            }
+
+            flights.AddRange(departQuery.ToList());
+
+            // رحلة العودة لو RoundTrip و ReturnDate موجود
+            if (model.TripType == TripType.RoundTrip && model.ReturnDate.HasValue)
+            {
+                var returnQuery = _context.Flights.AsQueryable();
+                returnQuery = returnQuery.Where(f =>
+                    f.Origin.ToLower() == destination &&
+                    f.Destination.ToLower() == origin &&
+                    f.DepartureTime.Date == model.ReturnDate.Value.Date
+                );
+
+                flights.AddRange(returnQuery.ToList());
+            }
+
+            model.SearchResults = flights;
+
+            return View("Index", model);
         }
 
 

@@ -1,4 +1,4 @@
-using Airline_Management_System__AMS_.Models;
+﻿using Airline_Management_System__AMS_.Models;
 using System.ComponentModel.DataAnnotations;
 
 namespace Airline_Management_System__AMS_.ViewModels
@@ -13,10 +13,9 @@ namespace Airline_Management_System__AMS_.ViewModels
         [Display(Name = "To")]
         public required string Destination { get; set; }
 
-        [Required(ErrorMessage = "Departure date is required")]
         [Display(Name = "Departure Date")]
         [DataType(DataType.Date)]
-        public DateTime DepartureDate { get; set; }
+        public DateTime? DepartureDate { get; set; }
 
         [Display(Name = "Return Date")]
         [DataType(DataType.Date)]

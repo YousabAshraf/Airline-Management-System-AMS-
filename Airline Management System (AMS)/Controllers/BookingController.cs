@@ -193,10 +193,8 @@ public class BookingController : Controller
 
     public async Task<IActionResult> MyBookings()
     {
-        // الحصول على UserId الحالي
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-        // جلب Passenger المرتبط بالمستخدم
         var passenger = await _context.Passengers
             .Include(p => p.Bookings)
                 .ThenInclude(b => b.Flight)
@@ -221,6 +219,7 @@ public class BookingController : Controller
 
         return View(booking);
     }
+
     public async Task<IActionResult> Details(int id)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -238,6 +237,7 @@ public class BookingController : Controller
         ViewBag.Seat = seat;
         return View(booking);
     }
+
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Cancel(int id)
