@@ -1,5 +1,217 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model IEnumerable<Airline_Management_System__AMS_.Models.Flight>
+
 @{
+    ViewData["Title"] = "Flight Management";
 }
+
+<link rel="stylesheet" href="~/css/admin-dashboard.css" />
+
+<style>
+    /* Airline Theme Color Overrides */
+    .text-primary {
+        color: #002244 !important;
+    }
+
+    .btn-primary {
+        background-color: #FF6600 !important;
+        border-color: #FF6600 !important;
+        color: white !important;
+    }
+
+    .btn-primary:hover {
+        background-color: #CC5200 !important;
+        border-color: #CC5200 !important;
+    }
+
+    .btn-outline-primary {
+        color: #0077CC !important;
+        border-color: #0077CC !important;
+    }
+
+    .btn-outline-primary:hover {
+        background-color: #0077CC !important;
+        border-color: #0077CC !important;
+        color: white !important;
+    }
+
+    .bg-primary {
+        background-color: #002244 !important;
+    }
+
+    .card-header.bg-white h5 {
+        color: #002244 !important;
+    }
+
+    h1.text-primary,
+    h5.text-primary {
+        color: #002244 !important;
+    }
+
+    .avatar-circle.bg-primary {
+        background-color: #002244 !important;
+    }
+
+    .flight-status-badge {
+        font-size: 0.75rem;
+        padding: 0.4rem 0.6rem;
+    }
+</style>
+
+<div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h2 text-primary fw-bold">
+                <i class="fas fa-plane me-2"></i>Flight Management
+            </h1>
+            <p class="text-muted">Manage all flights in the system</p>
+        </div>
+        <a asp-action="Create" class="btn btn-primary">
+            <i class="fas fa-plus me-2"></i>Add New Flight
+        </a>
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fas fa-check-circle me-2"></i>
+            @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fas fa-exclamation-circle me-2"></i>
+            @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <div class="card shadow-sm border-0 rounded-3">
+        <div class="card-header bg-white py-3 border-bottom">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <h5 class="mb-0 text-primary fw-bold">Flight List</h5>
+                </div>
+                <div class="col-md-6">
+                    <div class="input-group">
+                        <span class="input-group-text bg-light border-end-0">
+                            <i class="fas fa-search text-muted"></i>
+                        </span>
+                        <input type="text" id="flightSearch" class="form-control border-start-0 bg-light"
+                            placeholder="Search flights by number, route...">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="bg-light">
+                        <tr>
+                            <th class="ps-4">Flight Number</th>
+                            <th>Route</th>
+                            <th>Departure</th>
+                            <th>Aircraft</th>
+                            <th>Seats Status</th>
+                            <th>Status</th>
+                            <th class="text-end pe-4">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="flightTableBody">
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td class="ps-4">
+                                    <div class="d-flex align-items-center">
+                                        <div class="avatar-circle me-3 bg-primary text-white d-flex align-items-center justify-content-center rounded-circle"
+                                            style="width: 40px; height: 40px; font-size: 0.9rem;">
+                                            <i class="fas fa-plane"></i>
+                                        </div>
+                                        <div>
+                                            <div class="fw-bold">@item.FlightNumber</div>
+                                            <small class="text-muted">ID: @item.FlightId</small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="fw-medium">@item.Origin <i class="fas fa-arrow-right mx-1 text-muted small"></i> @item.Destination
+                                    </div>
+                                    <small class="text-muted">@item.AircraftType</small>
+                                </td>
+                                <td>
+                                    <div class="fw-medium">@item.DepartureTime.ToString("MMM dd, yyyy")</div>
+                                    <small class="text-muted">@item.DepartureTime.ToString("hh:mm tt")</small>
+                                </td>
+                                <td>
+                                    <span class="badge bg-light text-dark">@item.AircraftType</span>
+                                </td>
+                                <td>
+                                    <div class="progress" style="height: 24px;">
+                                        @{
+                                            int bookedSeats = (item.Seats?.Count ?? 0) - item.AvailableSeats;
+                                            int totalSeats = item.Seats?.Count ?? 0;
+                                            double occupancyPercent = totalSeats > 0 ? (bookedSeats * 100.0 / totalSeats) : 0;
+                                        }
+                                        <div class="progress-bar @(occupancyPercent < 50 ? "bg-success" : occupancyPercent < 80 ? "bg-warning" : "bg-danger")"
+                                            role="progressbar" style="width: @occupancyPercent%" 
+                                            aria-valuenow="@((int)occupancyPercent)" aria-valuemin="0" aria-valuemax="100">
+                                            <span class="text-dark fw-bold small">@bookedSeats/@totalSeats</span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    @if (item.DepartureTime < DateTime.Now)
+                                    {
+                                        <span class="badge bg-info flight-status-badge">Departed</span>
+                                    }
+                                    else if ((item.DepartureTime - DateTime.Now).TotalHours < 24)
+                                    {
+                                        <span class="badge bg-danger flight-status-badge">Soon</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-success flight-status-badge">Active</span>
+                                    }
+                                </td>
+                                <td class="text-end pe-4">
+                                    <div class="btn-group">
+                                        <a asp-action="Details" asp-route-id="@item.FlightId"
+                                            class="btn btn-sm btn-outline-primary" title="View Details">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                        <a asp-action="Edit" asp-route-id="@item.FlightId" class="btn btn-sm btn-outline-warning"
+                                            title="Edit">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <a asp-action="Delete" asp-route-id="@item.FlightId" class="btn btn-sm btn-outline-danger"
+                                            title="Delete">
+                                            <i class="fas fa-trash"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById('flightSearch').addEventListener('keyup', function () {
+        let searchText = this.value.toLowerCase();
+        let tableRows = document.querySelectorAll('#flightTableBody tr');
+
+        tableRows.forEach(row => {
+            let rowText = row.innerText.toLowerCase();
+            if (rowText.includes(searchText)) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        });
+    });
+</script>

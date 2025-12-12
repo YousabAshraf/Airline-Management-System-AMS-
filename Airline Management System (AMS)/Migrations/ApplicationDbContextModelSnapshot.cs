@@ -336,6 +336,9 @@ namespace Airline_Management_System__AMS_.Migrations
                     b.Property<bool>("IsAvailable")
                         .HasColumnType("bit");
 
+                    b.Property<int>("SeatPrice")
+                        .HasColumnType("int");
+
                     b.Property<string>("SeatNumber")
                         .IsRequired()
                         .HasMaxLength(5)
