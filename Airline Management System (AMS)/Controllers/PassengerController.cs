@@ -2,9 +2,8 @@
 using Airline_Management_System__AMS_.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-
 using Microsoft.AspNetCore.Authorization;
-using Airline_Management_System__AMS_.ViewModels; // Added for ViewModel support
+using Airline_Management_System__AMS_.ViewModels; 
 using Airline_Management_System__AMS_.Controllers;
 namespace Airline_Management_System__AMS_.Controllers
 {
@@ -24,7 +23,7 @@ namespace Airline_Management_System__AMS_.Controllers
             _roleManager = roleManager;
         }
 
-        // GET: Passenger
+       
         public async Task<IActionResult> Index()
         {
             var passengers = await _context.Passengers
@@ -33,7 +32,7 @@ namespace Airline_Management_System__AMS_.Controllers
             return View(passengers);
         }
 
-        // GET: Passenger/Details/5
+        
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -54,14 +53,14 @@ namespace Airline_Management_System__AMS_.Controllers
             return View(passenger);
         }
 
-        // GET: Passenger/Create
+      
         public IActionResult Create()
         {
             return View();
         }
 
 
-        // POST: Passenger/Create
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(PassengerViewModel model)
@@ -87,7 +86,7 @@ namespace Airline_Management_System__AMS_.Controllers
                     return View(model);
                 }
 
-                // 1. Create/Check User Account
+                
                 var existingUser = await _userManager.FindByEmailAsync(model.Email);
                 string userId = null;
 
@@ -104,21 +103,21 @@ namespace Airline_Management_System__AMS_.Controllers
                         PhoneNumberConfirmed = true,
                         NationalId = model.NationalId,
                         PassportNumber = model.PassportNumber,
-                        Role = model.Role // Map the selected Role
+                        Role = model.Role 
                     };
 
-                    // Use the password provided by the Admin
+                    
                     var result = await _userManager.CreateAsync(newUser, model.Password);
 
                     if (result.Succeeded)
                     {
-                        // Ensure the Role exists in the database
+                        
                         if (!await _roleManager.RoleExistsAsync(model.Role))
                         {
                             await _roleManager.CreateAsync(new Microsoft.AspNetCore.Identity.IdentityRole(model.Role));
                         }
 
-                        // Add to the selected Role (Admin or Customer)
+                        
                         await _userManager.AddToRoleAsync(newUser, model.Role);
 
                         userId = newUser.Id;
@@ -138,7 +137,7 @@ namespace Airline_Management_System__AMS_.Controllers
                     userId = existingUser.Id;
                 }
 
-                // 2. Create Passenger
+                
                 var passenger = new Passenger
                 {
                     FirstName = model.FirstName,
@@ -157,7 +156,7 @@ namespace Airline_Management_System__AMS_.Controllers
             return View(model);
         }
 
-        // GET: Passenger/Edit/5
+        
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -173,7 +172,7 @@ namespace Airline_Management_System__AMS_.Controllers
             return View(passenger);
         }
 
-        // POST: Passenger/Edit/5
+      
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,FirstName,LastName,Email,PhoneNumber,PassportNumber,NationalId,IsArchived")] Passenger passenger)
@@ -206,7 +205,6 @@ namespace Airline_Management_System__AMS_.Controllers
             return View(passenger);
         }
 
-        // GET: Passenger/Delete/5 (Archive Confirmation)
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -224,7 +222,7 @@ namespace Airline_Management_System__AMS_.Controllers
             return View(passenger);
         }
 
-        // POST: Passenger/Delete/5 (Performs Archive/Soft Delete)
+        
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
@@ -232,7 +230,7 @@ namespace Airline_Management_System__AMS_.Controllers
             var passenger = await _context.Passengers.FindAsync(id);
             if (passenger != null)
             {
-                // Soft delete (Archive)
+               
                 passenger.IsArchived = true;
                 _context.Update(passenger);
                 await _context.SaveChangesAsync();
@@ -240,7 +238,7 @@ namespace Airline_Management_System__AMS_.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // POST: Passenger/Restore/5 (Un-archive)
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Restore(int id)
@@ -255,7 +253,7 @@ namespace Airline_Management_System__AMS_.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // POST: Passenger/HardDelete/5 (Permanent Delete)
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> HardDelete(int id)
@@ -273,13 +271,13 @@ namespace Airline_Management_System__AMS_.Controllers
                     return NotFound();
                 }
 
-                // 1. Release Seats & Delete Bookings
+                
                 if (passenger.Bookings != null && passenger.Bookings.Any())
                 {
                     foreach (var booking in passenger.Bookings)
                     {
                         // Some bookings might reference a seat
-                        // booking.Id is the key, not booking.BookingId
+                      
                         var seat = await _context.Seats.FirstOrDefaultAsync(s => s.BookingId == booking.Id);
                         if (seat != null)
                         {
@@ -292,20 +290,19 @@ namespace Airline_Management_System__AMS_.Controllers
                     _context.Bookings.RemoveRange(passenger.Bookings);
                 }
 
-                // 2. Delete Linked User Account
+                
                 if (!string.IsNullOrEmpty(passenger.UserId))
                 {
                     var user = await _userManager.FindByIdAsync(passenger.UserId);
                     if (user != null)
                     {
-                        // 2.1 Delete related Feedbacks first (to prevent FK constraint violation)
                         var feedbacks = await _context.Feedbacks.Where(f => f.UserId == passenger.UserId).ToListAsync();
                         if (feedbacks.Any())
                         {
                             _context.Feedbacks.RemoveRange(feedbacks);
                         }
 
-                        // 2.2 Delete User
+                        
                         var result = await _userManager.DeleteAsync(user);
                         if (!result.Succeeded)
                         {
@@ -316,7 +313,7 @@ namespace Airline_Management_System__AMS_.Controllers
                     }
                 }
 
-                // 3. Delete Passenger Record
+                
                 _context.Passengers.Remove(passenger);
 
                 await _context.SaveChangesAsync();
@@ -327,7 +324,6 @@ namespace Airline_Management_System__AMS_.Controllers
             catch (Exception ex)
             {
                 await transaction.RollbackAsync();
-                // Log error (if logger available)
                 TempData["ErrorMessage"] = "Error deleting passenger: " + ex.Message;
             }
 

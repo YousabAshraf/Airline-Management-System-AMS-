@@ -41,7 +41,6 @@ namespace Airline_Management_System__AMS_.Controllers
 
             List<Flight> flights = new List<Flight>();
 
-            // Search for outbound flights
             var departQuery = _context.Flights.AsQueryable();
             departQuery = departQuery.Where(f =>
                 f.Origin.ToLower() == origin &&
@@ -56,7 +55,6 @@ namespace Airline_Management_System__AMS_.Controllers
 
             flights.AddRange(departQuery.ToList());
 
-            // Search for return flights (always included for Trips)
             if (model.ReturnDate.HasValue)
             {
                 var returnQuery = _context.Flights.AsQueryable();

@@ -21,7 +21,7 @@ namespace Airline_Management_System__AMS_.Controllers
 
         public async Task<IActionResult> Index()
         {
-            // Initialize default values in case database connection fails
+           
             int numberOfUsers = 0;
             int numberOfAvailableFlights = 0;
             int numberOfCompletedFlights = 0;
@@ -34,7 +34,7 @@ namespace Airline_Management_System__AMS_.Controllers
 
             try
             {
-                // Get statistics
+                
                 numberOfUsers = await _userManager.Users.CountAsync();
 
                 numberOfAvailableFlights = await _context.Flights
@@ -45,14 +45,14 @@ namespace Airline_Management_System__AMS_.Controllers
                     .Where(f => f.ArrivalTime < DateTime.Now)
                     .CountAsync();
 
-                // New comprehensive statistics
+               
                 totalBookings = await _context.Bookings.CountAsync();
 
                 totalPassengers = await _context.Passengers
                     .Where(p => !p.IsArchived)
                     .CountAsync();
 
-                // Calculate revenue only from confirmed (non-cancelled) bookings
+               
                 totalRevenue = await _context.Bookings
                     .Where(b => b.Status != BookingStatus.Cancelled)
                     .SumAsync(b => b.TicketPrice);
@@ -64,7 +64,7 @@ namespace Airline_Management_System__AMS_.Controllers
 
                 pendingFeedback = await _context.Feedbacks.CountAsync();
 
-                // Get recent bookings for activity feed
+                
                 recentBookings = await _context.Bookings
                     .Include(b => b.Passenger)
                     .Include(b => b.Flight)
@@ -74,11 +74,10 @@ namespace Airline_Management_System__AMS_.Controllers
             }
             catch (Exception)
             {
-                // If database connection fails, use default values (0)
-                // This allows the page to load even if SQL Server is not running
+               
             }
 
-            // Pass data to view
+          
             ViewBag.NumberOfUsers = numberOfUsers;
             ViewBag.NumberOfAvailableFlights = numberOfAvailableFlights;
             ViewBag.NumberOfCompletedFlights = numberOfCompletedFlights;

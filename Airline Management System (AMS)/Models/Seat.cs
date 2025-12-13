@@ -19,7 +19,7 @@ namespace Airline_Management_System__AMS_.Models
         public Flight Flight { get; set; }
 
         [ForeignKey("Booking")]
-        public int? BookingId { get; set; } // Seat مرتبط بالـ Booking بعد الحجز
+        public int? BookingId { get; set; } 
         public Booking Booking { get; set; }
 
         public int SeatPrice { get; set; } = 100;

@@ -26,7 +26,6 @@ namespace Airline_Management_System__AMS_.Controllers
             return View(flights);
         }
 
-        // GET: Flight/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -48,34 +47,29 @@ namespace Airline_Management_System__AMS_.Controllers
             return View(flight);
         }
 
-        // GET: Flight/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Flight/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("FlightNumber,Origin,Destination,DepartureTime,ArrivalTime,AircraftType,EconomySeats,EconomyPrice,BusinessSeats,BusinessPrice,FirstClassSeats,FirstClassPrice")] FlightViewModel model)
         {
             if (ModelState.IsValid)
             {
-                // Validate that at least one seat class has seats
                 if (model.EconomySeats == 0 && model.BusinessSeats == 0 && model.FirstClassSeats == 0)
                 {
                     ModelState.AddModelError("", "At least one seat class must have seats.");
                     return View(model);
                 }
 
-                // Validate seat numbers are positive
                 if (model.EconomySeats < 0 || model.BusinessSeats < 0 || model.FirstClassSeats < 0)
                 {
                     ModelState.AddModelError("", "Seat numbers cannot be negative.");
                     return View(model);
                 }
 
-                // Calculate total seats
                 int totalSeats = model.EconomySeats + model.BusinessSeats + model.FirstClassSeats;
 
                 var flight = new Flight
@@ -92,11 +86,9 @@ namespace Airline_Management_System__AMS_.Controllers
                 _context.Add(flight);
                 await _context.SaveChangesAsync();
 
-                // Create seats for each class
                 var seats = new List<Seat>();
                 int seatCounter = 1;
 
-                // Create Economy Class Seats
                 for (int i = 1; i <= model.EconomySeats; i++)
                 {
                     seats.Add(new Seat
@@ -110,7 +102,6 @@ namespace Airline_Management_System__AMS_.Controllers
                     seatCounter++;
                 }
 
-                // Create Business Class Seats
                 seatCounter = 1;
                 for (int i = 1; i <= model.BusinessSeats; i++)
                 {
@@ -125,7 +116,6 @@ namespace Airline_Management_System__AMS_.Controllers
                     seatCounter++;
                 }
 
-                // Create First Class Seats
                 seatCounter = 1;
                 for (int i = 1; i <= model.FirstClassSeats; i++)
                 {
@@ -149,7 +139,6 @@ namespace Airline_Management_System__AMS_.Controllers
             return View(model);
         }
 
-        // GET: Flight/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -182,7 +171,6 @@ namespace Airline_Management_System__AMS_.Controllers
             return View(model);
         }
 
-        // POST: Flight/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("FlightId,FlightNumber,Origin,Destination,DepartureTime,ArrivalTime,AircraftType")] FlightViewModel model)
@@ -228,7 +216,6 @@ namespace Airline_Management_System__AMS_.Controllers
             return View(model);
         }
 
-        // GET: Flight/Delete/5 (Delete Confirmation)
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -245,7 +232,6 @@ namespace Airline_Management_System__AMS_.Controllers
                 return NotFound();
             }
 
-            // Check if flight has bookings
             if (flight.Bookings != null && flight.Bookings.Any())
             {
                 TempData["Error"] = "Cannot delete a flight with existing bookings. Please cancel all bookings first.";
@@ -255,7 +241,6 @@ namespace Airline_Management_System__AMS_.Controllers
             return View(flight);
         }
 
-        // POST: Flight/Delete/5 (Performs Hard Delete)
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
@@ -270,20 +255,17 @@ namespace Airline_Management_System__AMS_.Controllers
                 return NotFound();
             }
 
-            // Check if flight has bookings
             if (flight.Bookings != null && flight.Bookings.Any())
             {
                 TempData["Error"] = "Cannot delete a flight with existing bookings. Please cancel all bookings first.";
                 return RedirectToAction(nameof(Index));
             }
 
-            // Remove associated seats first
             if (flight.Seats != null && flight.Seats.Any())
             {
                 _context.Seats.RemoveRange(flight.Seats);
             }
 
-            // Hard delete the flight
             _context.Flights.Remove(flight);
             await _context.SaveChangesAsync();
 

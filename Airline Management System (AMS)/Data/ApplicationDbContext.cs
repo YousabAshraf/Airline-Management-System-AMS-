@@ -16,7 +16,7 @@ namespace Airline_Management_System__AMS_.Data
         {
             base.OnModelCreating(builder);
 
-            // Unique constraints
+            
             builder.Entity<Flight>()
                 .HasIndex(f => f.FlightNumber)
                 .IsUnique();

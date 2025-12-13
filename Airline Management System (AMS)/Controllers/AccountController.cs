@@ -29,7 +29,6 @@ public class AccountController : Controller
         _context = context;
     }
 
-    // Register GET
     [HttpGet]
     public IActionResult Register()
     {
@@ -38,8 +37,6 @@ public class AccountController : Controller
         return View();
     }
 
-
-    // Register POST
     [HttpPost]
     public async Task<IActionResult> Register(RegisterViewModel model)
     {
@@ -139,8 +136,6 @@ public class AccountController : Controller
         return RedirectToAction("VerifyEmail", new { userId = user.Id });
     }
 
-
-    // VerifyEmail GET
     [HttpGet]
     public IActionResult VerifyEmail(string userId)
     {
@@ -148,8 +143,6 @@ public class AccountController : Controller
     }
 
 
-
-    // VerifyEmail POST
     [HttpPost]
     public async Task<IActionResult> VerifyEmail(VerifyEmailViewModel model)
     {
@@ -163,11 +156,11 @@ public class AccountController : Controller
             user.VerificationResendCount = 0;
             await _userManager.UpdateAsync(user);
 
-            // AUTO-CREATE PASSENGER PROFILE for Customer users
+
             var roles = await _userManager.GetRolesAsync(user);
             if (roles.Contains("User") || roles.Contains("Customer"))
             {
-                // Check if passenger profile already exists
+
                 var existingPassenger = await _context.Passengers
                     .FirstOrDefaultAsync(p => p.UserId == user.Id);
 
@@ -199,7 +192,7 @@ public class AccountController : Controller
     }
 
 
-    [HttpPost]
+    
     [HttpPost]
     public async Task<IActionResult> ResendCode(string userId)
     {

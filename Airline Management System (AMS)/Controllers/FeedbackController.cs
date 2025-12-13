@@ -32,12 +32,10 @@ namespace Airline_Management_System__AMS_.Controllers
             return View(feedback);
         }
 
-        // GET: Feedback/Submit
         public async Task<IActionResult> Submit(int? flightId)
         {
             var user = await _userManager.GetUserAsync(User);
 
-            // Populate flights dropdown for selection if not pre-selected
             ViewData["FlightId"] = new SelectList(_context.Flights.Where(f => f.DepartureTime < DateTime.Now), "FlightId", "FlightInfo");
 
             if (flightId.HasValue)
@@ -49,7 +47,6 @@ namespace Airline_Management_System__AMS_.Controllers
             return View();
         }
 
-        // POST: Feedback/Submit
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Submit([Bind("FlightId,Rating,Comment")] Feedback feedback)
@@ -58,7 +55,6 @@ namespace Airline_Management_System__AMS_.Controllers
             feedback.UserId = user.Id;
             feedback.CreatedAt = DateTime.Now;
 
-            // Remove User and UserId from validation since we set them manually
             ModelState.Remove("User");
             ModelState.Remove("UserId");
 
@@ -70,12 +66,10 @@ namespace Airline_Management_System__AMS_.Controllers
                 return RedirectToAction(nameof(MyFeedback));
             }
 
-            // Reload dropdown if validation fails
             ViewData["FlightId"] = new SelectList(_context.Flights.Where(f => f.DepartureTime < DateTime.Now), "FlightId", "FlightInfo", feedback.FlightId);
             return View(feedback);
         }
 
-        // GET: Feedback/MyFeedback
         public async Task<IActionResult> MyFeedback()
         {
             var user = await _userManager.GetUserAsync(User);
@@ -88,7 +82,6 @@ namespace Airline_Management_System__AMS_.Controllers
             return View(myFeedback);
         }
 
-        // POST: Feedback/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]

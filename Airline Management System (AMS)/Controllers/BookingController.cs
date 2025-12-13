@@ -38,6 +38,8 @@ public class BookingController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
+    [Authorize(Roles = "User")]
+
     public async Task<IActionResult> Create(BookingViewModel model)
     {
         if (model.SelectedSeatId == null)
@@ -46,14 +48,13 @@ public class BookingController : Controller
             return View(model);
         }
 
-        // 🔹 Seat
+    
         var seat = await _context.Seats
             .FirstOrDefaultAsync(s => s.SeatId == model.SelectedSeatId.Value);
 
         if (seat == null || !seat.IsAvailable)
             return BadRequest("Seat not available");
 
-        // 🔹 Passenger (من المستخدم الحالي)
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
         if (userId == null)
             return Unauthorized();
@@ -64,12 +65,10 @@ public class BookingController : Controller
         if (passenger == null)
             return BadRequest("Passenger not found");
 
-        // 🔹 Flight
         var flight = await _context.Flights.FindAsync(model.FlightId);
         if (flight == null)
             return BadRequest("Flight not found");
 
-        // 🔹 Create Booking
         var booking = new Booking
         {
             FlightId = flight.FlightId,
@@ -83,7 +82,6 @@ public class BookingController : Controller
         _context.Bookings.Add(booking);
         await _context.SaveChangesAsync();
 
-        // 🔹 Update Seat & Flight
         seat.IsAvailable = false;
         seat.BookingId = booking.Id;
         flight.AvailableSeats--;
@@ -144,6 +142,7 @@ public class BookingController : Controller
 
 
     [HttpGet]
+    [Authorize(Roles = "User")]
     public IActionResult Create(int flightId)
     {
         var flight = _context.Flights
@@ -193,6 +192,7 @@ public class BookingController : Controller
     }
 
     [HttpGet]
+    [Authorize(Roles = "User")]
     public IActionResult SelectSeat(int flightId)
     {
         var flight = _context.Flights
@@ -210,6 +210,7 @@ public class BookingController : Controller
     }
 
     [HttpPost]
+    [Authorize(Roles = "User")]
     public IActionResult SelectSeat(int flightId, Seat seat)
     {
         TempData["SelectedSeatId"] = seat.SeatId;
@@ -217,7 +218,7 @@ public class BookingController : Controller
         return RedirectToAction("Create", new { flightId = flightId });
     }
 
-
+    [Authorize(Roles = "User")]
     public async Task<IActionResult> MyBookings()
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -235,7 +236,7 @@ public class BookingController : Controller
         return View(bookings);
     }
 
-
+    [Authorize(Roles = "User")]
     public async Task<IActionResult> Details(int id)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -258,6 +259,7 @@ public class BookingController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
+    [Authorize(Roles = "User")]
     public async Task<IActionResult> Cancel(int id)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -354,6 +356,7 @@ public class BookingController : Controller
     }
 
     [HttpGet]
+    [Authorize(Roles = "User")]
     public async Task<IActionResult> Edit(int bookingId)
     {
 
@@ -393,7 +396,7 @@ public class BookingController : Controller
 
         return View(vm);
     }
-
+    [Authorize(Roles = "User")]
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Edit(int bookingId, int selectedSeatId)
