@@ -1,3 +1,5 @@
+SET QUOTED_IDENTIFIER ON;
+SET ANSI_NULLS ON;
 DELETE FROM Feedbacks;
 DBCC CHECKIDENT ('Feedbacks', RESEED, 0);
 UPDATE Seats SET BookingId = NULL;
@@ -7,61 +9,76 @@ DELETE FROM Seats;
 DBCC CHECKIDENT ('Seats', RESEED, 0);
 DELETE FROM Flights;
 DBCC CHECKIDENT ('Flights', RESEED, 0);
-DELETE FROM Passengers;
-DBCC CHECKIDENT ('Passengers', RESEED, 0);
-DELETE FROM AspNetUsers WHERE Email LIKE '%@example.com';
--- Note: Not deleting Users to preserve your Admin account. New users will be appended.
-INSERT INTO AspNetUsers (Id, UserName, NormalizedUserName, Email, NormalizedEmail, EmailConfirmed, PasswordHash, SecurityStamp, ConcurrencyStamp, PhoneNumberConfirmed, TwoFactorEnabled, LockoutEnabled, AccessFailedCount, FirstName, LastName, Role) VALUES ('d7843c0e-deb4-4f44-90af-53260165ccd6', 'Alice727', 'ALICE727', 'Alice727@example.com', 'ALICE727@EXAMPLE.COM', 1, 'AQAAAAEAACcQAAAAEH8J8...', 'dc39770e-0912-491f-8709-ff852e93a695', '1fb552b9-e44c-4acd-8bff-99a4ffcf109c', 0, 0, 0, 0, 'Alice', 'Jones', 'Customer');
-INSERT INTO AspNetUsers (Id, UserName, NormalizedUserName, Email, NormalizedEmail, EmailConfirmed, PasswordHash, SecurityStamp, ConcurrencyStamp, PhoneNumberConfirmed, TwoFactorEnabled, LockoutEnabled, AccessFailedCount, FirstName, LastName, Role) VALUES ('5465f747-f94e-4f0f-b3e3-8e2e942bd95e', 'Tina867', 'TINA867', 'Tina867@example.com', 'TINA867@EXAMPLE.COM', 1, 'AQAAAAEAACcQAAAAEH8J8...', '573d5a7a-fe68-4c67-a524-c4f127d95a55', '6ccaf798-7d52-4688-8e13-90b895109e01', 0, 0, 0, 0, 'Tina', 'Thomas', 'Customer');
-INSERT INTO AspNetUsers (Id, UserName, NormalizedUserName, Email, NormalizedEmail, EmailConfirmed, PasswordHash, SecurityStamp, ConcurrencyStamp, PhoneNumberConfirmed, TwoFactorEnabled, LockoutEnabled, AccessFailedCount, FirstName, LastName, Role) VALUES ('747871f9-2597-4617-ba28-0502d7f5998b', 'John602', 'JOHN602', 'John602@example.com', 'JOHN602@EXAMPLE.COM', 1, 'AQAAAAEAACcQAAAAEH8J8...', '1701407c-e40e-4905-a56b-f083f3307fbf', '093f8737-e9ef-4809-92d6-4ebc0eeac3d0', 0, 0, 0, 0, 'John', 'Lopez', 'Customer');
-INSERT INTO AspNetUsers (Id, UserName, NormalizedUserName, Email, NormalizedEmail, EmailConfirmed, PasswordHash, SecurityStamp, ConcurrencyStamp, PhoneNumberConfirmed, TwoFactorEnabled, LockoutEnabled, AccessFailedCount, FirstName, LastName, Role) VALUES ('e869ddd6-c6bb-47eb-bfe2-01d303ed1d11', 'Wendy444', 'WENDY444', 'Wendy444@example.com', 'WENDY444@EXAMPLE.COM', 1, 'AQAAAAEAACcQAAAAEH8J8...', 'd2ab6479-dab6-48a3-9e73-f746604f5df8', '87eba922-9054-400a-bd5e-160f21d13380', 0, 0, 0, 0, 'Wendy', 'Moore', 'Customer');
-INSERT INTO AspNetUsers (Id, UserName, NormalizedUserName, Email, NormalizedEmail, EmailConfirmed, PasswordHash, SecurityStamp, ConcurrencyStamp, PhoneNumberConfirmed, TwoFactorEnabled, LockoutEnabled, AccessFailedCount, FirstName, LastName, Role) VALUES ('259876d9-4fb1-489b-b319-4c4f7ac96ceb', 'Ivy785', 'IVY785', 'Ivy785@example.com', 'IVY785@EXAMPLE.COM', 1, 'AQAAAAEAACcQAAAAEH8J8...', '7b055c38-88a2-4c4f-aaf4-123dfba70574', 'b0218ec6-8627-406a-8a2e-afe7a9d718cf', 0, 0, 0, 0, 'Ivy', 'Garcia', 'Customer');
-INSERT INTO AspNetUsers (Id, UserName, NormalizedUserName, Email, NormalizedEmail, EmailConfirmed, PasswordHash, SecurityStamp, ConcurrencyStamp, PhoneNumberConfirmed, TwoFactorEnabled, LockoutEnabled, AccessFailedCount, FirstName, LastName, Role) VALUES ('005f4fc5-a7ef-48e7-8a41-fc42632b7288', 'Wendy784', 'WENDY784', 'Wendy784@example.com', 'WENDY784@EXAMPLE.COM', 1, 'AQAAAAEAACcQAAAAEH8J8...', '8de5587b-3c33-4f15-97a7-0e88dbf6eb9b', 'b57962d7-91ae-485e-9949-93cdc4524663', 0, 0, 0, 0, 'Wendy', 'Jones', 'Customer');
-INSERT INTO AspNetUsers (Id, UserName, NormalizedUserName, Email, NormalizedEmail, EmailConfirmed, PasswordHash, SecurityStamp, ConcurrencyStamp, PhoneNumberConfirmed, TwoFactorEnabled, LockoutEnabled, AccessFailedCount, FirstName, LastName, Role) VALUES ('4c891ae8-d61e-4243-bb98-de05a243b017', 'Victor306', 'VICTOR306', 'Victor306@example.com', 'VICTOR306@EXAMPLE.COM', 1, 'AQAAAAEAACcQAAAAEH8J8...', 'a535c356-739b-426c-bfd8-62e0d886ca77', '8e222c66-a064-44eb-8fee-1632639a7c71', 0, 0, 0, 0, 'Victor', 'Jones', 'Customer');
-INSERT INTO AspNetUsers (Id, UserName, NormalizedUserName, Email, NormalizedEmail, EmailConfirmed, PasswordHash, SecurityStamp, ConcurrencyStamp, PhoneNumberConfirmed, TwoFactorEnabled, LockoutEnabled, AccessFailedCount, FirstName, LastName, Role) VALUES ('5d29080f-8315-4695-8d83-500fcba01359', 'John430', 'JOHN430', 'John430@example.com', 'JOHN430@EXAMPLE.COM', 1, 'AQAAAAEAACcQAAAAEH8J8...', 'a2ac6368-338e-4300-95d9-1782d210e1d0', '5a5eefb3-e9fb-49c7-9edf-f30641561bd5', 0, 0, 0, 0, 'John', 'Thomas', 'Customer');
-INSERT INTO AspNetUsers (Id, UserName, NormalizedUserName, Email, NormalizedEmail, EmailConfirmed, PasswordHash, SecurityStamp, ConcurrencyStamp, PhoneNumberConfirmed, TwoFactorEnabled, LockoutEnabled, AccessFailedCount, FirstName, LastName, Role) VALUES ('e861add9-40e8-4353-91d8-52428fe4c9eb', 'Alice573', 'ALICE573', 'Alice573@example.com', 'ALICE573@EXAMPLE.COM', 1, 'AQAAAAEAACcQAAAAEH8J8...', 'd9bb02b0-2499-456c-80db-d6ffdd329540', 'e370074a-4de9-4f2f-b478-ac68a9282997', 0, 0, 0, 0, 'Alice', 'Williams', 'Customer');
-INSERT INTO AspNetUsers (Id, UserName, NormalizedUserName, Email, NormalizedEmail, EmailConfirmed, PasswordHash, SecurityStamp, ConcurrencyStamp, PhoneNumberConfirmed, TwoFactorEnabled, LockoutEnabled, AccessFailedCount, FirstName, LastName, Role) VALUES ('8ce2a14a-07d0-436d-976c-20d3ccccb56a', 'Olivia469', 'OLIVIA469', 'Olivia469@example.com', 'OLIVIA469@EXAMPLE.COM', 1, 'AQAAAAEAACcQAAAAEH8J8...', 'afd924d3-dd1d-4572-888e-6ee6c9c4cb12', '2d68434a-ac18-4538-a5ae-3218b7408e89', 0, 0, 0, 0, 'Olivia', 'Lopez', 'Customer');
-INSERT INTO AspNetUsers (Id, UserName, NormalizedUserName, Email, NormalizedEmail, EmailConfirmed, PasswordHash, SecurityStamp, ConcurrencyStamp, PhoneNumberConfirmed, TwoFactorEnabled, LockoutEnabled, AccessFailedCount, FirstName, LastName, Role) VALUES ('9a1209b5-d74e-4e1b-91bc-4b579dfec322', 'Eve401', 'EVE401', 'Eve401@example.com', 'EVE401@EXAMPLE.COM', 1, 'AQAAAAEAACcQAAAAEH8J8...', 'f8eb4321-7f56-4645-b69b-31c24af4d6c0', '72678a13-c090-4ba7-b6df-a4e6e7232ef6', 0, 0, 0, 0, 'Eve', 'Thomas', 'Customer');
-INSERT INTO AspNetUsers (Id, UserName, NormalizedUserName, Email, NormalizedEmail, EmailConfirmed, PasswordHash, SecurityStamp, ConcurrencyStamp, PhoneNumberConfirmed, TwoFactorEnabled, LockoutEnabled, AccessFailedCount, FirstName, LastName, Role) VALUES ('5b6fd7ba-ec37-4a30-9265-38e5597c16b9', 'Sam965', 'SAM965', 'Sam965@example.com', 'SAM965@EXAMPLE.COM', 1, 'AQAAAAEAACcQAAAAEH8J8...', 'e39836b6-b919-4539-90f3-3d6c2884ad16', 'c368684d-0917-44d1-aeca-d4baed4ef81e', 0, 0, 0, 0, 'Sam', 'Davis', 'Customer');
-INSERT INTO AspNetUsers (Id, UserName, NormalizedUserName, Email, NormalizedEmail, EmailConfirmed, PasswordHash, SecurityStamp, ConcurrencyStamp, PhoneNumberConfirmed, TwoFactorEnabled, LockoutEnabled, AccessFailedCount, FirstName, LastName, Role) VALUES ('4cdaaf2f-76b7-4a3e-ae50-41b3c3680da8', 'Peter706', 'PETER706', 'Peter706@example.com', 'PETER706@EXAMPLE.COM', 1, 'AQAAAAEAACcQAAAAEH8J8...', 'cd6fb834-9f93-411a-bb86-58bcdb8dd4de', 'a334a6a0-03e6-4f1a-83ac-3459f1dd0b66', 0, 0, 0, 0, 'Peter', 'Martin', 'Customer');
-INSERT INTO AspNetUsers (Id, UserName, NormalizedUserName, Email, NormalizedEmail, EmailConfirmed, PasswordHash, SecurityStamp, ConcurrencyStamp, PhoneNumberConfirmed, TwoFactorEnabled, LockoutEnabled, AccessFailedCount, FirstName, LastName, Role) VALUES ('40949543-461b-435b-85cb-9f65f15351cd', 'Yara355', 'YARA355', 'Yara355@example.com', 'YARA355@EXAMPLE.COM', 1, 'AQAAAAEAACcQAAAAEH8J8...', 'cd8caf04-e6b9-48f3-adef-3f70328d3d34', '59bb9814-e678-4158-be68-23ad477ef1ce', 0, 0, 0, 0, 'Yara', 'Miller', 'Customer');
-INSERT INTO AspNetUsers (Id, UserName, NormalizedUserName, Email, NormalizedEmail, EmailConfirmed, PasswordHash, SecurityStamp, ConcurrencyStamp, PhoneNumberConfirmed, TwoFactorEnabled, LockoutEnabled, AccessFailedCount, FirstName, LastName, Role) VALUES ('90f9193c-7990-4206-a02b-6af19024bbc8', 'Rose553', 'ROSE553', 'Rose553@example.com', 'ROSE553@EXAMPLE.COM', 1, 'AQAAAAEAACcQAAAAEH8J8...', 'a716c8ac-52e7-44d5-9b1a-ad547b8a3f42', '765da270-36dd-47c8-b8d1-a14846f2b8c9', 0, 0, 0, 0, 'Rose', 'Hernandez', 'Customer');
-INSERT INTO AspNetUsers (Id, UserName, NormalizedUserName, Email, NormalizedEmail, EmailConfirmed, PasswordHash, SecurityStamp, ConcurrencyStamp, PhoneNumberConfirmed, TwoFactorEnabled, LockoutEnabled, AccessFailedCount, FirstName, LastName, Role) VALUES ('7be54c16-af8a-4d62-bd8e-723eed9e78b2', 'Grace515', 'GRACE515', 'Grace515@example.com', 'GRACE515@EXAMPLE.COM', 1, 'AQAAAAEAACcQAAAAEH8J8...', '3b32dd14-721f-4f83-9dae-91b6be2899a6', '5f860511-2631-4710-8690-6fb0e6e106c5', 0, 0, 0, 0, 'Grace', 'Johnson', 'Customer');
-INSERT INTO AspNetUsers (Id, UserName, NormalizedUserName, Email, NormalizedEmail, EmailConfirmed, PasswordHash, SecurityStamp, ConcurrencyStamp, PhoneNumberConfirmed, TwoFactorEnabled, LockoutEnabled, AccessFailedCount, FirstName, LastName, Role) VALUES ('8899c259-b400-4403-b73c-2500a59307ea', 'Olivia221', 'OLIVIA221', 'Olivia221@example.com', 'OLIVIA221@EXAMPLE.COM', 1, 'AQAAAAEAACcQAAAAEH8J8...', '354e8cff-0bfb-41d1-947f-f158f499a2e1', 'b4a55d27-b47e-4c16-a83a-abf6877278fa', 0, 0, 0, 0, 'Olivia', 'Martinez', 'Customer');
-INSERT INTO AspNetUsers (Id, UserName, NormalizedUserName, Email, NormalizedEmail, EmailConfirmed, PasswordHash, SecurityStamp, ConcurrencyStamp, PhoneNumberConfirmed, TwoFactorEnabled, LockoutEnabled, AccessFailedCount, FirstName, LastName, Role) VALUES ('fca25c92-0b78-4ed0-a1d4-784d73038d3f', 'Wendy688', 'WENDY688', 'Wendy688@example.com', 'WENDY688@EXAMPLE.COM', 1, 'AQAAAAEAACcQAAAAEH8J8...', 'd18b1024-3dc2-4474-85e1-8ddb64a144d6', '4fcb28f8-6009-4500-b821-1254975f08bf', 0, 0, 0, 0, 'Wendy', 'Garcia', 'Customer');
-INSERT INTO AspNetUsers (Id, UserName, NormalizedUserName, Email, NormalizedEmail, EmailConfirmed, PasswordHash, SecurityStamp, ConcurrencyStamp, PhoneNumberConfirmed, TwoFactorEnabled, LockoutEnabled, AccessFailedCount, FirstName, LastName, Role) VALUES ('3fb56eea-73c1-41ec-8e0c-5d6c98a4520a', 'Tina358', 'TINA358', 'Tina358@example.com', 'TINA358@EXAMPLE.COM', 1, 'AQAAAAEAACcQAAAAEH8J8...', '2bc46a92-d6b0-496c-be79-151fe8ed3388', 'a5321797-93ae-431a-bd43-59293bc635ac', 0, 0, 0, 0, 'Tina', 'Miller', 'Customer');
-INSERT INTO AspNetUsers (Id, UserName, NormalizedUserName, Email, NormalizedEmail, EmailConfirmed, PasswordHash, SecurityStamp, ConcurrencyStamp, PhoneNumberConfirmed, TwoFactorEnabled, LockoutEnabled, AccessFailedCount, FirstName, LastName, Role) VALUES ('31a20598-1bee-45d4-a4a3-389452f8b1db', 'Noah789', 'NOAH789', 'Noah789@example.com', 'NOAH789@EXAMPLE.COM', 1, 'AQAAAAEAACcQAAAAEH8J8...', 'fb5be5d7-6adf-4130-9cb4-cf49c82afba7', 'd29a852c-ccb7-46ef-8bda-7d0baa465825', 0, 0, 0, 0, 'Noah', 'Williams', 'Customer');
-INSERT INTO AspNetUsers (Id, UserName, NormalizedUserName, Email, NormalizedEmail, EmailConfirmed, PasswordHash, SecurityStamp, ConcurrencyStamp, PhoneNumberConfirmed, TwoFactorEnabled, LockoutEnabled, AccessFailedCount, FirstName, LastName, Role) VALUES ('4dfd19bc-80f8-45d7-8f85-6c44a05f2d4b', 'Jack201', 'JACK201', 'Jack201@example.com', 'JACK201@EXAMPLE.COM', 1, 'AQAAAAEAACcQAAAAEH8J8...', '05bac5f8-eb35-4ace-bcf6-cda93d400443', '8e2fa3aa-8373-4663-b814-8a2e1fd1026a', 0, 0, 0, 0, 'Jack', 'Anderson', 'Customer');
-INSERT INTO AspNetUsers (Id, UserName, NormalizedUserName, Email, NormalizedEmail, EmailConfirmed, PasswordHash, SecurityStamp, ConcurrencyStamp, PhoneNumberConfirmed, TwoFactorEnabled, LockoutEnabled, AccessFailedCount, FirstName, LastName, Role) VALUES ('046b8269-ca52-4a56-b7a1-be2663a359c2', 'Frank872', 'FRANK872', 'Frank872@example.com', 'FRANK872@EXAMPLE.COM', 1, 'AQAAAAEAACcQAAAAEH8J8...', '0ef6fcd3-642b-4c66-be16-bcff764e06f1', '39a09d0d-1448-4bd5-804a-64da29a5e3d4', 0, 0, 0, 0, 'Frank', 'Johnson', 'Customer');
-INSERT INTO AspNetUsers (Id, UserName, NormalizedUserName, Email, NormalizedEmail, EmailConfirmed, PasswordHash, SecurityStamp, ConcurrencyStamp, PhoneNumberConfirmed, TwoFactorEnabled, LockoutEnabled, AccessFailedCount, FirstName, LastName, Role) VALUES ('56c390e9-30df-45d0-a742-df38f70da3f1', 'Rose547', 'ROSE547', 'Rose547@example.com', 'ROSE547@EXAMPLE.COM', 1, 'AQAAAAEAACcQAAAAEH8J8...', '53611df7-fac9-410e-9b66-7bd24dc2bd3e', '5819d52b-a1c4-4d9d-9b7d-6a4ca0314780', 0, 0, 0, 0, 'Rose', 'Lopez', 'Customer');
-INSERT INTO AspNetUsers (Id, UserName, NormalizedUserName, Email, NormalizedEmail, EmailConfirmed, PasswordHash, SecurityStamp, ConcurrencyStamp, PhoneNumberConfirmed, TwoFactorEnabled, LockoutEnabled, AccessFailedCount, FirstName, LastName, Role) VALUES ('0435efbf-2a49-446e-a709-d6c4baeec589', 'John271', 'JOHN271', 'John271@example.com', 'JOHN271@EXAMPLE.COM', 1, 'AQAAAAEAACcQAAAAEH8J8...', '2fef4c01-fb52-47fb-8ee7-b38955cb1927', '3f24ad77-0af0-48f2-a7fc-c52fe7d54ed1', 0, 0, 0, 0, 'John', 'Thomas', 'Customer');
-INSERT INTO AspNetUsers (Id, UserName, NormalizedUserName, Email, NormalizedEmail, EmailConfirmed, PasswordHash, SecurityStamp, ConcurrencyStamp, PhoneNumberConfirmed, TwoFactorEnabled, LockoutEnabled, AccessFailedCount, FirstName, LastName, Role) VALUES ('fb7f6ea1-4334-4cd6-8d2c-57f183336129', 'Rose323', 'ROSE323', 'Rose323@example.com', 'ROSE323@EXAMPLE.COM', 1, 'AQAAAAEAACcQAAAAEH8J8...', '4dd66415-8abc-4c09-835c-f3dd5aa7b63d', '2d74b48c-9292-44cb-97f4-0a02feb6b2c8', 0, 0, 0, 0, 'Rose', 'Williams', 'Customer');
+-- IDs to clean up (Specific Test Users)
+DECLARE @TargetIds TABLE (Id NVARCHAR(450));
+INSERT INTO @TargetIds (Id) VALUES 
+('d7843c0e-deb4-4f44-90af-53260165ccd6'),
+('5465f747-f94e-4f0f-b3e3-8e2e942bd95e'),
+('747871f9-2597-4617-ba28-0502d7f5998b'),
+('e869ddd6-c6bb-47eb-bfe2-01d303ed1d11'),
+('aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa');
+
+-- 1. Clear Feedbacks for these users
+DELETE FROM Feedbacks WHERE UserId IN (SELECT Id FROM @TargetIds);
+
+-- 2. Clear Passengers for these users (Bookings/Seats should be cleared globally or for these passengers)
+-- Clearing Bookings/Seats globally as per original script structure, or better:
+UPDATE Seats SET BookingId = NULL;
+DELETE FROM Bookings;
+DELETE FROM Passengers; -- Simply wipe Passengers to start fresh (as they are all seed data usually)
+
+-- 3. Clear Identity Tables for Target IDs
+DELETE FROM AspNetUserRoles WHERE UserId IN (SELECT Id FROM @TargetIds);
+DELETE FROM AspNetUserClaims WHERE UserId IN (SELECT Id FROM @TargetIds);
+DELETE FROM AspNetUserLogins WHERE UserId IN (SELECT Id FROM @TargetIds);
+DELETE FROM AspNetUserTokens WHERE UserId IN (SELECT Id FROM @TargetIds);
+
+-- 4. Delete Users
+DELETE FROM AspNetUsers WHERE Id IN (SELECT Id FROM @TargetIds);
+GO
+-- Note: Not deleting Users to preserve your Admin account if it exists.
+-- But for a clean seed, we will upsert or ignore duplicates.
+-- Professional Seed Data: 5 Distinct Users linked to 5 Distinct Passengers.
+
+-- 1. Alice Jones (User & Passenger)
+INSERT INTO AspNetUsers (Id, UserName, NormalizedUserName, Email, NormalizedEmail, EmailConfirmed, PasswordHash, SecurityStamp, ConcurrencyStamp, PhoneNumberConfirmed, TwoFactorEnabled, LockoutEnabled, AccessFailedCount, FirstName, LastName, Role, PhoneNumber, PassportNumber, NationalId, EmailConfirmationCode, LastVerificationEmailSent, VerificationResendCount) 
+VALUES ('d7843c0e-deb4-4f44-90af-53260165ccd6', 'Alice727@example.com', 'ALICE727@EXAMPLE.COM', 'Alice727@example.com', 'ALICE727@EXAMPLE.COM', 1, 'AQAAAAEAACcQAAAAEH8J8...', 'dc39770e-0912-491f-8709-ff852e93a695', '1fb552b9-e44c-4acd-8bff-99a4ffcf109c', 0, 0, 0, 0, 'Alice', 'Jones', 'Customer', '+1-555-0101', 'A10000001', '1000000000001', NEWID(), GETUTCDATE(), 0);
+
+-- 2. Tina Thomas (User & Passenger)
+INSERT INTO AspNetUsers (Id, UserName, NormalizedUserName, Email, NormalizedEmail, EmailConfirmed, PasswordHash, SecurityStamp, ConcurrencyStamp, PhoneNumberConfirmed, TwoFactorEnabled, LockoutEnabled, AccessFailedCount, FirstName, LastName, Role, PhoneNumber, PassportNumber, NationalId, EmailConfirmationCode, LastVerificationEmailSent, VerificationResendCount) 
+VALUES ('5465f747-f94e-4f0f-b3e3-8e2e942bd95e', 'Tina867@example.com', 'TINA867@EXAMPLE.COM', 'Tina867@example.com', 'TINA867@EXAMPLE.COM', 1, 'AQAAAAEAACcQAAAAEH8J8...', '573d5a7a-fe68-4c67-a524-c4f127d95a55', '6ccaf798-7d52-4688-8e13-90b895109e01', 0, 0, 0, 0, 'Tina', 'Thomas', 'Customer', '+1-555-0102', 'T20000002', '2000000000002', NEWID(), GETUTCDATE(), 0);
+
+-- 3. John Lopez (User & Passenger)
+INSERT INTO AspNetUsers (Id, UserName, NormalizedUserName, Email, NormalizedEmail, EmailConfirmed, PasswordHash, SecurityStamp, ConcurrencyStamp, PhoneNumberConfirmed, TwoFactorEnabled, LockoutEnabled, AccessFailedCount, FirstName, LastName, Role, PhoneNumber, PassportNumber, NationalId, EmailConfirmationCode, LastVerificationEmailSent, VerificationResendCount) 
+VALUES ('747871f9-2597-4617-ba28-0502d7f5998b', 'John602@example.com', 'JOHN602@EXAMPLE.COM', 'John602@example.com', 'JOHN602@EXAMPLE.COM', 1, 'AQAAAAEAACcQAAAAEH8J8...', '1701407c-e40e-4905-a56b-f083f3307fbf', '093f8737-e9ef-4809-92d6-4ebc0eeac3d0', 0, 0, 0, 0, 'John', 'Lopez', 'Customer', '+1-555-0103', 'J30000003', '3000000000003', NEWID(), GETUTCDATE(), 0);
+
+-- 4. Wendy Moore (User & Passenger)
+INSERT INTO AspNetUsers (Id, UserName, NormalizedUserName, Email, NormalizedEmail, EmailConfirmed, PasswordHash, SecurityStamp, ConcurrencyStamp, PhoneNumberConfirmed, TwoFactorEnabled, LockoutEnabled, AccessFailedCount, FirstName, LastName, Role, PhoneNumber, PassportNumber, NationalId, EmailConfirmationCode, LastVerificationEmailSent, VerificationResendCount) 
+VALUES ('e869ddd6-c6bb-47eb-bfe2-01d303ed1d11', 'Wendy444@example.com', 'WENDY444@EXAMPLE.COM', 'Wendy444@example.com', 'WENDY444@EXAMPLE.COM', 1, 'AQAAAAEAACcQAAAAEH8J8...', 'd2ab6479-dab6-48a3-9e73-f746604f5df8', '87eba922-9054-400a-bd5e-160f21d13380', 0, 0, 0, 0, 'Wendy', 'Moore', 'Customer', '+1-555-0104', 'W40000004', '4000000000004', NEWID(), GETUTCDATE(), 0);
+
+-- 5. Jane Doe (New Professional User & Passenger)
+INSERT INTO AspNetUsers (Id, UserName, NormalizedUserName, Email, NormalizedEmail, EmailConfirmed, PasswordHash, SecurityStamp, ConcurrencyStamp, PhoneNumberConfirmed, TwoFactorEnabled, LockoutEnabled, AccessFailedCount, FirstName, LastName, Role, PhoneNumber, PassportNumber, NationalId, EmailConfirmationCode, LastVerificationEmailSent, VerificationResendCount) 
+VALUES ('aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa', 'jane.doe@example.com', 'JANE.DOE@EXAMPLE.COM', 'jane.doe@example.com', 'JANE.DOE@EXAMPLE.COM', 1, 'AQAAAAEAACcQAAAAEH8J8...', 'prof-stamp-001', 'prof-concur-001', 0, 0, 0, 0, 'Jane', 'Doe', 'Customer', '+1-555-9999', 'PROF-PASS-001', '9999999999999', NEWID(), GETUTCDATE(), 0);
+
+
+
 SET IDENTITY_INSERT Passengers ON;
-INSERT INTO Passengers (Id, FirstName, LastName, Email, PhoneNumber, PassportNumber, NationalId, IsArchived, UserId) VALUES (1, 'Jane', 'Lopez', 'jane.lopez1@example.com', '+1-312-266-3328', 'H94040449', '48206063922687', 0, '046b8269-ca52-4a56-b7a1-be2663a359c2');
-INSERT INTO Passengers (Id, FirstName, LastName, Email, PhoneNumber, PassportNumber, NationalId, IsArchived, UserId) VALUES (2, 'Liam', 'Gonzalez', 'liam.gonzalez2@example.com', '+1-356-701-1041', 'U16081119', '21098361950954', 0, '747871f9-2597-4617-ba28-0502d7f5998b');
-INSERT INTO Passengers (Id, FirstName, LastName, Email, PhoneNumber, PassportNumber, NationalId, IsArchived, UserId) VALUES (3, 'Tina', 'Smith', 'tina.smith3@example.com', '+1-991-440-7041', 'E67780296', '27653657874397', 0, '5b6fd7ba-ec37-4a30-9265-38e5597c16b9');
-INSERT INTO Passengers (Id, FirstName, LastName, Email, PhoneNumber, PassportNumber, NationalId, IsArchived, UserId) VALUES (4, 'Mia', 'Garcia', 'mia.garcia4@example.com', '+1-485-896-1378', 'I04247962', '74931959642239', 0, 'e869ddd6-c6bb-47eb-bfe2-01d303ed1d11');
-INSERT INTO Passengers (Id, FirstName, LastName, Email, PhoneNumber, PassportNumber, NationalId, IsArchived, UserId) VALUES (5, 'Quinn', 'Hernandez', 'quinn.hernandez5@example.com', '+1-511-211-4046', 'D42969462', '50501923575235', 0, 'e861add9-40e8-4353-91d8-52428fe4c9eb');
-INSERT INTO Passengers (Id, FirstName, LastName, Email, PhoneNumber, PassportNumber, NationalId, IsArchived, UserId) VALUES (6, 'Kelly', 'Lopez', 'kelly.lopez6@example.com', '+1-897-726-5602', 'K73159840', '44392899411676', 0, '3fb56eea-73c1-41ec-8e0c-5d6c98a4520a');
-INSERT INTO Passengers (Id, FirstName, LastName, Email, PhoneNumber, PassportNumber, NationalId, IsArchived, UserId) VALUES (7, 'Grace', 'Martin', 'grace.martin7@example.com', '+1-289-736-4714', 'E08950131', '21711933446746', 0, '4cdaaf2f-76b7-4a3e-ae50-41b3c3680da8');
-INSERT INTO Passengers (Id, FirstName, LastName, Email, PhoneNumber, PassportNumber, NationalId, IsArchived, UserId) VALUES (8, 'Kelly', 'Moore', 'kelly.moore8@example.com', '+1-326-857-9479', 'Q12474133', '54197355483949', 0, '8ce2a14a-07d0-436d-976c-20d3ccccb56a');
-INSERT INTO Passengers (Id, FirstName, LastName, Email, PhoneNumber, PassportNumber, NationalId, IsArchived, UserId) VALUES (9, 'Bob', 'Smith', 'bob.smith9@example.com', '+1-337-984-2001', 'Y78416632', '74799531124432', 0, '4dfd19bc-80f8-45d7-8f85-6c44a05f2d4b');
-INSERT INTO Passengers (Id, FirstName, LastName, Email, PhoneNumber, PassportNumber, NationalId, IsArchived, UserId) VALUES (10, 'David', 'Smith', 'david.smith10@example.com', '+1-323-287-4007', 'N79659211', '33369867803157', 0, '5d29080f-8315-4695-8d83-500fcba01359');
-INSERT INTO Passengers (Id, FirstName, LastName, Email, PhoneNumber, PassportNumber, NationalId, IsArchived, UserId) VALUES (11, 'Ivy', 'Martin', 'ivy.martin11@example.com', '+1-449-108-5576', 'V66113411', '06338067923401', 0, '5465f747-f94e-4f0f-b3e3-8e2e942bd95e');
-INSERT INTO Passengers (Id, FirstName, LastName, Email, PhoneNumber, PassportNumber, NationalId, IsArchived, UserId) VALUES (12, 'Kelly', 'Moore', 'kelly.moore12@example.com', '+1-854-290-3648', 'Z67314264', '66546204366872', 0, '9a1209b5-d74e-4e1b-91bc-4b579dfec322');
-INSERT INTO Passengers (Id, FirstName, LastName, Email, PhoneNumber, PassportNumber, NationalId, IsArchived, UserId) VALUES (13, 'Bob', 'Davis', 'bob.davis13@example.com', '+1-253-297-4193', 'S19926591', '84175786257132', 0, 'fb7f6ea1-4334-4cd6-8d2c-57f183336129');
-INSERT INTO Passengers (Id, FirstName, LastName, Email, PhoneNumber, PassportNumber, NationalId, IsArchived, UserId) VALUES (14, 'Liam', 'Thomas', 'liam.thomas14@example.com', '+1-694-887-7754', 'A78469494', '75225175169154', 0, '40949543-461b-435b-85cb-9f65f15351cd');
-INSERT INTO Passengers (Id, FirstName, LastName, Email, PhoneNumber, PassportNumber, NationalId, IsArchived, UserId) VALUES (15, 'David', 'Anderson', 'david.anderson15@example.com', '+1-892-479-4283', 'B26296137', '96591817418096', 0, '8899c259-b400-4403-b73c-2500a59307ea');
-INSERT INTO Passengers (Id, FirstName, LastName, Email, PhoneNumber, PassportNumber, NationalId, IsArchived, UserId) VALUES (16, 'Tina', 'Smith', 'tina.smith16@example.com', '+1-593-483-5267', 'S58669311', '94227864958198', 0, '259876d9-4fb1-489b-b319-4c4f7ac96ceb');
-INSERT INTO Passengers (Id, FirstName, LastName, Email, PhoneNumber, PassportNumber, NationalId, IsArchived, UserId) VALUES (17, 'Grace', 'Thomas', 'grace.thomas17@example.com', '+1-615-672-7258', 'L21958927', '89914090549437', 0, '4c891ae8-d61e-4243-bb98-de05a243b017');
-INSERT INTO Passengers (Id, FirstName, LastName, Email, PhoneNumber, PassportNumber, NationalId, IsArchived, UserId) VALUES (18, 'Kelly', 'Wilson', 'kelly.wilson18@example.com', '+1-925-394-3520', 'J75310533', '89015188108205', 0, '0435efbf-2a49-446e-a709-d6c4baeec589');
-INSERT INTO Passengers (Id, FirstName, LastName, Email, PhoneNumber, PassportNumber, NationalId, IsArchived, UserId) VALUES (19, 'Charlie', 'Martinez', 'charlie.martinez19@example.com', '+1-843-765-2207', 'H22432559', '42300288096960', 0, 'fca25c92-0b78-4ed0-a1d4-784d73038d3f');
-INSERT INTO Passengers (Id, FirstName, LastName, Email, PhoneNumber, PassportNumber, NationalId, IsArchived, UserId) VALUES (20, 'Bob', 'Martin', 'bob.martin20@example.com', '+1-937-579-9827', 'K51291285', '61334900801112', 0, '005f4fc5-a7ef-48e7-8a41-fc42632b7288');
-INSERT INTO Passengers (Id, FirstName, LastName, Email, PhoneNumber, PassportNumber, NationalId, IsArchived, UserId) VALUES (21, 'Tina', 'Martinez', 'tina.martinez21@example.com', '+1-794-195-2866', 'J77890725', '80438701956433', 0, '7be54c16-af8a-4d62-bd8e-723eed9e78b2');
-INSERT INTO Passengers (Id, FirstName, LastName, Email, PhoneNumber, PassportNumber, NationalId, IsArchived, UserId) VALUES (22, 'Kelly', 'Jackson', 'kelly.jackson22@example.com', '+1-604-509-9903', 'L49846482', '49348868309226', 0, '56c390e9-30df-45d0-a742-df38f70da3f1');
-INSERT INTO Passengers (Id, FirstName, LastName, Email, PhoneNumber, PassportNumber, NationalId, IsArchived, UserId) VALUES (23, 'Kelly', 'Moore', 'kelly.moore23@example.com', '+1-726-335-5063', 'Q18991150', '51103491817905', 0, 'd7843c0e-deb4-4f44-90af-53260165ccd6');
-INSERT INTO Passengers (Id, FirstName, LastName, Email, PhoneNumber, PassportNumber, NationalId, IsArchived, UserId) VALUES (24, 'Yara', 'Johnson', 'yara.johnson24@example.com', '+1-666-800-5629', 'U37705617', '13785387118121', 0, '31a20598-1bee-45d4-a4a3-389452f8b1db');
-INSERT INTO Passengers (Id, FirstName, LastName, Email, PhoneNumber, PassportNumber, NationalId, IsArchived, UserId) VALUES (25, 'Hank', 'Gonzalez', 'hank.gonzalez25@example.com', '+1-466-783-1855', 'B36040049', '30799169742486', 0, '90f9193c-7990-4206-a02b-6af19024bbc8');
+
+-- Linked Passengers (Matching IDs from above)
+INSERT INTO Passengers (Id, FirstName, LastName, Email, PhoneNumber, PassportNumber, NationalId, IsArchived, UserId) 
+VALUES (1, 'Alice', 'Jones', 'Alice727@example.com', '+1-555-0101', 'A10000001', '1000000000001', 0, 'd7843c0e-deb4-4f44-90af-53260165ccd6');
+
+INSERT INTO Passengers (Id, FirstName, LastName, Email, PhoneNumber, PassportNumber, NationalId, IsArchived, UserId) 
+VALUES (2, 'Tina', 'Thomas', 'Tina867@example.com', '+1-555-0102', 'T20000002', '2000000000002', 0, '5465f747-f94e-4f0f-b3e3-8e2e942bd95e');
+
+INSERT INTO Passengers (Id, FirstName, LastName, Email, PhoneNumber, PassportNumber, NationalId, IsArchived, UserId) 
+VALUES (3, 'John', 'Lopez', 'John602@example.com', '+1-555-0103', 'J30000003', '3000000000003', 0, '747871f9-2597-4617-ba28-0502d7f5998b');
+
+INSERT INTO Passengers (Id, FirstName, LastName, Email, PhoneNumber, PassportNumber, NationalId, IsArchived, UserId) 
+VALUES (4, 'Wendy', 'Moore', 'Wendy444@example.com', '+1-555-0104', 'W40000004', '4000000000004', 0, 'e869ddd6-c6bb-47eb-bfe2-01d303ed1d11');
+
+INSERT INTO Passengers (Id, FirstName, LastName, Email, PhoneNumber, PassportNumber, NationalId, IsArchived, UserId) 
+VALUES (5, 'Jane', 'Doe', 'jane.doe@example.com', '+1-555-9999', 'PROF-PASS-001', '9999999999999', 0, 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa');
 SET IDENTITY_INSERT Passengers OFF;
 SET IDENTITY_INSERT Flights ON;
 INSERT INTO Flights (FlightId, FlightNumber, Origin, Destination, DepartureTime, ArrivalTime, AircraftType, AvailableSeats) VALUES (1, 'AMS1001', 'Berlin', 'Cairo', '2025-12-15 17:41:00', '2025-12-15 23:41:00', 'Boeing 777', 60);
@@ -1593,83 +1610,114 @@ INSERT INTO Seats (SeatId, SeatNumber, Class, FlightId, SeatPrice, IsAvailable) 
 INSERT INTO Seats (SeatId, SeatNumber, Class, FlightId, SeatPrice, IsAvailable) VALUES (1500, '10F', 'Economy', 25, 150, 1);
 SET IDENTITY_INSERT Seats OFF;
 SET IDENTITY_INSERT Bookings ON;
-INSERT INTO Bookings (Id, FlightId, PassengerId, SeatNumber, BookingDate, TicketPrice, Status) VALUES (1, 14, 19, '4E', '2025-12-13 03:02:03', 150, 0);
+-- Distribute 25 bookings across our 6 valid passengers (IDs 1-6)
+-- Passenger 1: Alice Jones (User-linked)
+INSERT INTO Bookings (Id, FlightId, PassengerId, SeatNumber, BookingDate, TicketPrice, Status) VALUES (1, 14, 1, '4E', '2025-12-13 03:02:03', 150, 0);
 UPDATE Seats SET IsAvailable = 0, BookingId = 1 WHERE SeatId = 803;
-INSERT INTO Bookings (Id, FlightId, PassengerId, SeatNumber, BookingDate, TicketPrice, Status) VALUES (2, 13, 24, '10B', '2025-12-13 03:02:03', 150, 0);
+INSERT INTO Bookings (Id, FlightId, PassengerId, SeatNumber, BookingDate, TicketPrice, Status) VALUES (2, 13, 1, '10B', '2025-12-13 03:02:03', 150, 0);
 UPDATE Seats SET IsAvailable = 0, BookingId = 2 WHERE SeatId = 776;
-INSERT INTO Bookings (Id, FlightId, PassengerId, SeatNumber, BookingDate, TicketPrice, Status) VALUES (3, 8, 7, '9F', '2025-12-13 03:02:03', 150, 0);
+
+-- Passenger 2: Tina Thomas (User-linked)
+INSERT INTO Bookings (Id, FlightId, PassengerId, SeatNumber, BookingDate, TicketPrice, Status) VALUES (3, 8, 2, '9F', '2025-12-13 03:02:03', 150, 0);
 UPDATE Seats SET IsAvailable = 0, BookingId = 3 WHERE SeatId = 474;
-INSERT INTO Bookings (Id, FlightId, PassengerId, SeatNumber, BookingDate, TicketPrice, Status) VALUES (4, 18, 15, '1A', '2025-12-13 03:02:03', 500, 0);
+INSERT INTO Bookings (Id, FlightId, PassengerId, SeatNumber, BookingDate, TicketPrice, Status) VALUES (4, 18, 2, '1A', '2025-12-13 03:02:03', 500, 0);
 UPDATE Seats SET IsAvailable = 0, BookingId = 4 WHERE SeatId = 1021;
-INSERT INTO Bookings (Id, FlightId, PassengerId, SeatNumber, BookingDate, TicketPrice, Status) VALUES (5, 25, 17, '2E', '2025-12-13 03:02:03', 500, 0);
+INSERT INTO Bookings (Id, FlightId, PassengerId, SeatNumber, BookingDate, TicketPrice, Status) VALUES (5, 25, 2, '2E', '2025-12-13 03:02:03', 500, 0);
 UPDATE Seats SET IsAvailable = 0, BookingId = 5 WHERE SeatId = 1451;
-INSERT INTO Bookings (Id, FlightId, PassengerId, SeatNumber, BookingDate, TicketPrice, Status) VALUES (6, 22, 16, '8C', '2025-12-13 03:02:03', 150, 0);
+
+-- Passenger 3: John Lopez (User-linked)
+INSERT INTO Bookings (Id, FlightId, PassengerId, SeatNumber, BookingDate, TicketPrice, Status) VALUES (6, 22, 3, '8C', '2025-12-13 03:02:03', 150, 0);
 UPDATE Seats SET IsAvailable = 0, BookingId = 6 WHERE SeatId = 1305;
-INSERT INTO Bookings (Id, FlightId, PassengerId, SeatNumber, BookingDate, TicketPrice, Status) VALUES (7, 14, 14, '4A', '2025-12-13 03:02:03', 150, 0);
+INSERT INTO Bookings (Id, FlightId, PassengerId, SeatNumber, BookingDate, TicketPrice, Status) VALUES (7, 14, 3, '4A', '2025-12-13 03:02:03', 150, 0);
 UPDATE Seats SET IsAvailable = 0, BookingId = 7 WHERE SeatId = 799;
-INSERT INTO Bookings (Id, FlightId, PassengerId, SeatNumber, BookingDate, TicketPrice, Status) VALUES (8, 20, 16, '8C', '2025-12-13 03:02:03', 150, 0);
+INSERT INTO Bookings (Id, FlightId, PassengerId, SeatNumber, BookingDate, TicketPrice, Status) VALUES (8, 20, 3, '8C', '2025-12-13 03:02:03', 150, 0);
 UPDATE Seats SET IsAvailable = 0, BookingId = 8 WHERE SeatId = 1185;
 INSERT INTO Bookings (Id, FlightId, PassengerId, SeatNumber, BookingDate, TicketPrice, Status) VALUES (9, 23, 3, '9F', '2025-12-13 03:02:03', 150, 0);
 UPDATE Seats SET IsAvailable = 0, BookingId = 9 WHERE SeatId = 1374;
-INSERT INTO Bookings (Id, FlightId, PassengerId, SeatNumber, BookingDate, TicketPrice, Status) VALUES (10, 22, 20, '1E', '2025-12-13 03:02:03', 500, 0);
+
+-- Passenger 4: Wendy Moore (User-linked)
+INSERT INTO Bookings (Id, FlightId, PassengerId, SeatNumber, BookingDate, TicketPrice, Status) VALUES (10, 22, 4, '1E', '2025-12-13 03:02:03', 500, 0);
 UPDATE Seats SET IsAvailable = 0, BookingId = 10 WHERE SeatId = 1265;
 INSERT INTO Bookings (Id, FlightId, PassengerId, SeatNumber, BookingDate, TicketPrice, Status) VALUES (11, 15, 4, '1A', '2025-12-13 03:02:03', 500, 0);
 UPDATE Seats SET IsAvailable = 0, BookingId = 11 WHERE SeatId = 841;
-INSERT INTO Bookings (Id, FlightId, PassengerId, SeatNumber, BookingDate, TicketPrice, Status) VALUES (12, 8, 20, '3B', '2025-12-13 03:02:03', 150, 0);
+INSERT INTO Bookings (Id, FlightId, PassengerId, SeatNumber, BookingDate, TicketPrice, Status) VALUES (12, 8, 4, '3B', '2025-12-13 03:02:03', 150, 0);
 UPDATE Seats SET IsAvailable = 0, BookingId = 12 WHERE SeatId = 434;
-INSERT INTO Bookings (Id, FlightId, PassengerId, SeatNumber, BookingDate, TicketPrice, Status) VALUES (13, 20, 17, '3B', '2025-12-13 03:02:03', 150, 0);
+INSERT INTO Bookings (Id, FlightId, PassengerId, SeatNumber, BookingDate, TicketPrice, Status) VALUES (13, 20, 4, '3B', '2025-12-13 03:02:03', 150, 0);
 UPDATE Seats SET IsAvailable = 0, BookingId = 13 WHERE SeatId = 1154;
-INSERT INTO Bookings (Id, FlightId, PassengerId, SeatNumber, BookingDate, TicketPrice, Status) VALUES (14, 10, 11, '9B', '2025-12-13 03:02:03', 150, 0);
+INSERT INTO Bookings (Id, FlightId, PassengerId, SeatNumber, BookingDate, TicketPrice, Status) VALUES (14, 10, 4, '9B', '2025-12-13 03:02:03', 150, 0);
 UPDATE Seats SET IsAvailable = 0, BookingId = 14 WHERE SeatId = 590;
+
+-- Passenger 5: Jane Doe (User-linked)
 INSERT INTO Bookings (Id, FlightId, PassengerId, SeatNumber, BookingDate, TicketPrice, Status) VALUES (15, 24, 5, '8C', '2025-12-13 03:02:03', 150, 0);
 UPDATE Seats SET IsAvailable = 0, BookingId = 15 WHERE SeatId = 1425;
-INSERT INTO Bookings (Id, FlightId, PassengerId, SeatNumber, BookingDate, TicketPrice, Status) VALUES (16, 12, 24, '2D', '2025-12-13 03:02:03', 500, 0);
+INSERT INTO Bookings (Id, FlightId, PassengerId, SeatNumber, BookingDate, TicketPrice, Status) VALUES (16, 12, 5, '2D', '2025-12-13 03:02:03', 500, 0);
 UPDATE Seats SET IsAvailable = 0, BookingId = 16 WHERE SeatId = 670;
-INSERT INTO Bookings (Id, FlightId, PassengerId, SeatNumber, BookingDate, TicketPrice, Status) VALUES (17, 11, 17, '3F', '2025-12-13 03:02:03', 150, 0);
+INSERT INTO Bookings (Id, FlightId, PassengerId, SeatNumber, BookingDate, TicketPrice, Status) VALUES (17, 11, 5, '3F', '2025-12-13 03:02:03', 150, 0);
 UPDATE Seats SET IsAvailable = 0, BookingId = 17 WHERE SeatId = 618;
-INSERT INTO Bookings (Id, FlightId, PassengerId, SeatNumber, BookingDate, TicketPrice, Status) VALUES (18, 6, 18, '10E', '2025-12-13 03:02:03', 150, 0);
+INSERT INTO Bookings (Id, FlightId, PassengerId, SeatNumber, BookingDate, TicketPrice, Status) VALUES (18, 6, 5, '10E', '2025-12-13 03:02:03', 150, 0);
 UPDATE Seats SET IsAvailable = 0, BookingId = 18 WHERE SeatId = 359;
-INSERT INTO Bookings (Id, FlightId, PassengerId, SeatNumber, BookingDate, TicketPrice, Status) VALUES (19, 17, 2, '8B', '2025-12-13 03:02:03', 150, 0);
+INSERT INTO Bookings (Id, FlightId, PassengerId, SeatNumber, BookingDate, TicketPrice, Status) VALUES (19, 17, 5, '8B', '2025-12-13 03:02:03', 150, 0);
 UPDATE Seats SET IsAvailable = 0, BookingId = 19 WHERE SeatId = 1004;
-INSERT INTO Bookings (Id, FlightId, PassengerId, SeatNumber, BookingDate, TicketPrice, Status) VALUES (20, 9, 4, '10C', '2025-12-13 03:02:03', 150, 0);
+
+-- Redistributing remaining bookings to user-linked passengers
+-- Alice Jones gets 1 more
+INSERT INTO Bookings (Id, FlightId, PassengerId, SeatNumber, BookingDate, TicketPrice, Status) VALUES (20, 9, 1, '10C', '2025-12-13 03:02:03', 150, 0);
 UPDATE Seats SET IsAvailable = 0, BookingId = 20 WHERE SeatId = 537;
-INSERT INTO Bookings (Id, FlightId, PassengerId, SeatNumber, BookingDate, TicketPrice, Status) VALUES (21, 9, 23, '9D', '2025-12-13 03:02:03', 150, 0);
+
+-- Tina Thomas gets 1 more
+INSERT INTO Bookings (Id, FlightId, PassengerId, SeatNumber, BookingDate, TicketPrice, Status) VALUES (21, 9, 2, '9D', '2025-12-13 03:02:03', 150, 0);
 UPDATE Seats SET IsAvailable = 0, BookingId = 21 WHERE SeatId = 532;
-INSERT INTO Bookings (Id, FlightId, PassengerId, SeatNumber, BookingDate, TicketPrice, Status) VALUES (22, 1, 10, '3A', '2025-12-13 03:02:03', 150, 0);
+
+-- John Lopez gets 1 more
+INSERT INTO Bookings (Id, FlightId, PassengerId, SeatNumber, BookingDate, TicketPrice, Status) VALUES (22, 1, 3, '3A', '2025-12-13 03:02:03', 150, 0);
 UPDATE Seats SET IsAvailable = 0, BookingId = 22 WHERE SeatId = 13;
-INSERT INTO Bookings (Id, FlightId, PassengerId, SeatNumber, BookingDate, TicketPrice, Status) VALUES (23, 18, 12, '4E', '2025-12-13 03:02:03', 150, 0);
+
+-- Wendy Moore gets 1 more
+INSERT INTO Bookings (Id, FlightId, PassengerId, SeatNumber, BookingDate, TicketPrice, Status) VALUES (23, 18, 4, '4E', '2025-12-13 03:02:03', 150, 0);
 UPDATE Seats SET IsAvailable = 0, BookingId = 23 WHERE SeatId = 1043;
-INSERT INTO Bookings (Id, FlightId, PassengerId, SeatNumber, BookingDate, TicketPrice, Status) VALUES (24, 16, 10, '1E', '2025-12-13 03:02:03', 500, 0);
+
+-- Jane Doe gets 2 more
+INSERT INTO Bookings (Id, FlightId, PassengerId, SeatNumber, BookingDate, TicketPrice, Status) VALUES (24, 16, 5, '1E', '2025-12-13 03:02:03', 500, 0);
 UPDATE Seats SET IsAvailable = 0, BookingId = 24 WHERE SeatId = 905;
-INSERT INTO Bookings (Id, FlightId, PassengerId, SeatNumber, BookingDate, TicketPrice, Status) VALUES (25, 11, 4, '5B', '2025-12-13 03:02:03', 150, 0);
+INSERT INTO Bookings (Id, FlightId, PassengerId, SeatNumber, BookingDate, TicketPrice, Status) VALUES (25, 11, 5, '5B', '2025-12-13 03:02:03', 150, 0);
 UPDATE Seats SET IsAvailable = 0, BookingId = 25 WHERE SeatId = 626;
 SET IDENTITY_INSERT Bookings OFF;
 SET IDENTITY_INSERT Feedbacks ON;
-INSERT INTO Feedbacks (FeedbackId, UserId, Rating, Comment, CreatedAt, FlightId) VALUES (1, '259876d9-4fb1-489b-b319-4c4f7ac96ceb', 3, 'On time.', '2025-12-13 03:02:03', 11);
-INSERT INTO Feedbacks (FeedbackId, UserId, Rating, Comment, CreatedAt, FlightId) VALUES (2, '56c390e9-30df-45d0-a742-df38f70da3f1', 4, 'Crew was rude.', '2025-12-13 03:02:03', 21);
-INSERT INTO Feedbacks (FeedbackId, UserId, Rating, Comment, CreatedAt, FlightId) VALUES (3, '9a1209b5-d74e-4e1b-91bc-4b579dfec322', 2, 'Crew was rude.', '2025-12-13 03:02:03', 10);
-INSERT INTO Feedbacks (FeedbackId, UserId, Rating, Comment, CreatedAt, FlightId) VALUES (4, '4c891ae8-d61e-4243-bb98-de05a243b017', 5, 'Comfortable seats.', '2025-12-13 03:02:03', 18);
-INSERT INTO Feedbacks (FeedbackId, UserId, Rating, Comment, CreatedAt, FlightId) VALUES (5, '259876d9-4fb1-489b-b319-4c4f7ac96ceb', 1, 'Comfortable seats.', '2025-12-13 03:02:03', 18);
-INSERT INTO Feedbacks (FeedbackId, UserId, Rating, Comment, CreatedAt, FlightId) VALUES (6, '259876d9-4fb1-489b-b319-4c4f7ac96ceb', 4, 'Comfortable seats.', '2025-12-13 03:02:03', 8);
-INSERT INTO Feedbacks (FeedbackId, UserId, Rating, Comment, CreatedAt, FlightId) VALUES (7, '747871f9-2597-4617-ba28-0502d7f5998b', 3, 'Crew was rude.', '2025-12-13 03:02:03', 1);
-INSERT INTO Feedbacks (FeedbackId, UserId, Rating, Comment, CreatedAt, FlightId) VALUES (8, 'fb7f6ea1-4334-4cd6-8d2c-57f183336129', 4, 'Will fly again.', '2025-12-13 03:02:03', 18);
-INSERT INTO Feedbacks (FeedbackId, UserId, Rating, Comment, CreatedAt, FlightId) VALUES (9, '8ce2a14a-07d0-436d-976c-20d3ccccb56a', 3, 'Great flight!', '2025-12-13 03:02:03', 25);
-INSERT INTO Feedbacks (FeedbackId, UserId, Rating, Comment, CreatedAt, FlightId) VALUES (10, 'd7843c0e-deb4-4f44-90af-53260165ccd6', 4, 'Will fly again.', '2025-12-13 03:02:03', 5);
-INSERT INTO Feedbacks (FeedbackId, UserId, Rating, Comment, CreatedAt, FlightId) VALUES (11, 'e869ddd6-c6bb-47eb-bfe2-01d303ed1d11', 4, 'Terrible service.', '2025-12-13 03:02:03', 19);
-INSERT INTO Feedbacks (FeedbackId, UserId, Rating, Comment, CreatedAt, FlightId) VALUES (12, '56c390e9-30df-45d0-a742-df38f70da3f1', 1, 'Food was cold.', '2025-12-13 03:02:03', 15);
-INSERT INTO Feedbacks (FeedbackId, UserId, Rating, Comment, CreatedAt, FlightId) VALUES (13, '005f4fc5-a7ef-48e7-8a41-fc42632b7288', 5, 'Delayed but handled well.', '2025-12-13 03:02:03', 24);
-INSERT INTO Feedbacks (FeedbackId, UserId, Rating, Comment, CreatedAt, FlightId) VALUES (14, 'fb7f6ea1-4334-4cd6-8d2c-57f183336129', 3, 'On time.', '2025-12-13 03:02:03', 14);
-INSERT INTO Feedbacks (FeedbackId, UserId, Rating, Comment, CreatedAt, FlightId) VALUES (15, '0435efbf-2a49-446e-a709-d6c4baeec589', 5, 'Average experience.', '2025-12-13 03:02:03', 19);
-INSERT INTO Feedbacks (FeedbackId, UserId, Rating, Comment, CreatedAt, FlightId) VALUES (16, '4cdaaf2f-76b7-4a3e-ae50-41b3c3680da8', 1, 'Crew was rude.', '2025-12-13 03:02:03', 21);
-INSERT INTO Feedbacks (FeedbackId, UserId, Rating, Comment, CreatedAt, FlightId) VALUES (17, '7be54c16-af8a-4d62-bd8e-723eed9e78b2', 5, 'Comfortable seats.', '2025-12-13 03:02:03', 10);
-INSERT INTO Feedbacks (FeedbackId, UserId, Rating, Comment, CreatedAt, FlightId) VALUES (18, '8899c259-b400-4403-b73c-2500a59307ea', 1, 'Food was cold.', '2025-12-13 03:02:03', 7);
-INSERT INTO Feedbacks (FeedbackId, UserId, Rating, Comment, CreatedAt, FlightId) VALUES (19, 'fca25c92-0b78-4ed0-a1d4-784d73038d3f', 4, 'On time.', '2025-12-13 03:02:03', 8);
-INSERT INTO Feedbacks (FeedbackId, UserId, Rating, Comment, CreatedAt, FlightId) VALUES (20, 'e869ddd6-c6bb-47eb-bfe2-01d303ed1d11', 3, 'On time.', '2025-12-13 03:02:03', 19);
-INSERT INTO Feedbacks (FeedbackId, UserId, Rating, Comment, CreatedAt, FlightId) VALUES (21, '5d29080f-8315-4695-8d83-500fcba01359', 1, 'On time.', '2025-12-13 03:02:03', 5);
-INSERT INTO Feedbacks (FeedbackId, UserId, Rating, Comment, CreatedAt, FlightId) VALUES (22, '4cdaaf2f-76b7-4a3e-ae50-41b3c3680da8', 4, 'Average experience.', '2025-12-13 03:02:03', 22);
-INSERT INTO Feedbacks (FeedbackId, UserId, Rating, Comment, CreatedAt, FlightId) VALUES (23, '4cdaaf2f-76b7-4a3e-ae50-41b3c3680da8', 4, 'Smooth landing.', '2025-12-13 03:02:03', 24);
-INSERT INTO Feedbacks (FeedbackId, UserId, Rating, Comment, CreatedAt, FlightId) VALUES (24, '4c891ae8-d61e-4243-bb98-de05a243b017', 2, 'On time.', '2025-12-13 03:02:03', 15);
-INSERT INTO Feedbacks (FeedbackId, UserId, Rating, Comment, CreatedAt, FlightId) VALUES (25, 'fb7f6ea1-4334-4cd6-8d2c-57f183336129', 2, 'Terrible service.', '2025-12-13 03:02:03', 11);
+-- Distribute 25 feedbacks across our 5 valid users
+-- Alice Jones (d7843c0e-deb4-4f44-90af-53260165ccd6)
+INSERT INTO Feedbacks (FeedbackId, UserId, Rating, Comment, CreatedAt, FlightId) VALUES (1, 'd7843c0e-deb4-4f44-90af-53260165ccd6', 4, 'Will fly again.', '2025-12-13 03:02:03', 5);
+INSERT INTO Feedbacks (FeedbackId, UserId, Rating, Comment, CreatedAt, FlightId) VALUES (2, 'd7843c0e-deb4-4f44-90af-53260165ccd6', 5, 'Great flight!', '2025-12-13 03:02:03', 14);
+INSERT INTO Feedbacks (FeedbackId, UserId, Rating, Comment, CreatedAt, FlightId) VALUES (3, 'd7843c0e-deb4-4f44-90af-53260165ccd6', 3, 'On time.', '2025-12-13 03:02:03', 13);
+INSERT INTO Feedbacks (FeedbackId, UserId, Rating, Comment, CreatedAt, FlightId) VALUES (4, 'd7843c0e-deb4-4f44-90af-53260165ccd6', 4, 'Comfortable seats.', '2025-12-13 03:02:03', 9);
+INSERT INTO Feedbacks (FeedbackId, UserId, Rating, Comment, CreatedAt, FlightId) VALUES (5, 'd7843c0e-deb4-4f44-90af-53260165ccd6', 5, 'Excellent service.', '2025-12-13 03:02:03', 1);
+
+-- Tina Thomas (5465f747-f94e-4f0f-b3e3-8e2e942bd95e)
+INSERT INTO Feedbacks (FeedbackId, UserId, Rating, Comment, CreatedAt, FlightId) VALUES (6, '5465f747-f94e-4f0f-b3e3-8e2e942bd95e', 4, 'Comfortable seats.', '2025-12-13 03:02:03', 8);
+INSERT INTO Feedbacks (FeedbackId, UserId, Rating, Comment, CreatedAt, FlightId) VALUES (7, '5465f747-f94e-4f0f-b3e3-8e2e942bd95e', 3, 'Average experience.', '2025-12-13 03:02:03', 18);
+INSERT INTO Feedbacks (FeedbackId, UserId, Rating, Comment, CreatedAt, FlightId) VALUES (8, '5465f747-f94e-4f0f-b3e3-8e2e942bd95e', 5, 'Will fly again.', '2025-12-13 03:02:03', 25);
+INSERT INTO Feedbacks (FeedbackId, UserId, Rating, Comment, CreatedAt, FlightId) VALUES (9, '5465f747-f94e-4f0f-b3e3-8e2e942bd95e', 2, 'Delayed flight.', '2025-12-13 03:02:03', 9);
+INSERT INTO Feedbacks (FeedbackId, UserId, Rating, Comment, CreatedAt, FlightId) VALUES (10, '5465f747-f94e-4f0f-b3e3-8e2e942bd95e', 4, 'Good value.', '2025-12-13 03:02:03', 2);
+
+-- John Lopez (747871f9-2597-4617-ba28-0502d7f5998b)
+INSERT INTO Feedbacks (FeedbackId, UserId, Rating, Comment, CreatedAt, FlightId) VALUES (11, '747871f9-2597-4617-ba28-0502d7f5998b', 3, 'Crew was rude.', '2025-12-13 03:02:03', 1);
+INSERT INTO Feedbacks (FeedbackId, UserId, Rating, Comment, CreatedAt, FlightId) VALUES (12, '747871f9-2597-4617-ba28-0502d7f5998b', 5, 'Smooth landing.', '2025-12-13 03:02:03', 22);
+INSERT INTO Feedbacks (FeedbackId, UserId, Rating, Comment, CreatedAt, FlightId) VALUES (13, '747871f9-2597-4617-ba28-0502d7f5998b', 4, 'On time.', '2025-12-13 03:02:03', 14);
+INSERT INTO Feedbacks (FeedbackId, UserId, Rating, Comment, CreatedAt, FlightId) VALUES (14, '747871f9-2597-4617-ba28-0502d7f5998b', 3, 'Average experience.', '2025-12-13 03:02:03', 20);
+INSERT INTO Feedbacks (FeedbackId, UserId, Rating, Comment, CreatedAt, FlightId) VALUES (15, '747871f9-2597-4617-ba28-0502d7f5998b', 5, 'Great flight!', '2025-12-13 03:02:03', 23);
+
+-- Wendy Moore (e869ddd6-c6bb-47eb-bfe2-01d303ed1d11)
+INSERT INTO Feedbacks (FeedbackId, UserId, Rating, Comment, CreatedAt, FlightId) VALUES (16, 'e869ddd6-c6bb-47eb-bfe2-01d303ed1d11', 4, 'Terrible service.', '2025-12-13 03:02:03', 19);
+INSERT INTO Feedbacks (FeedbackId, UserId, Rating, Comment, CreatedAt, FlightId) VALUES (17, 'e869ddd6-c6bb-47eb-bfe2-01d303ed1d11', 3, 'On time.', '2025-12-13 03:02:03', 22);
+INSERT INTO Feedbacks (FeedbackId, UserId, Rating, Comment, CreatedAt, FlightId) VALUES (18, 'e869ddd6-c6bb-47eb-bfe2-01d303ed1d11', 5, 'Comfortable seats.', '2025-12-13 03:02:03', 15);
+INSERT INTO Feedbacks (FeedbackId, UserId, Rating, Comment, CreatedAt, FlightId) VALUES (19, 'e869ddd6-c6bb-47eb-bfe2-01d303ed1d11', 2, 'Food was cold.', '2025-12-13 03:02:03', 8);
+INSERT INTO Feedbacks (FeedbackId, UserId, Rating, Comment, CreatedAt, FlightId) VALUES (20, 'e869ddd6-c6bb-47eb-bfe2-01d303ed1d11', 4, 'Good experience.', '2025-12-13 03:02:03', 20);
+
+-- Jane Doe (aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa)
+INSERT INTO Feedbacks (FeedbackId, UserId, Rating, Comment, CreatedAt, FlightId) VALUES (21, 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa', 5, 'Delayed but handled well.', '2025-12-13 03:02:03', 24);
+INSERT INTO Feedbacks (FeedbackId, UserId, Rating, Comment, CreatedAt, FlightId) VALUES (22, 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa', 4, 'Average experience.', '2025-12-13 03:02:03', 12);
+INSERT INTO Feedbacks (FeedbackId, UserId, Rating, Comment, CreatedAt, FlightId) VALUES (23, 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa', 3, 'Crew was helpful.', '2025-12-13 03:02:03', 11);
+INSERT INTO Feedbacks (FeedbackId, UserId, Rating, Comment, CreatedAt, FlightId) VALUES (24, 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa', 5, 'Will fly again.', '2025-12-13 03:02:03', 6);
+INSERT INTO Feedbacks (FeedbackId, UserId, Rating, Comment, CreatedAt, FlightId) VALUES (25, 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa', 4, 'Great flight!', '2025-12-13 03:02:03', 17);
 SET IDENTITY_INSERT Feedbacks OFF;
 -- Sync Flight.AvailableSeats with actual available seats
 UPDATE Flights SET AvailableSeats = (SELECT COUNT(*) FROM Seats WHERE Seats.FlightId = Flights.FlightId AND Seats.IsAvailable = 1);

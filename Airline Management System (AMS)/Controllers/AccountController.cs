@@ -80,7 +80,7 @@ public class AccountController : Controller
                 ModelState.AddModelError("", error.Description);
             return View(model);
         }
-        
+
 
         if (!await _roleManager.RoleExistsAsync(model.Role))
             await _roleManager.CreateAsync(new IdentityRole(model.Role));
@@ -156,7 +156,7 @@ public class AccountController : Controller
         var user = await _userManager.FindByIdAsync(model.UserId);
         if (user == null) return NotFound();
 
-        if (user.EmailConfirmationCode == model.Code) 
+        if (user.EmailConfirmationCode == model.Code)
         {
             user.EmailConfirmed = true;
             user.EmailConfirmationCode = "CONFIRMED";
@@ -179,7 +179,7 @@ public class AccountController : Controller
                         FirstName = user.FirstName,
                         LastName = user.LastName,
                         Email = user.Email,
-                        PhoneNumber = user.PhoneNumber ,
+                        PhoneNumber = user.PhoneNumber,
                         PassportNumber = user.PassportNumber,
                         NationalId = user.NationalId,
                         IsArchived = false
@@ -229,10 +229,10 @@ public class AccountController : Controller
 
         await _userManager.UpdateAsync(user);
 
-      await _emailSender.SendEmailAsync(
-      user.Email,
-      "New Verification Code",
-      $@"
+        await _emailSender.SendEmailAsync(
+        user.Email,
+        "New Verification Code",
+        $@"
     <div style='font-family: Arial, sans-serif; background-color:#f5f7fa; padding:30px;'>
         <div style='max-width:600px; margin:auto; background:white; padding:25px; border-radius:12px; box-shadow:0 2px 10px rgba(0,0,0,0.08);'>
 
@@ -273,7 +273,7 @@ public class AccountController : Controller
         </div>
     </div>
     ");
-        
+
 
 
         TempData["Success"] = "A new verification code has been sent to your email.";
@@ -401,7 +401,7 @@ public class AccountController : Controller
         </div>
     </div>
     ");
-        
+
 
 
         TempData["Success"] = "Verification code sent to your email.";
@@ -421,7 +421,7 @@ public class AccountController : Controller
         var user = await _userManager.FindByIdAsync(model.UserId);
         if (user == null) return NotFound();
 
-        if (user.EmailConfirmationCode != model.VerificationCode) 
+        if (user.EmailConfirmationCode != model.VerificationCode)
         {
             ModelState.AddModelError("", "Invalid verification code.");
             return View(model);
@@ -450,6 +450,110 @@ public class AccountController : Controller
         return RedirectToAction("Login");
     }
 
+
+    [HttpGet]
+    public async Task<IActionResult> Profile()
+    {
+        var user = await _userManager.GetUserAsync(User);
+        if (user == null)
+        {
+            return RedirectToAction("Login");
+        }
+
+        var passenger = await _context.Passengers.FirstOrDefaultAsync(p => p.UserId == user.Id);
+        if (passenger == null)
+        {
+            // Fallback: If no passenger profile exists (e.g. legacy admin), create one or show error
+            // For now, we'll redirect to home or show a message
+            return RedirectToAction("Index", "Home");
+        }
+
+        return View(passenger);
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Profile(Passenger model)
+    {
+        var user = await _userManager.GetUserAsync(User);
+        if (user == null)
+        {
+            return RedirectToAction("Login");
+        }
+
+        // Ensure the user is editing their own profile
+        if (model.UserId != user.Id)
+        {
+            return Unauthorized();
+        }
+
+        // Remove validation for fields the user can't change or hidden fields if necessary
+        ModelState.Remove("User");
+        ModelState.Remove("UserId");
+
+        if (ModelState.IsValid)
+        {
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
+            {
+                var passenger = await _context.Passengers.FirstOrDefaultAsync(p => p.Id == model.Id);
+                if (passenger == null)
+                {
+                    return NotFound();
+                }
+
+                // 1. Update Passenger Record
+                passenger.FirstName = model.FirstName;
+                passenger.LastName = model.LastName;
+                passenger.PhoneNumber = model.PhoneNumber;
+                passenger.PassportNumber = model.PassportNumber;
+                passenger.NationalId = model.NationalId;
+
+                // Only update Email if it's different (might require re-verification logic in a real app, strict for now)
+                bool emailChanged = !string.Equals(passenger.Email, model.Email, StringComparison.OrdinalIgnoreCase);
+                passenger.Email = model.Email;
+
+                _context.Passengers.Update(passenger);
+
+                // 2. Sync with ApplicationUser
+                user.FirstName = model.FirstName;
+                user.LastName = model.LastName;
+                user.PhoneNumber = model.PhoneNumber;
+                user.PassportNumber = model.PassportNumber; // Extended property
+                user.NationalId = model.NationalId;       // Extended property
+
+                if (emailChanged)
+                {
+                    user.Email = model.Email;
+                    user.UserName = model.Email; // Keep username synced with email
+                    user.EmailConfirmed = true; // Force re-verification? Or trust user? Let's keep it simple for now and trust
+                    // If you want to force verification, you'd generate a token here.
+                }
+
+                var userUpdateResult = await _userManager.UpdateAsync(user);
+                if (!userUpdateResult.Succeeded)
+                {
+                    throw new Exception("Failed to update user account: " + string.Join(", ", userUpdateResult.Errors.Select(e => e.Description)));
+                }
+
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+
+                // 3. Refresh Sign-in Principal (so the new name/claims appear immediately)
+                await _signInManager.RefreshSignInAsync(user);
+
+                TempData["Success"] = "Profile updated successfully!";
+                return RedirectToAction("Index", "UserDashboard"); // Redirect to Dashboard
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                ModelState.AddModelError("", "Error updating profile: " + ex.Message);
+            }
+        }
+
+        return View(model);
+    }
 
     [HttpPost]
     public async Task<IActionResult> Logout()

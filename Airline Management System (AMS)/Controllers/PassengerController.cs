@@ -27,7 +27,9 @@ namespace Airline_Management_System__AMS_.Controllers
         // GET: Passenger
         public async Task<IActionResult> Index()
         {
-            var passengers = await _context.Passengers.ToListAsync();
+            var passengers = await _context.Passengers
+                .Include(p => p.User)
+                .ToListAsync();
             return View(passengers);
         }
 
