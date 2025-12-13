@@ -52,7 +52,9 @@ namespace Airline_Management_System__AMS_.Controllers
                     .Where(p => !p.IsArchived)
                     .CountAsync();
 
+                // Calculate revenue only from confirmed (non-cancelled) bookings
                 totalRevenue = await _context.Bookings
+                    .Where(b => b.Status != BookingStatus.Cancelled)
                     .SumAsync(b => b.TicketPrice);
 
                 var today = DateTime.Today;

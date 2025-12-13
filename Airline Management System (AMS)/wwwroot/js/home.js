@@ -5,48 +5,6 @@
 document.addEventListener('DOMContentLoaded', function() {
     
     // ===================================
-    // TRIP TYPE TOGGLE
-    // ===================================
-    const tripTypeBtns = document.querySelectorAll('.trip-type-btn');
-    const returnDateGroup = document.getElementById('returnDateGroup');
-    const tripTypeInput = document.getElementById('tripTypeInput');
-
-    tripTypeBtns.forEach(btn => {
-        btn.addEventListener('click', function() {
-            // Remove active class from all buttons
-            tripTypeBtns.forEach(b => b.classList.remove('active'));
-            
-            // Add active class to clicked button
-            this.classList.add('active');
-            
-            // Get trip type
-            const tripType = this.dataset.tripType;
-            
-            // Update hidden input
-            if (tripTypeInput) {
-                tripTypeInput.value = tripType;
-            }
-            
-            // Show/hide return date based on trip type
-            if (returnDateGroup) {
-                if (tripType === 'OneWay') {
-                    returnDateGroup.style.display = 'none';
-                    const returnDateInput = document.getElementById('ReturnDate');
-                    if (returnDateInput) {
-                        returnDateInput.removeAttribute('required');
-                    }
-                } else {
-                    returnDateGroup.style.display = 'block';
-                    const returnDateInput = document.getElementById('ReturnDate');
-                    if (returnDateInput) {
-                        returnDateInput.setAttribute('required', 'required');
-                    }
-                }
-            }
-        });
-    });
-
-    // ===================================
     // DATE VALIDATION
     // ===================================
     const departureDateInput = document.getElementById('DepartureDate');

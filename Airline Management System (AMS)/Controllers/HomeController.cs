@@ -23,8 +23,7 @@ namespace Airline_Management_System__AMS_.Controllers
             return View(new FlightSearchViewModel
             {
                 Origin = string.Empty,
-                Destination = string.Empty,
-                TripType = TripType.RoundTrip
+                Destination = string.Empty
             });
         }
 
@@ -42,7 +41,7 @@ namespace Airline_Management_System__AMS_.Controllers
 
             List<Flight> flights = new List<Flight>();
 
-            // رحلة الذهاب
+            // Search for outbound flights
             var departQuery = _context.Flights.AsQueryable();
             departQuery = departQuery.Where(f =>
                 f.Origin.ToLower() == origin &&
@@ -57,8 +56,8 @@ namespace Airline_Management_System__AMS_.Controllers
 
             flights.AddRange(departQuery.ToList());
 
-            // رحلة العودة لو RoundTrip و ReturnDate موجود
-            if (model.TripType == TripType.RoundTrip && model.ReturnDate.HasValue)
+            // Search for return flights (always included for Trips)
+            if (model.ReturnDate.HasValue)
             {
                 var returnQuery = _context.Flights.AsQueryable();
                 returnQuery = returnQuery.Where(f =>

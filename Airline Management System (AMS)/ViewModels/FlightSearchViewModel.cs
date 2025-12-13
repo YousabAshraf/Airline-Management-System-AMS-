@@ -26,17 +26,6 @@ namespace Airline_Management_System__AMS_.ViewModels
         [Display(Name = "Passengers")]
         public int PassengerCount { get; set; } = 1;
 
-        [Required]
-        [Display(Name = "Trip Type")]
-        public TripType TripType { get; set; } = TripType.RoundTrip;
-
         public List<Flight>? SearchResults { get; set; }
-
-    }
-
-    public enum TripType
-    {
-        OneWay,
-        RoundTrip
     }
 }

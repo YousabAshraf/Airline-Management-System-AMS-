@@ -11,18 +11,7 @@
 
         <!-- FLIGHT SEARCH FORM -->
         <div class="flight-search-container">
-            <div class="trip-type-selector">
-                <button type="button" class="trip-type-btn active" data-trip-type="RoundTrip">
-                    <i class="fas fa-exchange-alt"></i> Round Trip
-                </button>
-                <button type="button" class="trip-type-btn" data-trip-type="OneWay">
-                    <i class="fas fa-long-arrow-alt-right"></i> One Way
-                </button>
-            </div>
-
             <form id="flightSearchForm" asp-controller="Home" asp-action="SearchFlights" method="post">
-                <input type="hidden" id="tripTypeInput" asp-for="TripType" value="RoundTrip" />
-
                 <div class="search-form">
                     <div class="form-group">
                         <label for="Origin">
@@ -46,15 +35,15 @@
                         <label for="DepartureDate">
                             <i class="fas fa-calendar-alt"></i> Departure
                         </label>
-                        <input type="date" id="DepartureDate" asp-for="DepartureDate" class="form-control" />
+                        <input type="date" id="DepartureDate" asp-for="DepartureDate" class="form-control" required />
                         <span asp-validation-for="DepartureDate" class="text-danger"></span>
                     </div>
 
-                    <div class="form-group" id="returnDateGroup">
+                    <div class="form-group">
                         <label for="ReturnDate">
                             <i class="fas fa-calendar-check"></i> Return
                         </label>
-                        <input type="date" id="ReturnDate" asp-for="ReturnDate" class="form-control" />
+                        <input type="date" id="ReturnDate" asp-for="ReturnDate" class="form-control" required />
                         <span asp-validation-for="ReturnDate" class="text-danger"></span>
                     </div>
 
@@ -70,7 +59,7 @@
 
                 <div style="text-align: center;">
                     <button type="submit" class="search-btn">
-                        <i class="fas fa-search"></i> Search Flights
+                        <i class="fas fa-search"></i> Search Trips
                     </button>
                 </div>
             </form>
