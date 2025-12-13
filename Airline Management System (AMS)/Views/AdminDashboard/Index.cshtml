@@ -1,7 +1,8 @@
 ﻿@{
     ViewData["Title"] = "Admin Dashboard";
     Layout = null; // Use standalone layout without main site header/footer
-    var recentBookings = ViewBag.RecentBookings as List<Airline_Management_System__AMS_.Models.Booking> ?? new List<Airline_Management_System__AMS_.Models.Booking>();
+    var recentBookings = ViewBag.RecentBookings as List<Airline_Management_System__AMS_.Models.Booking> ?? new
+    List<Airline_Management_System__AMS_.Models.Booking>();
 }
 
 <!DOCTYPE html>
@@ -239,7 +240,7 @@
                             <li class="activity-item">
                                 <div class="activity-info">
                                     <div class="activity-title">
-                                        @booking.Passenger?.FullName ?? "Unknown Passenger"
+                                        @((booking.Passenger?.FullName) ?? "Unknown Passenger")
                                     </div>
                                     <div class="activity-details">
                                         <span class="activity-detail-item">

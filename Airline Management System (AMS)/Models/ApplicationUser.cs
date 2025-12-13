@@ -26,14 +26,14 @@ namespace Airline_Management_System__AMS_.Models
         public Passenger? PassengerProfile { get; set; }
 
         [Display(Name = "Email Confirmation Code")]
-        public string EmailConfirmationCode { get; internal set; }
+        public string EmailConfirmationCode { get; set; } = Guid.NewGuid().ToString();
 
         [Display(Name = "Last Verification Email Sent")]
         public DateTime? LastVerificationEmailSent { get; set; }
 
         public int VerificationResendCount { get; set; } = 0;
 
-        
+
         public string NationalId { get; set; }
 
 
