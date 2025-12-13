@@ -253,6 +253,85 @@ namespace Airline_Management_System__AMS_.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        // POST: Passenger/HardDelete/5 (Permanent Delete)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> HardDelete(int id)
+        {
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
+            {
+                var passenger = await _context.Passengers
+                    .Include(p => p.Bookings)
+                    // .ThenInclude(b => b.Seat) // Removed: Booking does not have Seat navigation property
+                    .FirstOrDefaultAsync(m => m.Id == id);
+
+                if (passenger == null)
+                {
+                    return NotFound();
+                }
+
+                // 1. Release Seats & Delete Bookings
+                if (passenger.Bookings != null && passenger.Bookings.Any())
+                {
+                    foreach (var booking in passenger.Bookings)
+                    {
+                        // Some bookings might reference a seat
+                        // booking.Id is the key, not booking.BookingId
+                        var seat = await _context.Seats.FirstOrDefaultAsync(s => s.BookingId == booking.Id);
+                        if (seat != null)
+                        {
+                            seat.BookingId = null;
+                            seat.IsAvailable = true;
+                            _context.Seats.Update(seat);
+                        }
+                    }
+                    // Remove bookings (this updates Revenue stats indirectly as they are calculated from Bookings table)
+                    _context.Bookings.RemoveRange(passenger.Bookings);
+                }
+
+                // 2. Delete Linked User Account
+                if (!string.IsNullOrEmpty(passenger.UserId))
+                {
+                    var user = await _userManager.FindByIdAsync(passenger.UserId);
+                    if (user != null)
+                    {
+                        // 2.1 Delete related Feedbacks first (to prevent FK constraint violation)
+                        var feedbacks = await _context.Feedbacks.Where(f => f.UserId == passenger.UserId).ToListAsync();
+                        if (feedbacks.Any())
+                        {
+                            _context.Feedbacks.RemoveRange(feedbacks);
+                        }
+
+                        // 2.2 Delete User
+                        var result = await _userManager.DeleteAsync(user);
+                        if (!result.Succeeded)
+                        {
+                            // If delete fails (e.g., other constraints), throw to rollback transaction
+                            var errors = string.Join(", ", result.Errors.Select(e => e.Description));
+                            throw new Exception($"Failed to delete user account: {errors}");
+                        }
+                    }
+                }
+
+                // 3. Delete Passenger Record
+                _context.Passengers.Remove(passenger);
+
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+
+                TempData["SuccessMessage"] = "Passenger, bookings, and user account permanently deleted.";
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                // Log error (if logger available)
+                TempData["ErrorMessage"] = "Error deleting passenger: " + ex.Message;
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
+
         private bool PassengerExists(int id)
         {
             return _context.Passengers.Any(e => e.Id == id);
