@@ -15,25 +15,27 @@ public class EmailSender : IEmailSender
 
     public Task SendEmailAsync(string email, string subject, string htmlMessage)
     {
-        var smtpHost = _configuration["Email:SmtpHost"];
-        var smtpPort = int.Parse(_configuration["Email:SmtpPort"]);
-        var smtpUser = _configuration["Email:SmtpUser"];
-        var smtpPass = _configuration["Email:SmtpPass"];
+        var smtpHost = _configuration["SmtpSettings:SmtpServer"];
+        var smtpPort = int.Parse(_configuration["SmtpSettings:SmtpPort"]);
+        var smtpUser = _configuration["SmtpSettings:SmtpUsername"];
+        var smtpPass = _configuration["SmtpSettings:SmtpPassword"];
+        var senderEmail = _configuration["SmtpSettings:SenderEmail"];
 
         var smtp = new SmtpClient(smtpHost)
         {
             Port = smtpPort,
             Credentials = new NetworkCredential(smtpUser, smtpPass),
-            EnableSsl = true,
+            EnableSsl = true, // Brevo SMTP requires SSL/TLS
         };
 
         var mail = new MailMessage
         {
-            From = new MailAddress(smtpUser),
+            From = new MailAddress(senderEmail, "Airline Management System"),
             Subject = subject,
             Body = htmlMessage,
             IsBodyHtml = true,
         };
+
         mail.To.Add(email);
 
         return smtp.SendMailAsync(mail);

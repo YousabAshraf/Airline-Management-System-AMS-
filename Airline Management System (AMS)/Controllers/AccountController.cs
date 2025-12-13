@@ -90,7 +90,7 @@ public class AccountController : Controller
         user.LastVerificationEmailSent = DateTime.UtcNow;
         await _userManager.UpdateAsync(user);
 
-        /*await _emailSender.SendEmailAsync(
+        await _emailSender.SendEmailAsync(
             user.Email,
             "Email Verification Code",
             $@"
@@ -133,7 +133,7 @@ public class AccountController : Controller
             </p>
         </div>
     </div>
-    ");*/
+    ");
 
         TempData["Success"] = "Verification code sent to your email.";
         return RedirectToAction("VerifyEmail", new { userId = user.Id });
@@ -156,7 +156,7 @@ public class AccountController : Controller
         var user = await _userManager.FindByIdAsync(model.UserId);
         if (user == null) return NotFound();
 
-        if (user.EmailConfirmationCode != model.Code) //== or !=
+        if (user.EmailConfirmationCode == model.Code) 
         {
             user.EmailConfirmed = true;
             user.EmailConfirmationCode = "CONFIRMED";
@@ -229,7 +229,7 @@ public class AccountController : Controller
 
         await _userManager.UpdateAsync(user);
 
-      /*await _emailSender.SendEmailAsync(
+      await _emailSender.SendEmailAsync(
       user.Email,
       "New Verification Code",
       $@"
@@ -273,7 +273,7 @@ public class AccountController : Controller
         </div>
     </div>
     ");
-        */
+        
 
 
         TempData["Success"] = "A new verification code has been sent to your email.";
@@ -357,7 +357,7 @@ public class AccountController : Controller
 
         await _userManager.UpdateAsync(user);
 
-        /*await _emailSender.SendEmailAsync(
+        await _emailSender.SendEmailAsync(
      user.Email,
      "Email Verification Code",
      $@"
@@ -401,7 +401,7 @@ public class AccountController : Controller
         </div>
     </div>
     ");
-        */
+        
 
 
         TempData["Success"] = "Verification code sent to your email.";

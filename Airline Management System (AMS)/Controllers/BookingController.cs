@@ -20,8 +20,9 @@ public class BookingController : Controller
     private readonly UserManager<ApplicationUser> _userManager;
 
 
-    public BookingController(ApplicationDbContext context)
+    public BookingController(ApplicationDbContext context, IEmailSender emailSender)
     {
+        _emailSender = emailSender;
         _context = context;
     }
 
@@ -45,14 +46,34 @@ public class BookingController : Controller
             return View(model);
         }
 
-        var seat = await _context.Seats.FirstOrDefaultAsync(s => s.SeatId == model.SelectedSeatId.Value);
+        // 🔹 Seat
+        var seat = await _context.Seats
+            .FirstOrDefaultAsync(s => s.SeatId == model.SelectedSeatId.Value);
+
         if (seat == null || !seat.IsAvailable)
             return BadRequest("Seat not available");
 
+        // 🔹 Passenger (من المستخدم الحالي)
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (userId == null)
+            return Unauthorized();
+
+        var passenger = await _context.Passengers
+            .FirstOrDefaultAsync(p => p.UserId == userId);
+
+        if (passenger == null)
+            return BadRequest("Passenger not found");
+
+        // 🔹 Flight
+        var flight = await _context.Flights.FindAsync(model.FlightId);
+        if (flight == null)
+            return BadRequest("Flight not found");
+
+        // 🔹 Create Booking
         var booking = new Booking
         {
-            FlightId = model.FlightId,
-            PassengerId = model.PassengerId,
+            FlightId = flight.FlightId,
+            PassengerId = passenger.Id,
             SeatNumber = seat.SeatNumber,
             TicketPrice = seat.SeatPrice,
             Status = BookingStatus.Booked,
@@ -60,19 +81,15 @@ public class BookingController : Controller
         };
 
         _context.Bookings.Add(booking);
-        await _context.SaveChangesAsync(); // Booking.Id موجود بعد الحفظ
+        await _context.SaveChangesAsync();
 
+        // 🔹 Update Seat & Flight
         seat.IsAvailable = false;
         seat.BookingId = booking.Id;
-        var flight = await _context.Flights.FindAsync(model.FlightId);
         flight.AvailableSeats--;
 
         await _context.SaveChangesAsync();
-
-        var passenger = await _context.Passengers
-            .Include(p => p.User) 
-            .FirstOrDefaultAsync(p => p.Id == model.PassengerId);
-        /*await _emailSender.SendEmailAsync(
+        await _emailSender.SendEmailAsync(
             passenger.Email,
             "Booking Confirmation - Airline Management System",
             $@"
@@ -80,7 +97,7 @@ public class BookingController : Controller
     <div style='max-width:600px; margin:auto; background:white; padding:25px; border-radius:12px; box-shadow:0 2px 10px rgba(0,0,0,0.08);'>
         <!-- Banner -->
         <div style='text-align:center; margin-bottom:20px;'>
-            <img src='https://github.com/Steven-Amin02/Airline-Management-System-AMS-/raw/master/Airline%20Management%20System-AMS-/wwwroot/images/logo_in_email/readme_banner.png'
+<img src='https://github.com/Steven-Amin02/Airline-Management-System-AMS-/raw/master/Airline%20Management%20System%20(AMS)/wwwroot/images/logo_in_email/readme_banner.png'
                  alt='Banner'
                  style='width:100%; border-radius:10px;' />
         </div>
@@ -101,8 +118,8 @@ public class BookingController : Controller
                         background:#004aad; color:white; font-size:16px; 
                         letter-spacing:1px; font-weight:bold; text-align:left;'>
                 <p><strong>Flight:</strong> {flight.FlightNumber}</p>
-                <p><strong>Seat Number:</strong> {model.seat.SeatNumber}</p>
-                <p><strong>Class:</strong> {model.seat.Class}</p>
+                <p><strong>Seat Number:</strong> {seat.SeatNumber}</p>
+                <p><strong>Class:</strong> {seat.Class}</p>
                 <p><strong>Departure:</strong> {flight.DepartureTime:f}</p>
             </div>
         </div>
@@ -119,7 +136,7 @@ public class BookingController : Controller
     </div>
 </div>
 ");
-        */
+        
         TempData["BookingSuccess"] = "Booking successful!";
         return RedirectToAction("Index", "Home");
     }
@@ -259,14 +276,18 @@ public class BookingController : Controller
 
         if (!CanAccessBooking(booking)) return Forbid(); 
 
-        // تحقق أن الحالة Booked فقط يمكن إلغاؤها
         if (booking.Status != BookingStatus.Booked)
             return BadRequest("This booking cannot be cancelled.");
 
         var passenger = await _context.Passengers
             .Include(p => p.User)
             .FirstOrDefaultAsync(p => p.Id == booking.PassengerId);
-       /* await _emailSender.SendEmailAsync(
+
+        var flight = await _context.Flights.FindAsync(booking.FlightId);
+        flight.AvailableSeats++;
+
+        Console.WriteLine(passenger.Email + seat.SeatNumber);
+        await _emailSender.SendEmailAsync(
     passenger.Email,
     "Booking Cancelled - Airline Management System",
     $@"
@@ -274,7 +295,7 @@ public class BookingController : Controller
     <div style='max-width:600px; margin:auto; background:white; padding:25px; border-radius:12px; box-shadow:0 2px 10px rgba(0,0,0,0.08);'>
         <!-- Banner -->
         <div style='text-align:center; margin-bottom:20px;'>
-            <img src='https://github.com/Steven-Amin02/Airline-Management-System-AMS-/raw/master/Airline%20Management%20System-AMS-/wwwroot/images/logo_in_email/readme_banner.png'
+<img src='https://github.com/Steven-Amin02/Airline-Management-System-AMS-/raw/master/Airline%20Management%20System%20(AMS)/wwwroot/images/logo_in_email/readme_banner.png'
                  alt='Banner'
                  style='width:100%; border-radius:10px;' />
         </div>
@@ -295,8 +316,8 @@ public class BookingController : Controller
                         background:#dc3545; color:white; font-size:16px; 
                         letter-spacing:1px; font-weight:bold; text-align:left;'>
                 <p><strong>Flight:</strong> {flight.FlightNumber}</p>
-                <p><strong>Seat Number:</strong> {model.seat.SeatNumber}</p>
-                <p><strong>Class:</strong> {model.seat.Class}</p>
+                <p><strong>Seat Number:</strong> {seat.SeatNumber}</p>
+                <p><strong>Class:</strong> {seat.Class}</p>
                 <p><strong>Original Departure:</strong> {flight.DepartureTime:f}</p>
             </div>
         </div>
@@ -312,14 +333,13 @@ public class BookingController : Controller
         </p>
     </div>
 </div>
-");*/
+");
 
         booking.Status = BookingStatus.Cancelled;
 
         seat.IsAvailable = true;
 
-        var flight = await _context.Flights.FindAsync(booking.FlightId);
-        flight.AvailableSeats++;
+       
 
         if (seat != null)
         {
@@ -409,8 +429,7 @@ public class BookingController : Controller
 
         await _context.SaveChangesAsync();
 
-        // SEND UPDATED BOOKING EMAIL
-       /* await _emailSender.SendEmailAsync(
+        await _emailSender.SendEmailAsync(
             booking.Passenger.Email,
             "Booking Updated Successfully - Airline Management System",
             $@"
@@ -418,7 +437,7 @@ public class BookingController : Controller
     <div style='max-width:600px; margin:auto; background:white; padding:25px; border-radius:12px; box-shadow:0 2px 10px rgba(0,0,0,0.08);'>
 
         <div style='text-align:center; margin-bottom:20px;'>
-            <img src='https://github.com/Steven-Amin02/Airline-Management-System-AMS-/raw/master/Airline%20Management%20System-AMS-/wwwroot/images/logo_in_email/readme_banner.png'
+<img src='https://github.com/Steven-Amin02/Airline-Management-System-AMS-/raw/master/Airline%20Management%20System%20(AMS)/wwwroot/images/logo_in_email/readme_banner.png'
                  alt='Banner'
                  style='width:100%; border-radius:10px;' />
         </div>
@@ -456,7 +475,7 @@ public class BookingController : Controller
         </p>
     </div>
 </div>
-");*/
+");
 
         TempData["BookingSuccess"] = "Booking updated successfully!";
         return RedirectToAction("MyBookings");
@@ -648,18 +667,17 @@ public class BookingController : Controller
 
           
 
-                // إرسال الإيميل بعد التحديث
                 var newSeat = await _context.Seats
                     .FirstOrDefaultAsync(s => s.FlightId == booking.FlightId && s.SeatNumber == booking.SeatNumber);
 
-            /*await _emailSender.SendEmailAsync(
+            await _emailSender.SendEmailAsync(
                 booking.Passenger.Email,
                 "Booking Updated Successfully - Airline Management System",
                 $@"
 <div style='font-family: Arial, sans-serif; background-color:#f5f7fa; padding:30px;'>
     <div style='max-width:600px; margin:auto; background:white; padding:25px; border-radius:12px; box-shadow:0 2px 10px rgba(0,0,0,0.08);'>
         <div style='text-align:center; margin-bottom:20px;'>
-            <img src='https://github.com/Steven-Amin02/Airline-Management-System-AMS-/raw/master/Airline%20Management%20System-AMS-/wwwroot/images/logo_in_email/readme_banner.png'
+<img src='https://github.com/Steven-Amin02/Airline-Management-System-AMS-/raw/master/Airline%20Management%20System%20(AMS)/wwwroot/images/logo_in_email/readme_banner.png'
                  alt='Banner'
                  style='width:100%; border-radius:10px;' />
         </div>
@@ -689,7 +707,7 @@ public class BookingController : Controller
         </p>
     </div>
 </div>
-");*/
+");
 
             TempData["Success"] = "Booking edited successfully.";
             return RedirectToAction(nameof(Index));
