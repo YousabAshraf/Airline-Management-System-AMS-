@@ -38,7 +38,7 @@ namespace Airline_Management_System__AMS_.Controllers
             var user = await _userManager.GetUserAsync(User);
 
             // Populate flights dropdown for selection if not pre-selected
-            ViewData["FlightId"] = new SelectList(_context.Flights.Where(f => f.DepartureTime < DateTime.Now), "Id", "FlightInfo");
+            ViewData["FlightId"] = new SelectList(_context.Flights.Where(f => f.DepartureTime < DateTime.Now), "FlightId", "FlightInfo");
 
             if (flightId.HasValue)
             {
@@ -71,7 +71,7 @@ namespace Airline_Management_System__AMS_.Controllers
             }
 
             // Reload dropdown if validation fails
-            ViewData["FlightId"] = new SelectList(_context.Flights.Where(f => f.DepartureTime < DateTime.Now), "Id", "FlightInfo", feedback.FlightId);
+            ViewData["FlightId"] = new SelectList(_context.Flights.Where(f => f.DepartureTime < DateTime.Now), "FlightId", "FlightInfo", feedback.FlightId);
             return View(feedback);
         }
 
