@@ -47,14 +47,8 @@
                         <span asp-validation-for="ReturnDate" class="text-danger"></span>
                     </div>
 
-                    <div class="form-group">
-                        <label for="PassengerCount">
-                            <i class="fas fa-users"></i> Passengers
-                        </label>
-                        <input type="number" id="PassengerCount" asp-for="PassengerCount" class="form-control" min="1"
-                            max="9" value="1" required />
-                        <span asp-validation-for="PassengerCount" class="text-danger"></span>
-                    </div>
+                    <!-- Hidden Passenger Count (Default 1) -->
+                    <input type="hidden" asp-for="PassengerCount" value="1" />
                 </div>
 
                 <div style="text-align: center;">
