@@ -75,7 +75,7 @@ namespace Airline_Management_System__AMS_.Controllers
             var user = await _userManager.GetUserAsync(User);
             var myFeedback = await _context.Feedbacks
                 .Include(f => f.Flight)
-                .Where(f => f.UserId == user.Id)
+               // .Where(f => f.UserId == user.Id)
                 .OrderByDescending(f => f.CreatedAt)
                 .ToListAsync();
 

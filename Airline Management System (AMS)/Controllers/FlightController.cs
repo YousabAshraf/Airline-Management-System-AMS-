@@ -249,7 +249,7 @@ namespace Airline_Management_System__AMS_.Controllers
                 .Include(f => f.Bookings)
                 .Include(f => f.Seats)
                 .FirstOrDefaultAsync(f => f.FlightId == id);
-
+            var feedback=await _context.Feedbacks.FirstOrDefaultAsync(f => f.FlightId == id);
             if (flight == null)
             {
                 return NotFound();
@@ -265,6 +265,7 @@ namespace Airline_Management_System__AMS_.Controllers
             {
                 _context.Seats.RemoveRange(flight.Seats);
             }
+                _context.Feedbacks.RemoveRange(feedback);
 
             _context.Flights.Remove(flight);
             await _context.SaveChangesAsync();

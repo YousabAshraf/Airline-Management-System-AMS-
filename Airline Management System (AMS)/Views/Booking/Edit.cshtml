@@ -6,8 +6,8 @@
 
     var rows = Model.Seats
         .Where(s => !string.IsNullOrEmpty(s.SeatNumber))
-        .GroupBy(s => s.SeatNumber.Substring(1))
-        .OrderBy(g => int.Parse(g.Key))
+        .GroupBy(s => new string(s.SeatNumber.TakeWhile(char.IsDigit).ToArray()))
+        .OrderBy(g => int.TryParse(g.Key, out int rowNum) ? rowNum : 0)
         .ToList();
 }
 
@@ -199,24 +199,24 @@
                 <div class="seat-map-layout">
                     @foreach (var rowGroup in rows)
                     {
-                        <div class="seat-row">
+                            <div class="seat-row">
                             @foreach (var seat in rowGroup.OrderBy(s => s.SeatNumber))
                             {
                                 var seatClass = seat.IsAvailable ? (seat.Class.ToLower().Contains("business") ? "business" : "available") : "booked";
                                 if (Model.CurrentSeat == seat.SeatNumber) seatClass = "selected";
 
-                                <div class="seat-wrapper">
-                                    <div class="seat-box @seatClass"
-                                         data-seat-id="@seat.SeatId"
-                                         data-seat-number="@seat.SeatNumber"
-                                         data-seat-class="@seat.Class"
-                                         data-seat-price="@seat.SeatPrice"
-                                         data-available="@seat.IsAvailable">
+                                        <div class="seat-wrapper">
+                                            <div class="seat-box @seatClass"
+                                                 data-seat-id="@seat.SeatId"
+                                                 data-seat-number="@seat.SeatNumber"
+                                                 data-seat-class="@seat.Class"
+                                                 data-seat-price="@seat.SeatPrice"
+                                                 data-available="@seat.IsAvailable">
                                         @seat.SeatNumber
-                                    </div>
-                                </div>
+                                            </div>
+                                        </div>
                             }
-                        </div>
+                            </div>
                     }
                 </div>
             </div>
@@ -268,50 +268,50 @@
 </div>
 
 @section Scripts {
-    <script>
-                let selectedSeat = document.querySelector('.seat-box.selected');
-        const seatInfo = document.getElementById('seat-info');
-        const selectBtn = document.getElementById('select-seat-btn');
-        const selectedSeatInput = document.getElementById('selectedSeatId');
+        <script>
+                    let selectedSeat = document.querySelector('.seat-box.selected');
+            const seatInfo = document.getElementById('seat-info');
+            const selectBtn = document.getElementById('select-seat-btn');
+            const selectedSeatInput = document.getElementById('selectedSeatId');
 
-        const currentSeatNumber = "@Model.CurrentSeat"; // الكرسي الحالي الحقيقي
+            const currentSeatNumber = "@Model.CurrentSeat"; // الكرسي الحالي الحقيقي
 
-        // في البداية: لو selectedSeat هو نفس الكرسي الحالي → اقفل الزرار
-        if (selectedSeat && selectedSeat.dataset.seatNumber === currentSeatNumber) {
-            selectBtn.disabled = true;
-        }
+            // في البداية: لو selectedSeat هو نفس الكرسي الحالي → اقفل الزرار
+            if (selectedSeat && selectedSeat.dataset.seatNumber === currentSeatNumber) {
+                selectBtn.disabled = true;
+            }
 
-        document.querySelectorAll('.seat-box').forEach(box => {
-            box.addEventListener('click', function() {
-                const isAvailable = this.dataset.available === "True";
-                if (!isAvailable) return;
+            document.querySelectorAll('.seat-box').forEach(box => {
+                box.addEventListener('click', function() {
+                    const isAvailable = this.dataset.available === "True";
+                    if (!isAvailable) return;
 
-                // إزالة السيلكت من القديم
-                if (selectedSeat) selectedSeat.classList.remove('selected');
+                    // إزالة السيلكت من القديم
+                    if (selectedSeat) selectedSeat.classList.remove('selected');
 
-                // إضافة السيلكت الجديد
-                this.classList.add('selected');
-                selectedSeat = this;
+                    // إضافة السيلكت الجديد
+                    this.classList.add('selected');
+                    selectedSeat = this;
 
-                selectedSeatInput.value = this.dataset.seatId;
+                    selectedSeatInput.value = this.dataset.seatId;
 
-                const seatNumber = this.dataset.seatNumber;
-                const seatClass = this.dataset.seatClass;
-                const price = parseFloat(this.dataset.seatPrice).toFixed(2);
+                    const seatNumber = this.dataset.seatNumber;
+                    const seatClass = this.dataset.seatClass;
+                    const price = parseFloat(this.dataset.seatPrice).toFixed(2);
 
-                seatInfo.innerHTML = `
-                    <p><strong>Seat Number:</strong> ${seatNumber}</p>
-                    <p><strong>Class:</strong> ${seatClass}</p>
-                    <p><strong>Price:</strong> ${price} EGP</p>
-                `;
+                    seatInfo.innerHTML = `
+                        <p><strong>Seat Number:</strong> ${seatNumber}</p>
+                        <p><strong>Class:</strong> ${seatClass}</p>
+                        <p><strong>Price:</strong> ${price} EGP</p>
+                    `;
 
-                // 🔥 لو اختار نفس الكرسي القديم → اقفل الزرار
-                if (seatNumber === currentSeatNumber) {
-                    selectBtn.disabled = true;
-                } else {
-                    selectBtn.disabled = false;
-                }
+                    // 🔥 لو اختار نفس الكرسي القديم → اقفل الزرار
+                    if (seatNumber === currentSeatNumber) {
+                        selectBtn.disabled = true;
+                    } else {
+                        selectBtn.disabled = false;
+                    }
+                });
             });
-        });
-    </script>
+        </script>
 }
