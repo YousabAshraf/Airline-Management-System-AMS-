@@ -646,6 +646,18 @@ public class BookingController : Controller
             {
                 return View(model);
             }
+            var isSeatTaken = await _context.Bookings.AnyAsync(b =>
+                b.FlightId == booking.FlightId &&
+                b.SeatNumber == model.CurrentSeat &&
+                b.Id != booking.Id
+            );
+
+            if (isSeatTaken)
+            {
+                ModelState.AddModelError("CurrentSeat", "This seat is already selected by another passenger.");
+                return View(model);
+            }
+
 
             booking.SeatNumber = model.CurrentSeat;
             booking.TicketPrice = model.TicketPrice;

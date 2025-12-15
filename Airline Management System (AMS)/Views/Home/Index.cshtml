@@ -80,6 +80,7 @@
                                 <td>@flight.Destination</td>
                                 <td>@flight.DepartureTime.ToString("g")</td>
 								<td>@flight.ArrivalTime.ToString("g")</td>
+                                @if (!User.IsInRole("Admin")){
                                 <td>
                                     <a asp-controller="Booking"
                                        asp-action="Create"
@@ -88,6 +89,7 @@
                                         Book Ticket
                                     </a>
                                 </td>
+                                }
                             </tr>
                         }
                     </tbody>
