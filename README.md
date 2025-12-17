@@ -58,6 +58,10 @@ The interface is fully responsive, ensuring a seamless experience across desktop
 -   **Booking Administration**: Admins can override, edit, or cancel any user booking.
 -   **Feedback Monitoring**: Review customer satisfaction and flight ratings.
 
+### 🌍 Multi-language Support
+-   **Arabic Localization**: Fully supported Arabic interface (RTL).
+-   **Smart Localization**: Powered by **XLocalizer** for automatic resource management.
+
 ---
 
 ## 🛠️ Technology Stack
@@ -68,6 +72,7 @@ The interface is fully responsive, ensuring a seamless experience across desktop
 -   **Database**: SQL Server 2019+
 -   **ORM**: Entity Framework Core (Code-First approach)
 -   **Identity**: ASP.NET Core Identity for auth
+-   **Localization**: XLocalizer for seamless Arabic/English support
 -   **Services**: SMTP for Email Notifications
 
 ### Frontend
@@ -138,6 +143,7 @@ Follow these steps to set up the project locally.
 -   [x] **Admin Center**: Flight/Passenger/Booking management.
 -   [x] **Communication**: Automated Email Notifications (Confirmation, Updates, Cancellations).
 -   [x] **Feedback Loop**: Rating and review system.
+-   [x] **Localization**: Arabic (RTL) support via XLocalizer.
 -   [x] **UI/UX**: Responsive Airline Themed Design.
 
 ### 📅 Planned / Future
